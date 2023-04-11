@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--<title> Drop Down Sidebar Menu | CodingLab </title>-->
+    <link rel="stylesheet" href="~/css/SidebarAdmin.css">
+    <!-- Boxiocns CDN Link -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="sidebar close">
+        <div class="logo-details text-center">
+            <i class='bx bx-menu' style="cursor: pointer;"></i>
+
+            <span class="logo_name">HSHOP</span>
+
+        </div>
+        <ul class="nav-links">
+            <!-- <li>
+              <a href="#">
+                <i class='bx bx-grid-alt'></i>
+                <span class="link_name">Dashboard</span>
+              </a>
+              <ul class="sub-menu blank">
+                <li><a class="link_name" href="#">Category</a></li>
+              </ul>
+            </li> -->
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-collection'></i>
+                        <span class="link_name">Danh Mục</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu fadeInDown">
+                    <li><a class="link_name" href="#">Danh Mục</a></li>
+                    <li><a href="/Nhomhh/Index">Nhóm hàng hóa</a></li>
+                    <li><a href="/Thuonghieu/Index">Thương hiệu</a></li>
+                    <li><a href="/Nuosx/Index">Nước sản xuất</a></li>
+                    <li><a href="/Nhacungcap/Index">Nhà cung cấp</a></li>
+                    <li><a href="/Hanghoa/Index">Hàng Hóa</a></li>
+                    @*<li><a href="/Phieu">Phiếu Bảo hành</a></li>*@
+                    <li><a href="/Nhanvien/Index">Nhân viên</a></li>
+                    <li><a href="/Khachhang/Index">Khách hàng</a></li>
+                    <li><a href="/Nganhang/Index">Ngân hàng</a></li>
+                    <li><a href="/Hinhthucthanhtoan/Index">Hình thức thanh toán</a></li>
+                    <li><a href="/Phieuthuno/Idex">Phiếu Thu Nợ</a></li>
+                    <li><a href="/Phieutrano/Index">Phiếu Trả Nợ</a></li>
+
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-book-alt'></i>
+                        <span class="link_name">Quản lý</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Quản lý</a></li>
+                    <li><a href="#">Phiếu Nhập kho</a></li>
+                    <li><a href="#">Phiếu Xuất Kho</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <!-- <i class='bx bx-book-alt'></i> -->
+                        <i class='bx bx-line-chart'></i>
+
+                        <span class="link_name">Thống Kê</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Thống kê</a></li>
+                    <li><a href="#">Nhập kho</a></li>
+                    <li><a href="#">Xuất Kho</a></li>
+                    <li><a href="#">Tồn Kho</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-cog'></i>
+                        <span class="link_name">Cài đặt</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Cài đặt</a></li>
+                    <li><a href="#">Chế độ tối</a></li>
+                    <li><a href="#">Số dòng hiển thị</a></li>
+                </ul>
+            </li>
+         
+            <li>
+                <div class="profile-details">
+                    <div class="profile-content">
+                        <!--<img src="image/profile.jpg" alt="profileImg">-->
+                    </div>
+                    <div class="name-job">
+                        <!-- <div class="profile_name">HSHOP</div> -->
+                    </div>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section" style="background-color: #eeeeee;">
+        <div class="home-content d-flex justify-content-center" >
+            <h2 class="text-center">@ViewBag.Head</h2>
+
+        </div>
+        <div class="ml-2 mr-2">
+            <div class="p-2 rounded" style="background-color: #fff;">
+                @RenderBody()
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Sidebar Admin-->
+    <script>
+        let arrow = document.querySelectorAll(".arrow");
+        for (var i = 0; i < arrow.length; i++) {
+            arrow[i].addEventListener("click", (e) => {
+                let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
+                arrowParent.classList.toggle("showMenu");
+            });
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector(".bx-menu");
+        console.log(sidebarBtn);
+        sidebarBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("close");
+        });
+    </script>
+
+
+
+
+    <!-- Custom table -->
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <!-- Vietnamese language file for DataTables -->
+    <script src="https://cdn.datatables.net/plug-ins/1.10.25/i18n/Vietnamese.json"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "language": {
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi",
+                    "search": "Tìm kiếm:",
+                },
+                "pageLength": 10, // Số bản ghi hiển thị ban đầu
+                "search": {
+                    "search": "", // Giá trị tìm kiếm ban đầu
+                    "placeholder": "Tìm kiếm...", // Chú thích tìm kiếm
+                },
+                "language": {
+                    "decimal": "",
+                    "emptyTable": "Không có dữ liệu",
+                    "info": "Hiển thị từ _START_ đến _END_ của _TOTAL_ bản ghi",
+                    "infoEmpty": "Hiển thị từ 0 đến 0 của 0 bản ghi",
+                    "infoFiltered": "(được lọc từ tổng số _MAX_ bản ghi)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Hiển thị _MENU_ bản ghi",
+                    "loadingRecords": "Đang tải...",
+                    "processing": "Đang xử lý...",
+                    "search": "Tìm kiếm:",
+                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp",
+
+                    "paginate": {
+                        "first": "Đầu tiên",
+                        "last": "Cuối cùng",
+                        "next": "Sau",
+                        "previous": "Trước"
+                    },
+                    "aria": {
+                        "sortAscending": ": Sắp xếp tăng dần",
+                        "sortDescending": ": Sắp xếp giảm dần"
+                    }
+                }
+
+            });
+        });
+
+
+
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
