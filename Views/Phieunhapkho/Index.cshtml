@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ElectronicsStore.Models.Thuonghieu>
+﻿@model IEnumerable<ElectronicsStore.Models.Phieunhapkho>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,9 +9,9 @@
 
     <div class="d-flex justify-content-between ">
         <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
-            Thêm mới thương hiệu
+            Thêm mới phiếu nhập kho
         </button>
-        <form asp-controller="Thuonghieu" asp-action="TrashList">
+        <form asp-controller="Phieunhapkho" asp-action="TrashList">
             <button type="submit" class="btn btn-info">
                 <i class="fas fa-trash-restore"></i>
             </button>
@@ -23,9 +23,15 @@
     <thead>
         <tr>
             <th class="text-center">STT</th>
-            <th>Mã thương hiệu</th>
-            <th>Tên thương hiệu</th>
-
+            <th>Số phiếu</th>
+            <th>Nhân viên lập</th>
+            <th>Nhà cung cấp</th>
+            <th>Ngày lập</th>
+            <th class="d-none">Số hóa đơn</th>
+            <th class="d-none">Ngày hóa đơn</th>
+            <th class="d-none">Ghi chú</th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
             <th class="d-none"></th>
             <th></th>
         </tr>
@@ -39,9 +45,33 @@
 
             <tr>
                 <td class="d-flex justify-content-center">@count</td>
-                <td>@item.Math</td>
-                <td>@item.Tenth</td>
-                <td class=d-none>@item.Idth</td>
+                <td>@item.Sophieu</td>
+                <td>@item.IdnvNavigation.Tennv</td>
+                <td>@item.IdnccNavigation.Tenncc</td>
+
+                @{
+                    DateTime Ngaylap = (DateTime)item.Ngaylap;
+
+
+
+
+                }
+                <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                <td class="d-none">@item.Sohd</td>
+                @if (item.Ngayhd != null)
+                {
+                    DateTime Ngayhd = (DateTime)item.Ngayhd;
+                    <td class="d-none">@Ngayhd.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                }
+                else
+                {
+                    <td class="d-none"></td>
+                }
+                <td class="d-none">@item.Ghichu</td>
+                <td class="d-none">@item.Idpnk</td>
+                <td class="d-none">@item.IdnvNavigation.Tennv</td>
+                <td class="d-none">@item.IdnccNavigation.Idncc</td>
 
 
                 <td>
@@ -53,7 +83,7 @@
                             data-target="#detailModal">
                         <i class="fas fa-info-circle text-white"></i>
                     </button>
-                    <button data-id="@item.Idth" data-code="@item.Math" data-name="@item.Tenth" type="button" class="btn btn-danger deleteBtn"
+                    <button data-id="@item.Idpnk" data-code="@item.Sophieu" data-name="@item.IdnvNavigation.Tennv" data-name2="@item.IdnccNavigation.Tenncc" type="button" class="btn btn-danger deleteBtn"
                             data-toggle="modal" data-target="#deleteModal">
                         <i class="fas fa-trash text-white"></i>
                     </button>
@@ -74,12 +104,12 @@
         justify-content: center;">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Thêm mới nhóm hàng</h5>
+                <h5 class="modal-title" id="addProductModalLabel">Thêm mới nhân viên</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formAdd" asp-controller="Thuonghieu" asp-action="Create" method="post">
+            <form id="formAdd" asp-controller="Phieunhapkho" asp-action="Create" method="post" enctype="multipart/form-data">
 
                 <div class="modal-body">
 
@@ -87,12 +117,12 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Mã thương hiệu
+                                    Số phiếu
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="MathA" name="Math" maxlength="255" type="text"
+                                    <input id="SophieuA" name="Sophieu" maxlength="255" type="text"
                                            class="form-control">
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -100,24 +130,40 @@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Tên thương hiệu
+                                    Nhà cung cấp
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="TenthA" name="Tenth" maxlength="255" required
-                                           type="text" class="form-control">
+                                    <select class="form-control" id="IdnccA" name="Idncc">
+                                        @foreach (var item in @ViewData["Nhacungcap"] as List<Nhacungcap>)
+                                        {
+                                            <option value="@item.Idncc">@item.Mancc-@item.Tenncc</option>
+                                        }
+                                    </select>
 
                                 </div>
                             </div>
                         </div>
 
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                              type="text" class="form-control"></textarea>
 
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" id="addButton" disabled class="btn btn-primary">Lưu</button>
+                    <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
                 </div>
 
             </form>
@@ -134,19 +180,20 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formEdit" asp-controller="Thuonghieu" asp-action="Edit" method="post">
+            <form id="formEdit" asp-controller="Phieunhapkho" asp-action="Edit" method="post" enctype="multipart/form-data">
 
                 <div class="modal-body">
-                    <input id="id" name="Idth" class="d-none" type="text">
+                    <input id="id" name="Idpnk" class="d-none" type="text">
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Mã thương hiệu
+                                    Số phiếu
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="MathE" name="Math" maxlength="255" type="text"
+                                    <input id="SophieuE" name="Sophieu" maxlength="255" type="text"
                                            class="form-control">
+
                                 </div>
                             </div>
                         </div>
@@ -154,18 +201,35 @@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Tên thương hiệu
+                                    Nhà cung cấp
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="TenthE" name="Tenth" maxlength="255" required
-                                           type="text" class="form-control">
+                                    <select class="form-control" id="IdnccE" name="Idncc">
+                                        @foreach (var item in @ViewData["Nhacungcap"] as List<Nhacungcap>)
+                                        {
+                                            <option value="@item.Idncc">@item.Mancc-@item.Tenncc</option>
+                                        }
+                                    </select>
 
                                 </div>
                             </div>
                         </div>
 
 
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuE" name="Ghichu" maxlength="4000"
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -196,29 +260,89 @@
                     <div class="col-md-12 col-sm-12">
                         <div class="row d-flex align-items-center">
                             <div class="col-md-2 col-sm-12">
-                                Mã thương hiệu
+                                Số phiếu
                             </div>
                             <div class="col-md-10 col-sm-12">
-                                <input id="MathD" name="Math" maxlength="255" type="text"
-                                       class="form-control" disabled>
+                                <input id="SophieuD" name="Sophieu" maxlength="255" type="text" disabled
+                                       class="form-control">
+
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Nhà cung cấp
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+
+                                <input id="IdnccD" name="Idncc" disabled
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Người lập
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+
+                                <input id="IdnvD" name="Idnv" disabled
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Ngày lập
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+
+                                <input id="NgaylapD" name="Ngaylap" disabled
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Số hóa đơn
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+
+                                <input id="SohdD" name="Sohd" disabled
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Ngày hóa đơn
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+
+                                <input id="NgayhdD" name="Ngayhd" disabled
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="col-md-12 col-sm-12 mt-2">
                         <div class="row d-flex align-items-center">
                             <div class="col-md-2 col-sm-12">
-                                Tên thương hiệu
+                                Ghi chú
                             </div>
                             <div class="col-md-10 col-sm-12">
-                                <input id="TenthD" name="Tenth" maxlength="255" required
-                                       type="text" class="form-control" disabled>
+                                <textarea id="GhichuD" name="Ghichu" maxlength="4000" disabled
+                                          type="text" class="form-control"></textarea>
 
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
 
@@ -240,7 +364,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Thuonghieu" asp-action="Delete" method="post">
+            <form asp-controller="Phieunhapkho" asp-action="Delete" method="post">
                 <input id="idD" name="id" class="d-none" type="text">
 
                 <div class="modal-body">
@@ -292,10 +416,10 @@
             }
 
             if (!currentFieldIsValid || !field.checkValidity()) {
-                // Nếu trường không hợp lệ, đánh dấu form không hợp lệ và hiển thị lỗi
+                // Nếu trường Trường dữ liệu bắt buộc!, đánh dấu form Trường dữ liệu bắt buộc! và hiển thị lỗi
                 formIsValid = false;
                 field.classList.add("is-invalid");
-                field.setAttribute('placeholder', 'không hợp lệ!');
+                field.setAttribute('placeholder', 'Trường dữ liệu bắt buộc!!');
                 field.style.color = "red";
             } else {
                 field.classList.remove("is-invalid");
@@ -312,9 +436,9 @@
 
 
     // Đăng ký sự kiện "change" cho các trường input, textarea và select của form
-    formAdd.addEventListener("change", () => {
-        validateForm(formAdd, addButton);
-    });
+    //formAdd.addEventListener("change", () => {
+    //    validateForm(formAdd, addButton);
+    //});
 
     formEdit.addEventListener("change", () => {
         validateForm(formEdit, editButton);
@@ -324,15 +448,32 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script>
     function showModalDetail(row) {
+
+
         // Trích xuất thông tin từ các ô trong dòng được click
         const cells = row.parentElement.parentElement.cells;
-        const ma = cells[1].textContent;
-        const ten = cells[2].textContent;
+        const Sophieu = cells[1].textContent;
+        const Tennv = cells[2].textContent;
+        const Tenncc = cells[3].textContent;
+        const Ngaylap = cells[4].textContent;
+        const Sohd = cells[5].textContent;
+
+        const Ngayhd = cells[6].textContent;
+
+        const Ghichu = cells[7].textContent;
+        const Idpnk = cells[8].textContent;
+        const Idnv = cells[9].textContent;
+        const Idncc = cells[10].textContent;
 
         // Gán giá trị cho các input trong modal
-        document.querySelector('#MathD').value = ma;
-        document.querySelector('#TenthD').value = ten;
+        document.querySelector('#SophieuD').value = Sophieu;
+        document.querySelector('#IdnvD').value = Tennv;
+        document.querySelector('#IdnccD').value = Tenncc;
 
+        document.querySelector('#NgaylapD').value = Ngaylap;
+        document.querySelector('#SohdD').value = Sohd;
+        document.querySelector('#NgayhdD').value = Ngayhd;
+        document.querySelector('#GhichuD').value = Ghichu;
 
         // Hiển thị modal
         $('#detailModal').modal('show');
@@ -340,14 +481,30 @@
     function showModalEdit(row) {
         // Trích xuất thông tin từ các ô trong dòng được click
         const cells = row.parentElement.parentElement.cells;
-        const ma = cells[1].textContent;
-        const ten = cells[2].textContent;
-        const id = cells[3].textContent;
+        const Sophieu = cells[1].textContent;
+        const Tennv = cells[2].textContent;
+        const Tenncc = cells[3].textContent;
+        const Ngaylap = cells[4].textContent;
+        const Sohd = cells[5].textContent;
+
+        const Ngayhd = cells[6].textContent;
+
+        const Ghichu = cells[7].textContent;
+        const Idpnk = cells[8].textContent;
+        const Idnv = cells[9].textContent;
+        const Idncc = cells[10].textContent;
 
         // Gán giá trị cho các input trong modal
-        document.querySelector('#MathE').value = ma;
-        document.querySelector('#TenthE').value = ten;
-        document.querySelector('#id').value = id;
+        document.querySelector('#SophieuE').value = Sophieu;
+        //document.querySelector('#IdnvE').value = Idnv;
+        //document.querySelector('#IdnccE').value = Idncc;
+
+        //document.querySelector('#NgaylapE').value = Ngaylap;
+        //document.querySelector('#SohdD').value = Sohd;
+        document.querySelector('#IdnccE').value = Idncc;
+        document.querySelector('#GhichuE').value = Ghichu;
+
+        document.querySelector('#id').value = Idpnk;
 
         // Hiển thị modal
         $('#editModal').modal('show');
@@ -363,9 +520,10 @@
         document.getElementById("idD").value = id;
         // Hiển thị thông tin của dòng lên modal xác nhận
         var modal = $(this);
-        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có mã là ' + code + ' và tên là ' + name);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có số phiếu là ' + code + ' và người lập là ' + name);
     });
 
 
-    
+
 </script>
+

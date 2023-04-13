@@ -1,4 +1,5 @@
 using ElectronicsStore.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +26,17 @@ namespace ElectronicsStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options =>
+               {
+                   options.LoginPath = "/Access/Login";
+                    //options.Cookie.Name = "HienCaCookie";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+               });
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddSession(); ;
+
+
             services.AddControllersWithViews();
             services.AddDbContext<ElectronicsStoreContext>(option => option.UseSqlServer(Configuration.GetConnectionString("MyConnectionString")));
         }
@@ -53,7 +65,7 @@ namespace ElectronicsStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Khachhang}/{action=Index}/{id?}");
+                    pattern: "{controller=Dondathang}/{action=Index}/{id?}");
             });
         }
     }

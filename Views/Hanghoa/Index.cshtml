@@ -1,0 +1,1153 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Hanghoa>
+@using ElectronicsStore.Models;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
+}
+
+<div class="d-flex justify-content-between mb-2">
+
+    <div class="d-flex justify-content-between ">
+        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
+            Thêm mới hàng hóa
+        </button>
+        <form asp-controller="Hanghoa" asp-action="TrashList">
+            <button type="submit" class="btn btn-info">
+                <i class="fas fa-trash-restore"></i>
+            </button>
+        </form>
+
+    </div>
+</div>
+<table class="table table-striped table-bordered" id="productTable">
+    <thead>
+        <tr>
+            <th class="text-center">STT</th>
+            <th>Mã</th>
+            <th>Tên hàng hóa</th>
+            <th class="d-none"></th>
+            <th>Giá KM</th>
+            <th>Giá bán</th>
+            <th class="d-none"></th>
+
+            <th>Màu sắc</th>
+            <th>ĐVT</th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 1;
+        }
+        @foreach (var item in Model)
+        {
+
+        <tr>
+            <td class="d-flex justify-content-center">@count</td>
+            <td>@item.Mavl</td>
+            <td>@item.Tenvl</td>
+            <td class="d-none">@item.Hinhanh</td>
+
+            @*@{
+
+            string GiakmFormat = string.Format("{0:#,##0}", item.Giakm);
+            string GiabanFormat = string.Format("{0:#,##0}", item.Giaban);
+        }
+        <td>@GiakmFormat</td>
+        <td>@GiabanFormat</td>*@
+
+            <td>@item.Giakm</td>
+            <td>@item.Giaban</td>
+
+
+            <td class="d-none">@item.Tinhtrang</td>
+            <td>@item.Mausac</td>
+            <td>@item.Donvitinh</td>
+            <td class="d-none">@item.Thoigianbh</td>
+            <td class="d-none">@item.Mota</td>
+            <td class="d-none">@item.Idnsx</td>
+            <td class="d-none">@item.Idth</td>
+            <td class="d-none">@item.Idnhh</td>
+
+
+
+            <td class=d-none>@item.Idhh</td>
+
+            <td class="d-none">@item.IdnsxNavigation.Tennsx</td>
+            <td class="d-none">@item.IdthNavigation.Tenth</td>
+            <td class="d-none">@item.IdnhhNavigation.Tennhh</td>
+
+            <td class="d-flex justify-content-between align-items-center">
+                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#editModal">
+                    <i class="fas fa-pen text-white"></i>
+                </button>
+                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                        data-target="#detailModal">
+                    <i class="fas fa-info-circle text-white"></i>
+                </button>
+                <button data-id="@item.Idhh" data-code="@item.Mavl" data-name="@item.Tenvl" type="button" class="btn btn-danger deleteBtn"
+                        data-toggle="modal" data-target="#deleteModal">
+                    <i class="fas fa-trash text-white"></i>
+                </button>
+            </td>
+            @{ count++; }
+        </tr>
+
+
+        }
+
+
+    </tbody>
+</table>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Thêm mới hàng hóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formAdd" asp-controller="Hanghoa" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Nhóm HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdnhhA" name="Idnhh">
+                                                @foreach (var item in @ViewData["Nhomhh"] as List<Nhomhh>)
+                                                {
+                                                    <option value="@item.Idnhh">@item.Manhh-@item.Tennhh</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Thương Hiệu
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdthA" name="Idth">
+                                                @foreach (var item in @ViewData["Thuonghieu"] as List<Thuonghieu>)
+                                                {
+                                                    <option value="@item.Idth">@item.Math-@item.Tenth</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Nước SX
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdnsxA" name="Idnsx">
+                                                @foreach (var item in @ViewData["Nuosx"] as List<Nuosx>)
+                                                {
+                                                    <option value="@item.Idnsx">@item.Mansx-@item.Tennsx</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Mã HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="MavlA" name="Mavl" maxlength="255" type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Tên HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="TenvlA" name="Tenvl" maxlength="255" required
+                                                   type="text" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Giá KM
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="GiakmA" name="Giakm" maxlength="12"
+                                                   type="number" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Giá Bán
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="GiabanA" name="Giaban" required
+                                                   type="number" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Tình Trạng
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="TinhtrangA" name="Tinhtrang" required>
+                                                <option selected value="0">Mới</option>
+                                                <option value="1">Cũ</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Màu Sắc
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <select class="form-control" id="MausacA" name="Mausac" required>
+                                                <option selected value="Đen">Đen</option>
+                                                <option value="Đỏ đen">Đỏ đen</option>
+                                                <option value="Xanh đen">Xanh đen</option>
+                                                <option value="Đỏ">Đỏ</option>
+                                                <option value="Xám">Xám</option>
+                                                <option value="Trắng">Trắng</option>
+                                                <option value="Hồng">Hồng</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            ĐVT
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <select class="form-control" id="DonvitinhA" name="Donvitinh" required>
+                                                <option selected value="Cái">Cái</option>
+                                                <option value="Thùng">Thùng</option>
+                                                <option value="Chiếc">Chiếc</option>
+                                                <option value="Bao">Bao</option>
+                                                <option value="Gói">Gói</option>
+                                                <option value="Hộp">Hộp</option>
+                                                <option value="Can">Can</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Bảo Hành
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <select class="form-control" id="BaohanhA" name="Thoigianbh" required>
+                                                <option selected value="0">Không</option>
+                                                <option value="180">6 tháng</option>
+                                                <option value="360">12 tháng</option>
+                                                <option value="540">18 tháng</option>
+                                                <option value="720">24 tháng</option>
+                                                <option value="1080">36 tháng</option>
+                                                <option value="1800">5 năm</option>
+                                                <option value="2520">7 năm</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Hình ảnh
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <div class="custom-file">
+                                                <input name="Hinhanh" type="file" onchange="loadImageAdd(event)" class="custom-file-input inputImageAdd" id="customFile">
+                                                <label class="custom-file-label" for="customFile">Tải lên file ảnh</label>
+                                            </div>
+                                            <div class="preview"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Mô Tả
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <textarea id="MotaA" name="MoTa" maxlength="4000"
+                                                      type="text" class="form-control"></textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            @*<div class="row mt-2">
+                                <div class="d-flex justify-content-center">
+                                    <div>
+                                        <img src="" id="previewAdd" alt="Chưa có ảnh" />
+
+                                    </div>
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" id="addButton" disabled class="btn btn-primary">Lưu</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog w-90" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModal">Cập nhật thông tin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formEdit" asp-controller="Hanghoa" asp-action="Edit" method="post" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <input id="id" name="Idhh" class="d-none" type="text">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Nhóm HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdnhhE" name="Idnhh">
+                                                @foreach (var item in @ViewData["Nhomhh"] as List<Nhomhh>)
+                                                {
+                                                    <option value="@item.Idnhh">@item.Manhh-@item.Tennhh</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Thương Hiệu
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdthE" name="Idth">
+                                                @foreach (var item in @ViewData["Thuonghieu"] as List<Thuonghieu>)
+                                                {
+                                                    <option value="@item.Idth">@item.Math-@item.Tenth</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Nước SX
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdnsxE" name="Idnsx">
+                                                @foreach (var item in @ViewData["Nuosx"] as List<Nuosx>)
+                                                {
+                                                    <option value="@item.Idnsx">@item.Mansx-@item.Tennsx</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Mã HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="MavlE" name="Mavl" maxlength="255" type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Tên HH
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="TenvlE" name="Tenvl" maxlength="255" required
+                                                   type="text" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Giá KM
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="GiakmE" name="Giakm" maxlength="12" 
+                                                   type="number" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Giá Bán
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="GiabanE" name="Giaban" required
+                                                   type="number" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Tình Trạng
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="TinhtrangE" name="Tinhtrang" required>
+                                                <option selected value="0">Mới</option>
+                                                <option value="1">Cũ</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Màu Sắc
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <select class="form-control" id="MausacE" name="Mausac" required>
+                                                <option selected value="Đen">Đen</option>
+                                                <option value="Đỏ đen">Đỏ đen</option>
+                                                <option value="Xanh đen">Xanh đen</option>
+                                                <option value="Đỏ">Đỏ</option>
+                                                <option value="Xám">Xám</option>
+                                                <option value="Trắng">Trắng</option>
+                                                <option value="Hồng">Hồng</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            ĐVT
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="DonvitinhE" name="Donvitinh" required>
+                                                <option selected value="Cái">Cái</option>
+                                                <option value="Thùng">Thùng</option>
+                                                <option value="Chiếc">Chiếc</option>
+                                                <option value="Bao">Bao</option>
+                                                <option value="Gói">Gói</option>
+                                                <option value="Hộp">Hộp</option>
+                                                <option value="Can">Can</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Bảo Hành
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <select class="form-control" id="BaohanhE" name="Thoigianbh" required>
+                                                <option selected value="0">Không</option>
+                                                <option value="180">6 tháng</option>
+                                                <option value="360">12 tháng</option>
+                                                <option value="540">18 tháng</option>
+                                                <option value="1080">36 tháng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Hình ảnh
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+
+                                            <div class="custom-file">
+                                                <input name="Hinhanh" type="file" onchange="loadImageEdit(event)" class="custom-file-input inputImageAdd" id="customFile">
+                                                <label class="custom-file-label" for="customFile">Tải lên file ảnh</label>
+                                            </div>
+                                            <div class="preview"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Mô Tả
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <textarea id="MotaE" name="MoTa" maxlength="4000"
+                                                      type="text" class="form-control"></textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mt-2">
+                                <div class="d-flex justify-content-center">
+                                    <div>
+                                        @*<img src="" id="previewAdd" alt="Chưa có ảnh" />*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6 col-sm-12">
+                            <h3 class="text-center">Ảnh hiện tại</h3>
+                            <div class="d-flex justify-content-center">
+                                <div>
+                                    <img src="" style=" border-radius:20px" id="HinhanhE" alt="Chưa có ảnh" />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <h3 class="text-center">Ảnh mới</h3>
+                            <div class="d-flex justify-content-center">
+                                <div>
+                                    <img src="" style=" border-radius:20px" id="PreHinhanhE" alt="Chưa có ảnh" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" id="editButton" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal"
+     aria-hidden="true">
+    <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center mb-2">
+                    <div>
+                        <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh" />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Nhóm HH
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                       
+                                        <input class="form-control" id="IdnhhD" name="Idnhh" disabled/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Thương Hiệu
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                       
+                                        <input class="form-control" id="IdthD" name="Idth" disabled />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Nước SX
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        
+                                        <input class="form-control" id="IdnsxD" name="Idnsx" disabled />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Mã HH
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="MavlD" name="Mavl" maxlength="255" type="text" disabled
+                                               class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Tên HH
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="TenvlD" name="Tenvl" maxlength="255" required disabled
+                                               type="text" class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Giá KM
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="GiakmD" name="Giakm" maxlength="12"  disabled
+                                               type="text" class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Giá Bán
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="GiabanD" name="Giaban"  disabled
+                                               type="text" class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Tình Trạng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                      
+                                        <input id="TinhtrangD" name="Tinhtrang" required disabled
+                                               type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Màu Sắc
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="MausacD" name="Mausac" maxlength="255" required disabled
+                                                  type="text" class="form-control"/>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        ĐVT
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="DonvitinhD" name="Donvitinh" maxlength="255" disabled
+                                               type="text" class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Bảo Hành
+                                    </div>
+                                    <div class="col-md-10 col-sm-12"> 
+                                        <input id="BaohanhD" name="Thoigianbh" maxlength="255" required disabled
+                                               type="email" class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Hình ảnh
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+
+                                        <div class="custom-file">
+                                            <input name="Hinhanh" type="file" onchange="loadImageAdd(event)" class="custom-file-input inputImageAdd" id="customFile">
+                                            <label class="custom-file-label" for="customFile">Tải lên file ảnh</label>
+                                        </div>
+                                        <div class="preview"></div>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Mô Tả
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="MotaD" name="MoTa" maxlength="4000" disabled
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-2">
+                            <div class="d-flex justify-content-center">
+                                <div>
+                                    @*<img src="" id="previewAdd" alt="Chưa có ảnh" />*@
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+               
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-controller="Hanghoa" asp-action="Delete" method="post">
+                <input id="idD" name="id" class="d-none" type="text">
+
+                <div class="modal-body">
+                    Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const formAdd = document.getElementById("formAdd");
+    const addButton = document.getElementById("addButton");
+
+    const formEdit = document.getElementById("formEdit");
+    const editButton = document.getElementById("editButton");
+
+    formAdd.addEventListener('change', function () {
+        if (formAdd.checkValidity()) {
+            addButton.disabled = false;
+        } else {
+            addButton.disabled = true;
+        }
+    });
+    formEdit.addEventListener('change', function () {
+        if (formEdit.checkValidity()) {
+            editButton.disabled = false;
+        } else {
+            editButton.disabled = true;
+        }
+    });
+</script>
+
+<script>
+    function validateForm(form, saveButton) {
+        // Lặp qua tất cả các trường input, textarea và select của form
+        let formIsValid = true;
+        const fields = form.querySelectorAll("input, textarea, select");
+        let currentFieldIsValid = true;
+        fields.forEach((field) => {
+            if (field === event.target) {
+                currentFieldIsValid = field.checkValidity();
+            }
+
+            if (!currentFieldIsValid || !field.checkValidity()) {
+                // Nếu trường không hợp lệ, đánh dấu form không hợp lệ và hiển thị lỗi
+                formIsValid = false;
+                field.classList.add("is-invalid");
+                field.setAttribute('placeholder', 'Trường dữ liệu bắt buộc!');
+                field.style.color = "red";
+            } else {
+                field.classList.remove("is-invalid");
+                field.setAttribute('placeholder', '');
+                field.style.color = "black";
+            }
+        });
+
+        // Enable hoặc disable nút lưu dữ liệu tùy thuộc vào trạng thái hợp lệ của form
+        saveButton.disabled = !formIsValid;
+    }
+
+    // Lấy tham chiếu tới form và nút lưu dữ liệu từ DOM
+
+
+    // Đăng ký sự kiện "change" cho các trường input, textarea và select của form
+    formAdd.addEventListener("change", () => {
+        validateForm(formAdd, addButton);
+    });
+
+    formEdit.addEventListener("change", () => {
+        validateForm(formEdit, editButton);
+    });
+</script>
+<!-- Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    function showModalDetail(row) {
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.cells;
+        const Mavl = cells[1].textContent;
+        const Tenvl = cells[2].textContent;
+        const Hinhanh = cells[3].textContent;
+        let Giakm = cells[4].textContent;
+        let Giaban = cells[5].textContent;
+        const Tinhtrang = cells[6].textContent;
+        const Mausac = cells[7].textContent;
+        const Donvitinh = cells[8].textContent;
+        const Thoigianbh = cells[9].textContent;
+        const Mota = cells[10].textContent;
+        const Idnsx = cells[11].textContent;
+        const Idth = cells[12].textContent;
+        const Idnhh = cells[13].textContent;
+
+        const Tennsx = cells[15].textContent;
+        const Tenth = cells[16].textContent;
+        const Tennhh = cells[17].textContent;
+        console.log("Giakm " + Giakm);
+        console.log("Giaban " + Giaban);
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MavlD').value = Mavl;
+        document.querySelector('#TenvlD').value = Tenvl;
+
+        let GiakmD = "";
+        let GiabanD = "";
+        if (Giakm != "") {
+            Giakm = parseFloat(Giakm);
+            GiakmD = Giakm.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', currencyDisplay: 'narrowSymbol' });
+            console.log(GiakmD)
+
+        }
+        if (Giaban != "") {
+            Giaban = parseFloat(Giaban);
+            GiabanD = Giaban.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', currencyDisplay: 'narrowSymbol' });
+            console.log(GiabanD)
+        }
+
+
+        document.querySelector('#GiakmD').value = GiakmD;
+        document.querySelector('#GiabanD').value = GiabanD;
+
+        //document.querySelector('#GiakmD').value = Giakm;
+        //document.querySelector('#GiabanD').value = Giaban;
+
+        if (Tinhtrang == "0") {
+            document.querySelector('#TinhtrangD').value = "Mới";
+
+        }
+        else if (Tinhtrang == "1") {
+            document.querySelector('#TinhtrangD').value = "Cũ";
+
+        }
+        document.querySelector('#MausacD').value = Mausac;
+        document.querySelector('#DonvitinhD').value = Donvitinh;
+        if (Thoigianbh == "0") {
+            document.querySelector('#BaohanhD').value = 'Không';
+        }
+        else if (Thoigianbh == "180") {
+            document.querySelector('#BaohanhD').value = '6 tháng';
+        }
+        else if (Thoigianbh == "360") {
+            document.querySelector('#BaohanhD').value = '12 tháng';
+        }
+        else if (Thoigianbh == "540") {
+            document.querySelector('#BaohanhD').value = '18 tháng';
+        }
+        else if (Thoigianbh == "720") {
+            document.querySelector('#BaohanhD').value = '24 tháng';
+        }
+        else if (Thoigianbh == "1080") {
+            document.querySelector('#BaohanhD').value = '36 tháng';
+        }
+        else if (Thoigianbh == "1800") {
+            document.querySelector('#BaohanhD').value = '5 năm';
+        }
+        else if (Thoigianbh == "2520") {
+            document.querySelector('#BaohanhD').value = '7 năm';
+        }
+        //document.querySelector('#BaohanhD').value = Thoigianbh;
+        document.querySelector('#MotaD').value = Mota;
+        
+
+        document.querySelector('#IdnsxD').value = Tennsx;
+        document.querySelector('#IdthD').value = Tenth;
+        document.querySelector('#IdnhhD').value = Tennhh;
+
+        document.querySelector('#HinhanhD').src = "./Images/" + Hinhanh;
+
+        document.querySelector('#HinhanhD').style.width = "350px";
+        document.querySelector('#HinhanhD').style.height = "350px";
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+    function showModalEdit(row) {
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.cells;
+        const Mavl = cells[1].textContent;
+        const Tenvl = cells[2].textContent;
+        const Hinhanh = cells[3].textContent;
+        let Giakm = cells[4].textContent;
+        let Giaban = cells[5].textContent;
+        const Tinhtrang = cells[6].textContent;
+        const Mausac = cells[7].textContent;
+        const Donvitinh = cells[8].textContent;
+        const Thoigianbh = cells[9].textContent;
+        const Mota = cells[10].textContent;
+        const Idnsx = cells[11].textContent;
+        const Idth = cells[12].textContent;
+        const Idnhh = cells[13].textContent;
+        const id = cells[14].textContent;
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MavlE').value = Mavl;
+        document.querySelector('#TenvlE').value = Tenvl;
+        //let GiakmE = "";
+        //let GiabanE = "";
+        //if (Giakm != "") {
+        //    Giakm = parseFloat(Giakm);
+        //    GiakmE = Giakm.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', currencyDisplay: 'narrowSymbol' });
+        //    console.log(GiakmE)
+
+        //}
+        //if (Giaban != "") {
+        //    Giaban = parseFloat(Giaban);
+        //    GiabanE = Giaban.toLocaleString('vi-VN', { style: 'currency', currency: 'VND', currencyDisplay: 'narrowSymbol' });
+        //    console.log(GiabanE)
+        //}
+        document.querySelector('#GiakmE').value = Giakm;
+        document.querySelector('#GiabanE').value = Giaban;
+        document.querySelector('#TinhtrangE').value = Tinhtrang;
+        console.log(Mausac)
+        document.querySelector('#MausacE').value = Mausac;
+
+        document.querySelector('#DonvitinhE').value = Donvitinh;
+      
+        
+        document.querySelector('#BaohanhE').value = Thoigianbh;
+        document.querySelector('#MotaE').value = Mota;
+        
+
+        document.querySelector('#IdnsxE').value = Idnsx;
+        document.querySelector('#IdthE').value = Idth;
+        document.querySelector('#IdnhhE').value = Idnhh;
+
+       
+        document.querySelector('#HinhanhE').src = "./Images/" + Hinhanh;
+
+        document.querySelector('#HinhanhE').style.width = "350px";
+        document.querySelector('#HinhanhE').style.height = "350px";
+
+        document.querySelector('#id').value = id;
+
+        // Hiển thị modal
+        $('#editModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có mã là ' + code + ' và tên là ' + name);
+    });
+
+
+
+</script>
+@*@section scripts{
+        <script type="text/javascript">
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+    }*@
+
+<script>
+
+    // JavaScript
+    function loadImageAdd(event) {
+        const file = event.target.files[0];
+
+        const tempUrl = URL.createObjectURL(file);
+
+        const img = document.getElementById('previewAdd');
+
+        img.src = tempUrl;
+        img.style.width = "350px";
+        img.style.height = "350px";
+    }
+
+
+</script>
+<script>
+
+    function loadImageEdit(event) {
+        const file = event.target.files[0];
+
+        const tempUrl = URL.createObjectURL(file);
+
+        const img = document.getElementById('PreHinhanhE');
+
+        img.src = tempUrl;
+        img.style.width = "350px";
+        img.style.height = "350px";
+
+    }
+</script>

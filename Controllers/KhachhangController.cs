@@ -111,7 +111,16 @@ namespace ElectronicsStore.Controllers
                 nv.Sdt = khachhang.Sdt;
                 nv.Email = khachhang.Email;
                 nv.Masothue = khachhang.Masothue;
-                nv.Matkhau = khachhang.Matkhau;
+                if (nv.Matkhau != "")
+                {
+                    nv.Matkhau = khachhang.Matkhau;
+
+                }
+                else
+                {
+                    nv.Matkhau = "NV12345";
+
+                }
                 nv.Ghichu = khachhang.Ghichu;
                 nv.Facebook = khachhang.Facebook;
                 nv.Zalo = khachhang.Zalo;
@@ -167,7 +176,16 @@ namespace ElectronicsStore.Controllers
                     nv.Sdt = khachhang.Sdt;
                     nv.Email = khachhang.Email;
                     nv.Masothue = khachhang.Masothue;
-                    nv.Matkhau = khachhang.Matkhau;
+                    if (nv.Matkhau != "")
+                    {
+                        nv.Matkhau = khachhang.Matkhau;
+
+                    }
+                    else
+                    {
+                        nv.Matkhau = "NV12345";
+
+                    }
                     nv.Ghichu = khachhang.Ghichu;
                     nv.Facebook = khachhang.Facebook;
                     nv.Zalo = khachhang.Zalo;

@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Phieutranoncc>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
+}
+
+<div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between  flex-row-reverse">
+            <form asp-controller="Phieutranoncc" asp-action="Index">
+                <button type="submit" class="btn btn-light ">
+                    Quay lại
+                </button>
+            </form>
+           
+    </div>
+
+    </div>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Số phiếu</th>
+                <th>Nhân viên lập</th>
+                <th>Ngày lập</th>
+                <th>Hình thức</th>
+                <th>Ghi chú</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+            <tr>
+                <td class="d-flex justify-content-center">@count</td>
+                <td>@item.Sophieu</td>
+                <td>@item.IdnvNavigation.Tennv</td>
+                <td>@item.Ngaylap</td>
+                <td>@item.IdhtttNavigation.Tenhttt</td>
+                <td>@item.Ghichu</td>
+
+                <td class="d-none">@item.Idptnncc</td>
+
+
+                <td>
+                    <form asp-controller="Phieutranoncc" asp-action="ReStore">
+                        <input name="id" value="@item.Idptnncc" class="d-none" type="text">
+
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-unlock text-white"></i>
+                        </button>
+                    </form>
+
+                </td>
+                @{ count++; }
+            </tr>
+
+
+            }
+
+
+        </tbody>
+    </table>
+

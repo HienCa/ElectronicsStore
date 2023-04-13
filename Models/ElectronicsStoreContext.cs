@@ -193,7 +193,7 @@ namespace ElectronicsStore.Models
                 entity.Property(e => e.Mota)
                     .IsRequired()
                     .HasColumnName("MOTA")
-                    .HasMaxLength(255);
+                    .HasMaxLength(4000);
 
                 entity.Property(e => e.Tenvl)
                     .IsRequired()

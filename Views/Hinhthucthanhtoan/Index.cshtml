@@ -292,10 +292,10 @@
             }
 
             if (!currentFieldIsValid || !field.checkValidity()) {
-                // Nếu trường không hợp lệ, đánh dấu form không hợp lệ và hiển thị lỗi
+                // Nếu trường Trường dữ liệu bắt buộc!, đánh dấu form Trường dữ liệu bắt buộc! và hiển thị lỗi
                 formIsValid = false;
                 field.classList.add("is-invalid");
-                field.setAttribute('placeholder', 'không hợp lệ!');
+                field.setAttribute('placeholder', 'Trường dữ liệu bắt buộc!!');
                 field.style.color = "red";
             } else {
                 field.classList.remove("is-invalid");

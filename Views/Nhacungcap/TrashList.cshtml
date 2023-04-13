@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Nhacungcap>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
+}
+
+<div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between  flex-row-reverse">
+            <form asp-controller="Nhacungcap" asp-action="Index">
+                <button type="submit" class="btn btn-light ">
+                    Quay lại
+                </button>
+            </form>
+           
+    </div>
+
+    </div>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã</th>
+                <th>Tên nhà cung cấp</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th >Địa chỉ</th>
+                <th>Mã Số Thuế</th>
+                <th >Ghi chú</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+            <tr>
+                <td class="d-flex justify-content-center">@count</td>
+                <td>@item.Mancc</td>
+                <td>@item.Tenncc</td>
+                <td>@item.Email</td>
+                <td>@item.Sdt</td>
+                <td >@item.Diachi</td>
+                <td>@item.Masothue</td>
+                <td class="d-none">@item.Idncc</td>
+
+
+                <td>
+                    <form asp-controller="Nhacungcap" asp-action="ReStore">
+                        <input name="id" value="@item.Idncc" class="d-none" type="text">
+
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-unlock text-white"></i>
+                        </button>
+                    </form>
+
+                </td>
+                @{ count++; }
+            </tr>
+
+
+            }
+
+
+        </tbody>
+    </table>
+

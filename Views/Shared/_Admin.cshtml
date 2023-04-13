@@ -58,8 +58,8 @@
                     <li><a href="/Khachhang/Index">Khách hàng</a></li>
                     <li><a href="/Nganhang/Index">Ngân hàng</a></li>
                     <li><a href="/Hinhthucthanhtoan/Index">Hình thức thanh toán</a></li>
-                    <li><a href="/Phieuthuno/Idex">Phiếu Thu Nợ</a></li>
-                    <li><a href="/Phieutrano/Index">Phiếu Trả Nợ</a></li>
+                    <li><a href="/Phieuthunokh/Index">Phiếu Thu Nợ</a></li>
+                    <li><a href="/Phieutranoncc/Index">Phiếu Trả Nợ</a></li>
 
                 </ul>
             </li>
@@ -73,8 +73,8 @@
                 </div>
                 <ul class="sub-menu">
                     <li><a class="link_name" href="#">Quản lý</a></li>
-                    <li><a href="#">Phiếu Nhập kho</a></li>
-                    <li><a href="#">Phiếu Xuất Kho</a></li>
+                    <li><a href="/Phieunhapkho/Index">Phiếu Nhập kho</a></li>
+                    <li><a href="/Dondathang/Index">Phiếu Xuất Kho</a></li>
                 </ul>
             </li>
             <li>
@@ -117,7 +117,10 @@
                     <div class="name-job">
                         <!-- <div class="profile_name">HSHOP</div> -->
                     </div>
-                    <i class='bx bx-log-out'></i>
+                    <form asp-action="Logout" asp-controller="Access">
+                        <button type="submit" style="border:none"> <i class='bx bx-log-out'></i></button>
+                    </form>
+                   
                 </div>
             </li>
         </ul>

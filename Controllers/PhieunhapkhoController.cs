@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElectronicsStore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicsStore.Controllers
 {
+    [Authorize]
+
     public class PhieunhapkhoController : Controller
     {
         private readonly ElectronicsStoreContext _context;
@@ -21,25 +24,26 @@ namespace ElectronicsStore.Controllers
         // GET: Phieunhapkho
         public async Task<IActionResult> Index()
         {
+            var electronicsStoreContext = await _context.Phieunhapkho.Where(a => a.Active == 1).Include(p => p.IdnccNavigation).Include(p => p.IdnvNavigation).ToListAsync();
+
             ViewBag.Head = "Quản Lý Phiếu Nhập Kho";
-
-            var electronicsStoreContext = _context.Phieunhapkho.Where(a => a.Active == 1).Include(p => p.IdnccNavigation).Include(p => p.IdnvNavigation);
-            return View(await electronicsStoreContext.ToListAsync());
-
+            ViewData["Nhanvien"] = await _context.Nhanvien.Where(a => a.Active == 1).ToListAsync();
+            ViewData["Nhacungcap"] = await _context.Nhacungcap.Where(a => a.Active == 1).ToListAsync();
+            return View(electronicsStoreContext);
         }
         public async Task<IActionResult> TrashList(int id)
         {
-            ViewBag.Head = "Khôi Phục Phiếu Nhập Kho";
+            var electronicsStoreContext = await _context.Phieunhapkho.Where(a => a.Active == 0).Include(p => p.IdnccNavigation).Include(p => p.IdnvNavigation).ToListAsync();
 
-            var electronicsStoreContext = _context.Phieunhapkho.Where(a => a.Active == 0).Include(p => p.IdnccNavigation).Include(p => p.IdnvNavigation);
-            return View(await electronicsStoreContext.ToListAsync());
+            ViewBag.Head = "Khôi Phục Phiếu Phiếu Nhập Kho";
+            return View(electronicsStoreContext);
         }
         public async Task<IActionResult> ReStore(int id)
         {
-            var Phieunhapkho = await _context.Phieunhapkho
+            var phieunhapkho = await _context.Phieunhapkho
                 .FirstOrDefaultAsync(m => m.Idpnk == id);
-            Phieunhapkho.Active = 1;
-            _context.Update(Phieunhapkho);
+            phieunhapkho.Active = 1;
+            _context.Update(phieunhapkho);
             await _context.SaveChangesAsync();
             return RedirectToAction("TrashList");
         }
@@ -53,7 +57,7 @@ namespace ElectronicsStore.Controllers
             }
 
             var phieunhapkho = await _context.Phieunhapkho
-                .Include(p => p.IdnccNavigation)
+                .Include(p => p.Idncc)
                 .Include(p => p.IdnvNavigation)
                 .FirstOrDefaultAsync(m => m.Idpnk == id);
             if (phieunhapkho == null)
@@ -67,8 +71,7 @@ namespace ElectronicsStore.Controllers
         // GET: Phieunhapkho/Create
         public IActionResult Create()
         {
-            ViewData["Idncc"] = new SelectList(_context.Nhacungcap, "Idncc", "Diachi");
-            ViewData["Idnv"] = new SelectList(_context.Nhanvien, "Idnv", "Diachi");
+
             return View();
         }
 
@@ -77,16 +80,25 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idpnk,Sophieu,Ngaylap,Sohd,Ngayhd,Ghichu,Active,Idncc,Idnv")] Phieunhapkho phieunhapkho)
+        public async Task<IActionResult> Create(Phieunhapkho phieunhapkho)
         {
             if (ModelState.IsValid)
             {
+                string employeeEmail = Request.Cookies["HienCaCookie"];
+                var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
+
+                phieunhapkho.Ngaylap = DateTime.Now;
+                if (phieunhapkho.Sophieu == null)
+                {
+                    phieunhapkho.Sophieu = "PNK" + nhanvien.Manv + '-' + ((phieunhapkho.Ngaylap).ToString()).Replace("/", "").Replace(" ", "");
+                }
+                phieunhapkho.Idnv = nhanvien.Idnv;
+                //Idnv từ đăng nhập
                 _context.Add(phieunhapkho);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Idncc"] = new SelectList(_context.Nhacungcap, "Idncc", "Diachi", phieunhapkho.Idncc);
-            ViewData["Idnv"] = new SelectList(_context.Nhanvien, "Idnv", "Diachi", phieunhapkho.Idnv);
+
             return View(phieunhapkho);
         }
 
@@ -103,8 +115,7 @@ namespace ElectronicsStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["Idncc"] = new SelectList(_context.Nhacungcap, "Idncc", "Diachi", phieunhapkho.Idncc);
-            ViewData["Idnv"] = new SelectList(_context.Nhanvien, "Idnv", "Diachi", phieunhapkho.Idnv);
+
             return View(phieunhapkho);
         }
 
@@ -113,9 +124,14 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( Phieunhapkho phieunhapkho)
+        public async Task<IActionResult> Edit(Phieunhapkho phieunhapkho)
         {
-            
+
+
+            string employeeEmail = Request.Cookies["HienCaCookie"];
+            var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
+            phieunhapkho.Idnv = nhanvien.Idnv;
+            phieunhapkho.Ngaylap = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -138,8 +154,7 @@ namespace ElectronicsStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Idncc"] = new SelectList(_context.Nhacungcap, "Idncc", "Diachi", phieunhapkho.Idncc);
-            ViewData["Idnv"] = new SelectList(_context.Nhanvien, "Idnv", "Diachi", phieunhapkho.Idnv);
+
             return View(phieunhapkho);
         }
 
@@ -152,7 +167,7 @@ namespace ElectronicsStore.Controllers
             }
 
             var phieunhapkho = await _context.Phieunhapkho
-                .Include(p => p.IdnccNavigation)
+                .Include(p => p.Idncc)
                 .Include(p => p.IdnvNavigation)
                 .FirstOrDefaultAsync(m => m.Idpnk == id);
             if (phieunhapkho == null)
