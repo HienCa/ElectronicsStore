@@ -31,12 +31,15 @@ namespace ElectronicsStore.Models
         public virtual DbSet<Nhomhh> Nhomhh { get; set; }
         public virtual DbSet<Noidungddh> Noidungddh { get; set; }
         public virtual DbSet<Noidungpnk> Noidungpnk { get; set; }
+        public virtual DbSet<Noidungpxk> Noidungpxk { get; set; }
         public virtual DbSet<Noidungthunoddh> Noidungthunoddh { get; set; }
+        public virtual DbSet<Noidungthunokh> Noidungthunokh { get; set; }
         public virtual DbSet<Noidungtranoncc> Noidungtranoncc { get; set; }
         public virtual DbSet<Nuosx> Nuosx { get; set; }
         public virtual DbSet<Phieunhapkho> Phieunhapkho { get; set; }
         public virtual DbSet<Phieuthunokh> Phieuthunokh { get; set; }
         public virtual DbSet<Phieutranoncc> Phieutranoncc { get; set; }
+        public virtual DbSet<Phieuxuatkho> Phieuxuatkho { get; set; }
         public virtual DbSet<Thuonghieu> Thuonghieu { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -190,10 +193,7 @@ namespace ElectronicsStore.Models
                     .HasColumnName("MAVL")
                     .HasMaxLength(255);
 
-                entity.Property(e => e.Mota)
-                    .IsRequired()
-                    .HasColumnName("MOTA")
-                    .HasMaxLength(4000);
+                entity.Property(e => e.Mota).HasColumnName("MOTA");
 
                 entity.Property(e => e.Tenvl)
                     .IsRequired()
@@ -576,6 +576,12 @@ namespace ElectronicsStore.Models
 
                 entity.Property(e => e.Dongia).HasColumnName("DONGIA");
 
+                entity.Property(e => e.Donvitinh)
+                    .IsRequired()
+                    .HasColumnName("DONVITINH")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Hansd)
                     .HasColumnName("HANSD")
                     .HasColumnType("date");
@@ -603,6 +609,48 @@ namespace ElectronicsStore.Models
                     .HasForeignKey(d => d.Idpnk)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKNOIDUNGPNK363708");
+            });
+
+            modelBuilder.Entity<Noidungpxk>(entity =>
+            {
+                entity.HasKey(e => new { e.Idndpxk, e.Idpxk, e.Idhh })
+                    .HasName("PK__NOIDUNGP__249494B6742CCB04");
+
+                entity.ToTable("NOIDUNGPXK");
+
+                entity.Property(e => e.Idndpxk)
+                    .HasColumnName("IDNDPXK")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Idpxk).HasColumnName("IDPXK");
+
+                entity.Property(e => e.Idhh).HasColumnName("IDHH");
+
+                entity.Property(e => e.Cktm).HasColumnName("CKTM");
+
+                entity.Property(e => e.Dongia).HasColumnName("DONGIA");
+
+                entity.Property(e => e.Donvitinh)
+                    .IsRequired()
+                    .HasColumnName("DONVITINH")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Soluong).HasColumnName("SOLUONG");
+
+                entity.Property(e => e.Vat).HasColumnName("VAT");
+
+                entity.HasOne(d => d.IdhhNavigation)
+                    .WithMany(p => p.Noidungpxk)
+                    .HasForeignKey(d => d.Idhh)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKNOIDUNGPXK226531");
+
+                entity.HasOne(d => d.IdpxkNavigation)
+                    .WithMany(p => p.Noidungpxk)
+                    .HasForeignKey(d => d.Idpxk)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKNOIDUNGPXK205950");
             });
 
             modelBuilder.Entity<Noidungthunoddh>(entity =>
@@ -641,6 +689,44 @@ namespace ElectronicsStore.Models
                     .HasForeignKey(d => d.Idptnkh)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKNOIDUNGTHU506148");
+            });
+
+            modelBuilder.Entity<Noidungthunokh>(entity =>
+            {
+                entity.HasKey(e => new { e.Idndtnkh, e.Idptnkh, e.Idpxk })
+                    .HasName("PK__NOIDUNGT__045AACC6636C958F");
+
+                entity.ToTable("NOIDUNGTHUNOKH");
+
+                entity.Property(e => e.Idndtnkh)
+                    .HasColumnName("IDNDTNKH")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Idptnkh).HasColumnName("IDPTNKH");
+
+                entity.Property(e => e.Idpxk).HasColumnName("IDPXK");
+
+                entity.Property(e => e.Ghichu)
+                    .HasColumnName("GHICHU")
+                    .HasMaxLength(4000);
+
+                entity.Property(e => e.Ngaythuno)
+                    .HasColumnName("NGAYTHUNO")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Sotien).HasColumnName("SOTIEN");
+
+                entity.HasOne(d => d.IdptnkhNavigation)
+                    .WithMany(p => p.Noidungthunokh)
+                    .HasForeignKey(d => d.Idptnkh)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKNOIDUNGTHU311955");
+
+                entity.HasOne(d => d.IdpxkNavigation)
+                    .WithMany(p => p.Noidungthunokh)
+                    .HasForeignKey(d => d.Idpxk)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKNOIDUNGTHU248276");
             });
 
             modelBuilder.Entity<Noidungtranoncc>(entity =>
@@ -838,6 +924,58 @@ namespace ElectronicsStore.Models
                     .HasForeignKey(d => d.Idnv)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FKPHIEUTRANO695999");
+            });
+
+            modelBuilder.Entity<Phieuxuatkho>(entity =>
+            {
+                entity.HasKey(e => e.Idpxk)
+                    .HasName("PK__PHIEUXUA__98FA1D5058BB7428");
+
+                entity.ToTable("PHIEUXUATKHO");
+
+                entity.Property(e => e.Idpxk)
+                    .HasColumnName("IDPXK")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Active)
+                    .HasColumnName("ACTIVE")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Ghichu)
+                    .HasColumnName("GHICHU")
+                    .HasMaxLength(4000);
+
+                entity.Property(e => e.Idkh).HasColumnName("IDKH");
+
+                entity.Property(e => e.Idnv).HasColumnName("IDNV");
+
+                entity.Property(e => e.Ngayhd)
+                    .HasColumnName("NGAYHD")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Ngaylap)
+                    .HasColumnName("NGAYLAP")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Sohd)
+                    .HasColumnName("SOHD")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Sophieu)
+                    .HasColumnName("SOPHIEU")
+                    .HasMaxLength(255);
+
+                entity.HasOne(d => d.IdkhNavigation)
+                    .WithMany(p => p.Phieuxuatkho)
+                    .HasForeignKey(d => d.Idkh)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKPHIEUXUATK935766");
+
+                entity.HasOne(d => d.IdnvNavigation)
+                    .WithMany(p => p.Phieuxuatkho)
+                    .HasForeignKey(d => d.Idnv)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKPHIEUXUATK390756");
             });
 
             modelBuilder.Entity<Thuonghieu>(entity =>

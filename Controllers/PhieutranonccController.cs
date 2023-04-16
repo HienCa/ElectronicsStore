@@ -81,7 +81,7 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Phieutranoncc phieutranoncc)
+        public async Task<IActionResult> Create(Phieutranoncc phieutranoncc, int Idpnk)
         {
             if (ModelState.IsValid)
             {
@@ -97,10 +97,52 @@ namespace ElectronicsStore.Controllers
                 //Idnv từ đăng nhập
                 _context.Add(phieutranoncc);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                TempData["SoPhieu"] = phieutranoncc.Sophieu;
+                var phieutrano = _context.Phieutranoncc.Where(e => (e.Idnv).Equals(nhanvien.Idnv)).Where(e => (e.Sophieu).Equals(phieutranoncc.Sophieu)).FirstOrDefault();
+
+                TempData["phieutrano"] = phieutrano.Idptnncc;
+                return RedirectToAction("Details", "Phieunhapkho", new { id = Idpnk });
+
             }
 
-            return View(phieutranoncc);
+            return RedirectToAction("Details", "Phieunhapkho", new { id = Idpnk });
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Actions(Noidungtranoncc noidungphieutrano, string action)
+        {
+            noidungphieutrano.Ngaytrano = DateTime.Now;
+
+            if (action == "addItem")
+            {
+
+                _context.Add(noidungphieutrano);
+                await _context.SaveChangesAsync();
+            }
+            if (action == "editItem")
+            {
+                var Phieutranoncc = await _context.Phieutranoncc.FindAsync(noidungphieutrano.Idptnncc);
+
+                noidungphieutrano.Ngaytrano = Phieutranoncc.Ngaylap;
+                _context.Update(noidungphieutrano);
+                await _context.SaveChangesAsync();
+            }
+            if (action == "deleteItem")
+            {
+                var Noidung = _context.Noidungtranoncc.Where(id=>id.Idndtnncc == noidungphieutrano.Idndtnncc).FirstOrDefault();
+                var phieutra = _context.Phieutranoncc.Where(id => id.Idptnncc == noidungphieutrano.Idptnncc).FirstOrDefault();
+
+                _context.Noidungtranoncc.Remove(Noidung);
+                _context.Phieutranoncc.Remove(phieutra);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Phieunhapkho", new { id = noidungphieutrano.Idpnk });
+
+
         }
 
         // GET: Phieutranoncc/Edit/5

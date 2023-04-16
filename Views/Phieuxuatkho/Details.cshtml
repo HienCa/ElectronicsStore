@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ElectronicsStore.Models.Noidungpnk>
+﻿@model IEnumerable<ElectronicsStore.Models.Noidungpxk>
 
 @using ElectronicsStore.Models;
 
@@ -7,29 +7,28 @@
     ElectronicsStoreContext _context = new ElectronicsStoreContext();
 
 
-    //int id = ViewBag.Idpnk;
-    Phieunhapkho phieunhapkho = TempData["Phieunhapkho"] as Phieunhapkho;
+    //int id = ViewBag.Idpxk;
+    Phieuxuatkho phieuxuatkho = TempData["Phieuxuatkho"] as Phieuxuatkho;
 
     List<Hanghoa> vatlieu = _context.Hanghoa.Where(active => active.Active == 1).ToList();
     List<Nhacungcap> nhacungcap = _context.Nhacungcap.Where(n => n.Active == 1).ToList();
 
-    //List<Phieutranoncc> phieutranoncc = _context.Phieutranoncc.Where(n => n.Active == 1).ToList();
-    //List<Hinhthucthanhtoan> httt = _context.Hinhthucthanhtoan.Where(n => n.Active == 1).ToList();
+
 
 
 }
 
 <ul class="tabs row text-center">
-    <li class="tab-link  col-md-6 current" data-tab="tab-1">Nội Dung Phiếu Nhập #@phieunhapkho.Sophieu</li>
+    <li class="tab-link  col-md-6 current" data-tab="tab-1">Nội Dung Phiếu Nhập #@phieuxuatkho.Sophieu</li>
 
-    <li class="tab-link  col-md-6" data-tab="tab-2">Trả Nợ Nhà Cung Cấp #@phieunhapkho.Sophieu</li>
+    <li class="tab-link  col-md-6" data-tab="tab-2">Trả Nợ Nhà Cung Cấp #@phieuxuatkho.Sophieu</li>
 
 </ul>
 <div id="tab-1" class="tab-content current">
-    <form id="formNDPNK" asp-action="Actions" asp-controller="Phieunhapkho" method="post">
-        <input id="Idndpnk" name="phieunhap" type="hidden" />
+    <form id="formNDPNK" asp-action="Actions" asp-controller="Phieuxuatkho" method="post">
+        <input id="Idndpxk" name="phieunhap" type="hidden" />
 
-        <input type="hidden" name="Idpnk" id="Idpnk" value="@phieunhapkho.Idpnk" />
+        <input type="hidden" name="Idpxk" id="Idpxk" value="@phieuxuatkho.Idpxk" />
         <input id="Thue" type="hidden" />
 
         <div class="bg-light p-1 border border-secondary rounded ">
@@ -41,7 +40,7 @@
                             Số phiếu
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input readonly type="text" value="@phieunhapkho.Sophieu" class="form-control">
+                            <textarea readonly type="text" value="@phieuxuatkho.Sophieu" class="form-control" style="height:40px">@phieuxuatkho.Sophieu</textarea>
                         </div>
                     </div>
                 </div>
@@ -51,15 +50,15 @@
                             Ngày Nhập
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            @if (phieunhapkho.Ngayhd != null)
+                            @if (phieuxuatkho.Ngayhd != null)
                             {
-                                DateTime Ngaylap = phieunhapkho.Ngaylap;
+                                DateTime Ngaylap = phieuxuatkho.Ngaylap;
                                 <input readonly class="form-control" value="@Ngaylap.ToString("dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture)" />
 
                             }
                             else
                             {
-                                <input readonly value="@phieunhapkho.Ngaylap" class="form-control" />
+                                <input readonly value="@phieuxuatkho.Ngaylap" class="form-control" />
                             }
                         </div>
                     </div>
@@ -67,18 +66,11 @@
                 <div class="col-md-6 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-2 col-sm-12">
-                            Nhà CC
+                            Tên khách
                         </div>
                         <div class="col-md-10 col-sm-12">
-                            @*<select id="multipleSelect"name="@phieunhapkho.Idncc" placeholder="Chọn vật liệu muốn nhập kho" data-search="true"
-                                        data-silent-initial-value-set="true">
-                                    @foreach (var item in nhacungcap)
-                                    {
-                                        <option value="@item.Idncc">@item.Tenncc</option>
-                                    }
 
-                                </select>*@
-                            <input readonly value="@phieunhapkho.IdnccNavigation.Tenncc" class="form-control" />
+                            <input readonly value="@phieuxuatkho.IdkhNavigation.Tenkh" class="form-control" />
 
                         </div>
                     </div>
@@ -93,7 +85,7 @@
                             Số HĐ
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input readonly type="text" value="@phieunhapkho.Sohd" class="form-control">
+                            <input readonly type="text" value="@phieuxuatkho.Sohd" class="form-control">
 
                         </div>
                     </div>
@@ -104,15 +96,15 @@
                             Ngày HĐ
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            @if (phieunhapkho.Ngayhd != null)
+                            @if (phieuxuatkho.Ngayhd != null)
                             {
-                                DateTime Ngayhd = (DateTime)phieunhapkho.Ngayhd;
+                                DateTime Ngayhd = (DateTime)phieuxuatkho.Ngayhd;
                                 <input readonly class="form-control" value="@Ngayhd.ToString("dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture)" />
 
                             }
                             else
                             {
-                                <input readonly class="form-control" value="@phieunhapkho.Ngayhd" />
+                                <input readonly class="form-control" value="@phieuxuatkho.Ngayhd" />
                             }
                         </div>
                     </div>
@@ -123,7 +115,7 @@
                             Ghi Chú
                         </div>
                         <div class="col-md-10 col-sm-12">
-                            <textarea readonly value="@phieunhapkho.Ghichu" id="" row="" style="height:40px;" class="form-control"></textarea>
+                            <textarea readonly value="@phieuxuatkho.Ghichu" id="" row="" style="height:40px;" class="form-control"></textarea>
                         </div>
                     </div>
                 </div>
@@ -135,7 +127,7 @@
                 <div class="col-md-6 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-2 col-sm-12">
-                            Tên hàng
+                            Hàng hóa
                         </div>
                         <div class="col-md-10 col-sm-12">
                             <select id="multipleSelect" name="Idhh" class="Idhh" placeholder="Chọn hãng sản xuất " data-search="true" style="max-width:100%"
@@ -143,92 +135,79 @@
 
                                 @foreach (var item in vatlieu)
                                 {
-                                    <option value="@item.Idhh">@item.Tenvl</option>
+                                    <option class="hh" value="@item.Idhh">@item.Mavl-@item.Tenvl</option>
                                 }
 
                             </select>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            Số Lô
+                            Hiện có
                         </div>
                         <div class="col-md-8 col-sm-12">
-
-                            <input type="text" name="Solo" id="Solo" class="form-control" required>
-
+                            <input id="CountCurrent" type="number" readonly class="form-control" name="" value="" />
 
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
-                        <div class="col-md-3 col-sm-12">
-                            ĐV Tính
+                        <div class="col-md-4 col-sm-12">
+                            SL Xuất
                         </div>
-                        <div class="col-md-9 col-sm-12">
-                            <select class="Donvitinh" id="Donvitinh" name="Donvitinh">
-                                <option selected value="Cái">Cái</option>
-                                <option value="Thùng">Thùng</option>
-                                <option value="Chiếc">Chiếc</option>
-                                <option value="Bao">Bao</option>
-                                <option value="Gói">Gói</option>
-                                <option value="Hộp">Hộp</option>
-                            </select>
+                        <div class="col-md-8 col-sm-12">
+                            <input type="number" name="Soluong" readonly id="Soluong" placeholder="0.0" class="form-control" value="1" required>
+
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="row mt-2">
-                <div class="col-md-3 col-sm-12">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-md-4 col-sm-12">
-                            VAT
-                        </div>
-                        <div class="col-md-8 col-sm-12">
-                            <input id="Vat" type="number" class="form-control" name="VAT" value="0" />
 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-12">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-md-4 col-sm-12">
-                            Số Lượng
-                        </div>
-                        <div class="col-md-8 col-sm-12">
-                            @*<input type="number" id="Count" onblur="myFunction()" placeholder="0.0" class="form-control">*@
-                            <input type="number" name="Soluong" id="Soluong" placeholder="0.0" class="form-control" value="1" required>
-
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
                             Đơn Giá
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            @*<input class="form-control" placeholder="0.0" inputmode="numeric" type="text" id="Gianhap" oninput="ValidateIsNaN()"
-                                onblur="myFunction()" />*@
-                            <input class="form-control" placeholder="0.0" name="Dongia" inputmode="numeric" type="number" id="Dongia" required />
+                            <input class="form-control" placeholder="0.0" readonly name="Dongia" inputmode="numeric" type="number" id="Dongia" required />
 
 
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
-                        <div class="col-md-3 col-sm-12">
+                        <div class="col-md-4 col-sm-12">
+                            VAT
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <input id="Vat" type="number" class="form-control" readonly name="VAT" value="0" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-4 col-sm-12">
+                            %CKTM
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <input class="form-control" type="number" name="Cktm" readonly id="Cktm" placeholder="Chiếc khấu" value="0" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-4 col-sm-12">
                             Th.Tiền
                         </div>
-                        <div class="col-md-9 col-sm-12">
+                        <div class="col-md-8 col-sm-12">
                             <input class="form-control" readonly type="text" id="Thanhtien" placeholder="0.0" />
                             <input class="form-control" type="hidden" id="Tongtien" />
                         </div>
@@ -237,23 +216,26 @@
 
             </div>
             <div class="row mt-2">
+
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            %CKTM
+
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input class="form-control" type="number" name="Cktm" id="Cktm" placeholder="Chiếc khấu" value="0" />
+
+
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            Ngày SX
+
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input type="date" name="Ngaysx" id="Ngaysx" class="form-control" />
+
 
                         </div>
                     </div>
@@ -261,17 +243,17 @@
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            Hạn SD
+
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input type="date" id="Hansd" name="Hansd" class="form-control">
+
 
                         </div>
                     </div>
                 </div>
 
                 <input id="action" type="hidden" name="action" value="addItem" />
-                <input id="IdndpnkE" type="hidden" name="Idndpnk" />
+                <input id="IdndpxkE" type="hidden" name="Idndpxk" />
                 <div class="col-md-3 col-sm-12">
                     <button type="submit" style="float: right;" disabled class="btn btn-primary w-50" id="btnAdd">Thêm</button>
                     <div class="d-flex">
@@ -295,15 +277,12 @@
             <thead>
                 <tr class="text-center">
                     <th style="max-width:30px" class="text-center">STT</th>
-                    <th scope="col">Số lô</th>
-                    <th scope="col">Tên hàng hóa</th>
+                    <th scope="col">Mã HH</th>
+                    <th class="d-none" scope="col">Tên hàng hóa</th>
                     <th scope="col">Số lượng</th>
                     <th scope="col">Đơn giá</th>
                     <th scope="col">Thành tiền</th>
 
-                    <th class="d-none" scope="col"></th>
-                    <th class="d-none" scope="col"></th>
-                    <th class="d-none" scope="col"></th>
                     <th class="d-none" scope="col"></th>
                     <th class="d-none" scope="col"></th>
                     <th class="d-none" scope="col"></th>
@@ -321,13 +300,13 @@
                 double totalCKTM = 0;
                 double totalTotal = 0;
             }
-            @foreach (var item in TempData["Noidungpnk"] as List<Noidungpnk>)
+            @foreach (var item in TempData["Noidungpxk"] as List<Noidungpxk>)
             {
                 <tr class="tr">
                     <td class="d-flex justify-content-center">@count</td>
-                    <td>@item.Solo</td>
-                    <td style="width:500px">@item.IdhhNavigation.Tenvl</td>
-                    <td>@item.Soluong</td>
+                    <td>@item.IdhhNavigation.Mavl</td>
+                    <td class="d-none" style="width:500px">@item.IdhhNavigation.Tenvl</td>
+                    <td class="d-flex justify-content-center"><input id="SoluongEE" oninput="changeCountNDPXK(this)" class="form-control" type="number" min="1" value="@item.Soluong" style="width:80px" /></td>
 
                     @{
 
@@ -352,48 +331,25 @@
                     <td>@ThanhTien</td>
 
 
-                    @if (item.Ngaysx != null)
-                    {
-                        DateTime Ngaysx = (DateTime)item.Ngaysx;
-                        <td class="d-none">@Ngaysx.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                        <td class="d-none">@Ngaysx.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</td>
-                    }
-                    else
-                    {
-                        <td class="d-none"></td>
-                        <td class="d-none"></td>
-                    }
-
-                    @if (item.Hansd != null)
-                    {
-                        DateTime Hansd = (DateTime)item.Hansd;
-
-                        <td class="d-none">@Hansd.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                        <td class="d-none">@Hansd.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</td>
-                    }
-                    else
-                    {
-                        <td class="d-none"></td>
-                        <td class="d-none"></td>
-                    }
 
                     <td class="d-none">@item.Donvitinh</td>
-                    <td class="d-none">@item.Idndpnk</td>
+                    <td class="d-none">@item.Idndpxk</td>
                     <td class="d-none">@item.Vat</td>
                     <td class="d-none">@item.Cktm</td>
                     <td class="d-none">@item.IdhhNavigation.Idhh</td>
                     <td class="d-none">@item.IdhhNavigation.Hinhanh</td>
+                    <td class="d-none">@item.Soluong</td>
 
 
                     <td class="table-td-center d-flex " style="justify-content:space-evenly;align-items:center">
 
-                        <a class="btn  btn-sm btn-warning " onclick="onEdit(this)"><i class="fas fa-edit text-white"></i></a>
+                        <button onclick="submitChangeCountNDPXK()" id="ChangeCountNDPXKBtn" class="btn btn-warning" disabled><i class="fas fa-edit text-white"></i></button>
 
                         <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
                                 data-target="#detailModal">
                             <i class="fas fa-info-circle text-white"></i>
                         </button>
-                        <button data-id="@item.Idhh" data-code="@item.IdhhNavigation.Mavl" data-name="@item.IdhhNavigation.Tenvl" type="button" class="btn btn-danger deleteBtn"
+                        <button data-id="@item.Idndpxk" data-code="@item.IdhhNavigation.Mavl" data-name="@item.IdhhNavigation.Tenvl" type="button" class="btn btn-danger deleteBtn"
                                 data-toggle="modal" data-target="#deleteModal">
                             <i class="fas fa-trash text-white"></i>
                         </button>
@@ -404,7 +360,13 @@
         </table>
     </div>
 
-
+    <form id="formUpdateSLNDPX" asp-controller="Phieuxuatkho" asp-action="Actions">
+        <input id="SoluongE" min="1" name="Soluong" type="hidden" />
+        <input id="IdndpxkEE" name="Idndpxk" type="hidden" value="" />
+        <input id="DongiaE" name="Dongia" type="hidden" value="" />
+        <input id="IdhhE" name="Idhh" type="hidden" value="" />
+        <input name="action" value="editItem" type="hidden" />
+    </form>
     <div class="bg-light p-1 border border-secondary rounded mt-2">
         <div class="row">
             <div class="col-md-3 col-sm-12">
@@ -454,9 +416,9 @@
 
     </div>
     <div class=" mt-2 d-flex flex-row-reverse">
-        <input type="submit" id="TaoPhieu" value="Tạo phiếu" class="btn btn-primary w-25" />
+        <input type="submit" disabled id="" value="Tạo phiếu" class="btn btn-primary w-25" />
 
-        <a href="/Phieunhapkho/Index" class="btn btn-light w-25">Quay lại</a>
+        <a href="/Phieuxuatkho/Index" class="btn btn-light w-25">Quay lại</a>
 
 
     </div>
@@ -464,7 +426,7 @@
 <div id="tab-2" class="tab-content ">
 
     <div class="bg-light p-1 mb-2  border border-secondary rounded">
-        <form id="" asp-action="Create" asp-controller="Phieutranoncc">
+        <form id="" asp-action="Create" asp-controller="Phieuthunokh">
 
             <div class="row">
                 <div class="col-md-3 col-sm-12">
@@ -473,7 +435,7 @@
                             Hình thức
                         </div>
                         <div class="col-md-9 col-sm-12">
-                            <select id="selectDefault" name="Idhttt">
+                            <select name="Idhttt">
 
                                 @foreach (var item in TempData["Hinhthucthanhtoan"] as List<Hinhthucthanhtoan>)
                                 {
@@ -497,8 +459,9 @@
                 </div>
                 <div class="col-md-1 col-sm-12">
 
-                    <input type="hidden" name="Idpnk" value="@phieunhapkho.Idpnk" />
-                    <input type="hidden" name="SoPhieu" value="@phieunhapkho.Sophieu" />
+                    <input type="hidden" name="Idpxk" value="@phieuxuatkho.Idpxk" />
+                    <input type="hidden" name="SoPhieu" value="@phieuxuatkho.Sophieu" />
+
                     <input type="submit" id="TaoPhieu" value="Tạo Phiếu" class="btn btn-primary w-100" />
 
                 </div>
@@ -506,10 +469,10 @@
         </form>
     </div>
 
-    <form asp-action="Actions" asp-controller="Phieutranoncc" id="formNDTNNCC" method="post">
-        <input type="hidden" name="Idpnk" value="@phieunhapkho.Idpnk" />
-        <input type="hidden" name="Idndtnncc" id="Idndtnncc" />
-        <input type="hidden" name="Idptnncc" id="Idptnncc" value="@TempData["phieutrano"]" />
+    <form asp-action="Actions" asp-controller="Phieuthunokh" id="formNDTNNCC" method="post">
+        <input type="hidden" name="Idpxk" value="@phieuxuatkho.Idpxk" />
+        <input type="hidden" name="Idndtnkh" id="Idndtnkh" />
+        <input type="hidden" name="Idptnkh" id="Idptnkh" value="@TempData["phieuthuno"]" />
         <input type="hidden" name="action" id="actionNDPTN" value="addItem" />
 
         <div class="bg-light p-1  border border-secondary rounded">
@@ -589,12 +552,12 @@
                     double TienDaThanhToan = 0;
 
                 }
-                @foreach (var item in TempData["Noidungtranoncc"] as List<Noidungtranoncc>)
+                @foreach (var item in TempData["Noidungthunokh"] as List<Noidungthunokh>)
                 {
                     <tr class="trNDTNNCC">
                         <td class="d-flex justify-content-center">@countt</td>
 
-                        <th scope="row">@item.IdpnkNavigation.IdnvNavigation.Tennv</th>
+                        <th scope="row">@item.IdpxkNavigation.IdnvNavigation.Tennv</th>
                         @{
                             var Sotien = String.Format("{0:0,0}", (@item.Sotien));
 
@@ -602,9 +565,9 @@
 
                         }
                         <td>@Sotien</td>
-                        @if (item.Ngaytrano != null)
+                        @if (item.Ngaythuno != null)
                         {
-                            DateTime Ngaytn = (DateTime)item.Ngaytrano;
+                            DateTime Ngaytn = (DateTime)item.Ngaythuno;
                             <td>@Ngaytn.ToString("dd/MM/yyyy hh:mm:ss tt", System.Globalization.CultureInfo.InvariantCulture)</td>
                             <td class="d-none">@Ngaytn.ToString("yyyy-MM-dd HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture)</td>
 
@@ -614,13 +577,13 @@
                             <td></td>
                             <td class="d-none"></td>
                         }
-                        <td style="display:none">@item.Idndtnncc</td>
+                        <td style="display:none">@item.Idndtnkh</td>
                         <td>@item.Ghichu</td>
-                        <td class="d-none sophieu">@item.IdptnnccNavigation.Sophieu</td>
-                        <td class="d-none idptnncc">@item.IdptnnccNavigation.Idptnncc</td>
+                        <td class="d-none sophieu">@item.IdptnkhNavigation.Sophieu</td>
+                        <td class="d-none idptnncc">@item.IdptnkhNavigation.Idptnkh</td>
                         <td class="table-td-center d-flex " style="justify-content:space-evenly;align-items:center">
                             <a class="btn btn-warning " onclick="onEditNdptnncc(this)"><i class="fas fa-edit text-white"></i></a>
-                            <button data-id="@item.Idndtnncc" data-code="@item.IdptnnccNavigation.Sophieu" data-name="@item.Sotien" type="button" class="btn btn-danger deleteBtn2"
+                            <button data-id="@item.Idndtnkh" data-code="@item.IdptnkhNavigation.Sophieu" data-name="@item.Sotien" type="button" class="btn btn-danger deleteBtn2"
                                     data-toggle="modal" data-target="#deleteModal2">
                                 <i class="fas fa-trash text-white"></i>
                             </button>
@@ -669,51 +632,30 @@
                                     </div>
                                     <div class="col-md-10 col-sm-12">
 
+                                        <textarea class="form-control" id="MahhD" disabled></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Tên HH
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+
                                         <textarea class="form-control" id="TenhhD" disabled></textarea>
 
                                     </div>
                                 </div>
                             </div>
+
+
+
                             <div class="col-md-12 col-sm-12 mt-2">
                                 <div class="row d-flex align-items-center">
                                     <div class="col-md-2 col-sm-12">
-                                        Số lô
-                                    </div>
-                                    <div class="col-md-10 col-sm-12">
-
-                                        <input class="form-control" id="SoloD" disabled />
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 mt-2">
-                                <div class="row d-flex align-items-center">
-                                    <div class="col-md-2 col-sm-12">
-                                        Ngày SX
-                                    </div>
-                                    <div class="col-md-10 col-sm-12">
-                                        <input id="NgaysxD" maxlength="12" disabled
-                                               type="text" class="form-control">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 mt-2">
-                                <div class="row d-flex align-items-center">
-                                    <div class="col-md-2 col-sm-12">
-                                        Hạn SD
-                                    </div>
-                                    <div class="col-md-10 col-sm-12">
-                                        <input id="HansdD" name="" disabled
-                                               type="text" class="form-control">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 col-sm-12 mt-2">
-                                <div class="row d-flex align-items-center">
-                                    <div class="col-md-2 col-sm-12">
-                                        ĐVT
+                                        Đơn vị tính
                                     </div>
                                     <div class="col-md-10 col-sm-12">
 
@@ -808,8 +750,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Phieunhapkho" asp-action="Actions" method="post">
-                <input id="idD" name="id" class="d-none" type="text">
+            <form asp-controller="Phieuxuatkho" asp-action="Actions" method="post">
+                <input id="idD" name="Idndpxk" class="d-none" type="text">
                 <input name="action" value="deleteItem" class="d-none" type="hidden">
 
                 <div class="modal-body">
@@ -836,9 +778,9 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Phieutranoncc" asp-action="Actions" method="post">
-                <input id="IdndtnnccNDPTN" name="Idndtnncc" class="d-none" type="text">
-                <input id="" name="Idpnk" value="@phieunhapkho.Idpnk" class="d-none" type="text">
+            <form asp-controller="Phieuthunokh" asp-action="Actions" method="post">
+                <input id="IdndtnkhNDPTN" name="Idndtnkh" class="d-none" type="text">
+                <input id="" name="Idpxk" value="@phieuxuatkho.Idpxk" class="d-none" type="text">
                 <input name="action" value="deleteItem" class="d-none" type="hidden">
 
                 <div class="modal-body">
@@ -855,15 +797,30 @@
 
 </div>
 
+<form id="formFillter" method="post" asp-action="Fillter" asp-controller="Phieuxuatkho">
+    <input type="hidden" id="IdhhFillter" name="Idhh" />
+    <input type="hidden" id="IdpxkFillter" name="Idpxk" value="@phieuxuatkho.Idpxk" />
+</form>
 
 
-@{ 
+@{
     var SoTienConNo = @totalTotal - @TienDaThanhToan;
 }
 <input type="hidden" value="@totalTotal" id="SoTienCanThanhToan" />
 <input type="hidden" value="@TienDaThanhToan" id="SoTienDaThanhToan" />
 <input type="hidden" value="@SoTienConNo" id="SoTienConNo" />
 
+@*<script>
+        window.addEventListener("load", function () {
+            if (document.getElementById("SoTienConNo") > 0) {
+                document.getElementById("TaoPhieu").disabled = false;
+            } else {
+                document.getElementById("TaoPhieu").disabled = true;
+
+            }
+        })
+
+    </script>*@
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
@@ -872,27 +829,24 @@
     function showModalDetail(row) {
         // Trích xuất thông tin từ các ô trong dòng được click
         const cells = row.parentElement.parentElement.cells;
-        const Solo = cells[1].textContent;
+        const Mahh = cells[1].textContent;
         const Tenhh = cells[2].textContent;
-        const Soluong = cells[3].textContent;
+        //const Soluong = cells[3].textContent;
         let Dongia = cells[4].textContent;
         let Thanhtien = cells[5].textContent;
-        const Ngaysx = cells[6].textContent;
-        const Hansd = cells[8].textContent;
-        const Donvitinh = cells[10].textContent;
-        const Vat = cells[12].textContent;
-        const Cktm = cells[13].textContent;
-        const Hinhanh = cells[15].textContent;
+        const Donvitinh = cells[6].textContent;
+        const Idndpxk = cells[7].textContent;
+        const Vat = cells[8].textContent;
+        const Cktm = cells[9].textContent;
+        const Idhh = cells[10].textContent;
+        const Hinhanh = cells[11].textContent;
+        const Soluong = cells[12].textContent;
 
-        console.log(cells[14].textContent)
-        console.log(cells[15].textContent)
-        document.querySelector('#SoloD').value = Solo;
+        document.querySelector('#MahhD').value = Mahh;
         document.querySelector('#TenhhD').value = Tenhh;
         document.querySelector('#SoluongD').value = Soluong;
         document.querySelector('#DongiaD').value = Dongia;
         document.querySelector('#ThanhtienD').value = Thanhtien + " VNĐ";
-        document.querySelector('#NgaysxD').value = Ngaysx;
-        document.querySelector('#HansdD').value = Hansd;
         document.querySelector('#DonvitinhD').value = Donvitinh;
         document.querySelector('#VatD').value = Vat + "%";
         document.querySelector('#CktmD').value = Cktm + "%";
@@ -914,82 +868,13 @@
         document.getElementById("idD").value = id;
         // Hiển thị thông tin của dòng lên modal xác nhận
         var modal = $(this);
-        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có mã là ' + code + ' và tên là ' + name);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa nội dung phiếu có mã hàng hóa là ' + code + ' và tên hàng hóa là ' + name);
     });
 
 </script>
 
 
-<script>
 
-
-    const formNDPNK = document.getElementById("formNDPNK");
-    const btnAdd = document.getElementById("btnAdd");
-    const btnUpdate = document.getElementById("btnUpdate");
-    const btnCancel = document.getElementById("btnCancel");
-
-
-
-    formNDPNK.addEventListener('change', function () {
-        if (formNDPNK.checkValidity()) {
-            btnAdd.disabled = false;
-        } else {
-            btnAdd.disabled = true;
-        }
-    });
-
-
-    formNDPNK.addEventListener('change', function () {
-        if (formNDPNK.checkValidity()) {
-            btnUpdate.disabled = false;
-        } else {
-            btnUpdate.disabled = true;
-        }
-    });
-
-
-    btnCancel.addEventListener("click", function () {
-        btnUpdate.style.display = "none";
-        btnCancel.style.display = "none";
-        btnAdd.style.display = "block";
-    })
-    btnUpdate.addEventListener("click", function () {
-        btnAdd.style.display = "block";
-        btnUpdate.style.display = "none";
-        btnCancel.style.display = "none";
-
-    })
-
-    function onEdit(td) {
-
-        selectedRow = td.parentElement.parentElement;
-        document.getElementById("Solo").value = selectedRow.cells[1].innerHTML;
-
-        //document.getElementById("Idhh").value = selectedRow.cells[2].innerHTML;
-        document.getElementById("Soluong").value = selectedRow.cells[3].innerHTML;
-
-        let priceFormated = (selectedRow.cells[4].innerHTML).replaceAll(",", "");
-
-        document.getElementById("Dongia").value = priceFormated;
-        document.getElementById("Thanhtien").value = selectedRow.cells[5].innerHTML;
-
-        document.getElementById("Ngaysx").value = selectedRow.cells[7].innerHTML;
-        document.getElementById("Hansd").value = selectedRow.cells[9].innerHTML;
-        document.getElementById("Donvitinh").value = selectedRow.cells[10].innerHTML;
-
-        document.getElementById("IdndpnkE").value = selectedRow.cells[11].innerHTML;
-        document.getElementById("Vat").value = selectedRow.cells[12].innerHTML;
-        document.getElementById("Cktm").value = selectedRow.cells[13].innerHTML;
-        document.querySelector(".Idhh").value = selectedRow.cells[14].innerHTML;
-
-
-        document.getElementById("action").value = "editItem";
-        btnAdd.style.display = "none";
-        btnUpdate.style.display = "block";
-        btnCancel.style.display = "block";
-
-    }
-</script>
 
 <script>
     function validateForm(form, saveButton) {
@@ -1076,14 +961,19 @@
     const SoTienDaThanhToan = document.getElementById("SoTienDaThanhToan");
     const SoTienConNo = document.getElementById("SoTienConNo");
     const SotienPhaiTra = document.getElementById("SotienPhaiTra");
+    const Idptnkh = document.getElementById("Idptnkh");
     SoTienMuonTra.addEventListener("input", function () {
-        if (parseFloat(SoTienMuonTra.value) > parseFloat(SoTienConNo.value) || SoTienMuonTra.value == "") {
+        if (parseFloat(SoTienMuonTra.value) > parseFloat(SoTienConNo.value) || SoTienMuonTra.value == "" || Idptnkh.value == "") {
             btnAddNdptn.disabled = true;
+            btnUpdateNdptn.disabled = true;
+
             SoTienMuonTra.style.border = "4px red solid";
             SoTienMuonTra.style.color = "red";
         }
         else {
             btnAddNdptn.disabled = false;
+            btnUpdateNdptn.disabled = false;
+
             SoTienMuonTra.style.border = "4px green solid";
             SoTienMuonTra.style.color = "green";
 
@@ -1109,24 +999,7 @@
         }
     });
 
-    btnCancelNdptn.addEventListener("click", function () {
-        btnUpdateNdptn.style.display = "none";
-        btnCancelNdptn.style.display = "none";
-        btnAddNdptn.style.display = "block";
-
-        document.getElementById("actionNDPTN").value = "addItem";
-        btnAddNdptn.disabled = true;
-        document.getElementById("SotienNdpt").value = "";
-        document.getElementById("SoPhieuTra").value = "";
-        document.getElementById("GhichuNdpt").value = "";
-        SoTienMuonTra.style.border = "4px #ced4da solid";
-    })
-    btnUpdateNdptn.addEventListener("click", function () {
-        btnAddNdptn.style.display = "block";
-        btnUpdateNdptn.style.display = "none";
-        btnCancelNdptn.style.display = "none";
-
-    })
+ 
 
 
 </script>
@@ -1138,17 +1011,32 @@
         selectedRow = td.parentElement.parentElement;
         document.getElementById("SotienNdpt").value = (selectedRow.cells[2].innerHTML).replaceAll(",", "");
 
-        document.getElementById("Idndtnncc").value = selectedRow.cells[5].innerHTML;
+        document.getElementById("Idndtnkh").value = selectedRow.cells[5].innerHTML;
         document.getElementById("GhichuNdpt").value = selectedRow.cells[6].innerHTML;
         document.getElementById("SoPhieuTra").value = selectedRow.cells[7].innerHTML;
-        document.getElementById("Idptnncc").value = selectedRow.cells[8].innerHTML;
-        SoTienMuonTra.style.border = "4px green solid";
+        document.getElementById("Idptnkh").value = selectedRow.cells[8].innerHTML;
 
         document.getElementById("actionNDPTN").value = "editItem"
         btnAddNdptn.style.display = "none";
         btnUpdateNdptn.style.display = "block";
         btnCancelNdptn.style.display = "block";
+        SoTienMuonTra.style.border = "4px green solid";
 
+        //SoTienMuonTra.addEventListener("input", function () {
+        //    if (parseFloat(SoTienMuonTra.value) > parseFloat(SoTienConNo.value) - parseFloat(document.getElementById("SotienNdpt").value) || SoTienMuonTra.value == "") {
+        //        btnAddNdptn.disabled = true;
+        //        SoTienMuonTra.style.border = "4px red solid";
+        //        SoTienMuonTra.style.color = "red";
+        //    }
+        //    else {
+        //        btnAddNdptn.disabled = false;
+        //        SoTienMuonTra.style.border = "4px green solid";
+        //        SoTienMuonTra.style.color = "green";
+
+
+        //    }
+        //    SotienPhaiTra.innerText = "Cần trả thêm: " + VND.format(SoTienConNo.value);
+        //})
     }
     $('#deleteModal2').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
@@ -1156,7 +1044,7 @@
         var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
         var code = button.data('code');
         // Tiếp tục với các cột còn lại
-        document.getElementById("IdndtnnccNDPTN").value = id;
+        document.getElementById("IdndtnkhNDPTN").value = id;
         // Hiển thị thông tin của dòng lên modal xác nhận
         var modal = $(this);
         modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có số phiểu là ' + code + ' và số tiền là ' + VND.format(name));
@@ -1164,6 +1052,117 @@
 
 
 
-   
+
+
+</script>
+<script>
+
+    const formFillter = document.getElementById("formFillter");
+    const IdhhFillter = document.getElementById("IdhhFillter");
+    const IdpxkFillter = document.getElementById("IdpxkFillter");
+
+    const kk = document.querySelectorAll(".vscomp-option");
+    kk.forEach(function (h, index) {
+        h.addEventListener("click", function () {
+            //lấy data-value của thẻ div - giá trị trong thẻ select
+            IdhhFillter.value = h.dataset.value;
+            formFillter.submit();
+        })
+    })
+
+    window.addEventListener("load", function (e) {
+        let selectTagText = document.querySelector(".vscomp-value");
+        selectTagText.innerText = "--- Chọn linh kiện muốn xuất ---";
+    });
+</script>
+
+<script>
+    const formUpdateSLNDPX = document.getElementById("formUpdateSLNDPX");
+    const editSLNDPXBtn = document.getElementById("editSLNDPXBtn");
+    const ChangeCountNDPXKBtn = document.getElementById("ChangeCountNDPXKBtn");
+
+    function changeCountNDPXK(row) {
+        const cells = row.parentElement.parentElement.cells;
+        const Mahh = cells[1].textContent;
+        const Tenhh = cells[2].textContent;
+        //const Soluong = cells[3].textContent;
+        let Dongia = cells[4].textContent;
+        let Thanhtien = cells[5].textContent;
+        const Donvitinh = cells[6].textContent;
+        const Idndpxk = cells[7].textContent;
+        const Vat = cells[8].textContent;
+        const Cktm = cells[9].textContent;
+        const Idhh = cells[10].textContent;
+        const Hinhanh = cells[11].textContent;
+        const Soluong = cells[12].textContent;
+
+        document.querySelector('#IdndpxkEE').value = Idndpxk;
+        document.querySelector('#DongiaE').value = Dongia.replaceAll(",", "");
+        document.querySelector('#IdhhE').value = Idhh;
+        document.querySelector('#SoluongE').value = row.value;
+
+        row.parentNode.parentNode.querySelector("#ChangeCountNDPXKBtn").disabled = false;
+    }
+
+    function submitChangeCountNDPXK() {
+        formUpdateSLNDPX.submit();
+    }
+
+</script>
+<script>
+
+
+    const formNDPNK = document.getElementById("formNDPNK");
+    const btnAdd = document.getElementById("btnAdd");
+    const btnUpdate = document.getElementById("btnUpdate");
+    const btnCancel = document.getElementById("btnCancel");
+
+
+
+    formNDPNK.addEventListener('change', function () {
+        if (formNDPNK.checkValidity()) {
+            btnAdd.disabled = false;
+        } else {
+            btnAdd.disabled = true;
+        }
+    });
+
+
+    formNDPNK.addEventListener('change', function () {
+        if (formNDPNK.checkValidity()) {
+            btnUpdate.disabled = false;
+        } else {
+            btnUpdate.disabled = true;
+        }
+    });
+
+
+    btnCancelNdptn.addEventListener("click", function () {
+        btnUpdateNdptn.style.display = "none";
+        btnCancelNdptn.style.display = "none";
+        btnAddNdptn.style.display = "block";
+        console.log("ssssss")
+        document.getElementById("actionNDPTN").value = "addItem";
+        btnAddNdptn.disabled = true;
+        document.getElementById("SotienNdpt").value = "";
+        document.getElementById("SoPhieuTra").value = "";
+        document.getElementById("GhichuNdpt").value = "";
+        SoTienMuonTra.style.border = "4px #ced4da solid";
+
+
+    })
+    btnCancel.addEventListener("click", function () {
+        btnUpdate.style.display = "none";
+        btnCancel.style.display = "none";
+        btnAdd.style.display = "block";
+    })
+    btnUpdate.addEventListener("click", function () {
+        btnAdd.style.display = "block";
+        btnUpdate.style.display = "none";
+        btnCancel.style.display = "none";
+
+    })
+
+
 
 </script>

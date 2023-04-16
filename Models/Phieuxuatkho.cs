@@ -7,25 +7,27 @@ using System.Collections.Generic;
 
 namespace ElectronicsStore.Models
 {
-    public partial class Phieuthunokh
+    public partial class Phieuxuatkho
     {
-        public Phieuthunokh()
+        public Phieuxuatkho()
         {
-            Noidungthunoddh = new HashSet<Noidungthunoddh>();
+            Noidungpxk = new HashSet<Noidungpxk>();
             Noidungthunokh = new HashSet<Noidungthunokh>();
         }
 
-        public int Idptnkh { get; set; }
+        public int Idpxk { get; set; }
         public string Sophieu { get; set; }
         public DateTime Ngaylap { get; set; }
+        public string Sohd { get; set; }
+        public DateTime? Ngayhd { get; set; }
         public string Ghichu { get; set; }
         public int Active { get; set; }
-        public int Idhttt { get; set; }
         public int Idnv { get; set; }
+        public int Idkh { get; set; }
 
-        public virtual Hinhthucthanhtoan IdhtttNavigation { get; set; }
+        public virtual Khachhang IdkhNavigation { get; set; }
         public virtual Nhanvien IdnvNavigation { get; set; }
-        public virtual ICollection<Noidungthunoddh> Noidungthunoddh { get; set; }
+        public virtual ICollection<Noidungpxk> Noidungpxk { get; set; }
         public virtual ICollection<Noidungthunokh> Noidungthunokh { get; set; }
     }
 }

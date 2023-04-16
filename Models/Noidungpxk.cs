@@ -7,21 +7,18 @@ using System.Collections.Generic;
 
 namespace ElectronicsStore.Models
 {
-    public partial class Noidungpnk
+    public partial class Noidungpxk
     {
-        public int Idndpnk { get; set; }
+        public int Idndpxk { get; set; }
         public float Soluong { get; set; }
         public float Dongia { get; set; }
-        public string Solo { get; set; }
-        public DateTime? Ngaysx { get; set; }
-        public DateTime? Hansd { get; set; }
         public float? Vat { get; set; }
         public float? Cktm { get; set; }
+        public int Idpxk { get; set; }
         public int Idhh { get; set; }
-        public int Idpnk { get; set; }
         public string Donvitinh { get; set; }
 
         public virtual Hanghoa IdhhNavigation { get; set; }
-        public virtual Phieunhapkho IdpnkNavigation { get; set; }
+        public virtual Phieuxuatkho IdpxkNavigation { get; set; }
     }
 }

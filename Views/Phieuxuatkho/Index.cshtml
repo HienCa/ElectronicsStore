@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ElectronicsStore.Models.Phieunhapkho>
+﻿@model IEnumerable<ElectronicsStore.Models.Phieuxuatkho>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,9 +9,9 @@
 
     <div class="d-flex justify-content-between ">
         <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
-            Thêm mới phiếu nhập kho
+            Thêm mới phiếu xuất kho
         </button>
-        <form asp-controller="Phieunhapkho" asp-action="TrashList">
+        <form asp-controller="Phieuxuatkho" asp-action="TrashList">
             <button type="submit" class="btn btn-info">
                 <i class="fas fa-trash-restore"></i>
             </button>
@@ -25,7 +25,7 @@
             <th class="text-center">STT</th>
             <th>Số phiếu</th>
             <th>Nhân viên lập</th>
-            <th>Nhà cung cấp</th>
+            <th>Khách hàng</th>
             <th>Ngày lập</th>
             <th class="d-none">Số hóa đơn</th>
             <th class="d-none">Ngày hóa đơn</th>
@@ -47,13 +47,10 @@
                 <td class="d-flex justify-content-center">@count</td>
                 <td>@item.Sophieu</td>
                 <td>@item.IdnvNavigation.Tennv</td>
-                <td>@item.IdnccNavigation.Tenncc</td>
+                <td>@item.IdkhNavigation.Tenkh</td>
 
                 @{
                     DateTime Ngaylap = (DateTime)item.Ngaylap;
-
-
-
 
                 }
                 <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
@@ -69,9 +66,9 @@
                     <td class="d-none"></td>
                 }
                 <td class="d-none">@item.Ghichu</td>
-                <td class="d-none">@item.Idpnk</td>
+                <td class="d-none">@item.Idpxk</td>
                 <td class="d-none">@item.IdnvNavigation.Tennv</td>
-                <td class="d-none">@item.IdnccNavigation.Idncc</td>
+                <td class="d-none">@item.IdkhNavigation.Idkh</td>
 
 
                 <td>
@@ -83,12 +80,11 @@
                             data-target="#detailModal">
                         <i class="fas fa-info-circle text-white"></i>
                     </button>
-                    <button data-id="@item.Idpnk" data-code="@item.Sophieu" data-name="@item.IdnvNavigation.Tennv" data-name2="@item.IdnccNavigation.Tenncc" type="button" class="btn btn-danger deleteBtn"
+                    <button data-id="@item.Idpxk" data-code="@item.Sophieu" data-name="@item.IdnvNavigation.Tennv" data-name2="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
                             data-toggle="modal" data-target="#deleteModal">
                         <i class="fas fa-trash text-white"></i>
                     </button>
-                    <a class="btn btn-primary text-white" href="/Phieunhapkho/Details/@item.Idpnk">Nhập</a>
-
+                    <a class="btn btn-primary text-white" href="/Phieuxuatkho/Details/@item.Idpxk">Xuất</a>
                 </td>
                 @{ count++; }
             </tr>
@@ -111,7 +107,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formAdd" asp-controller="Phieunhapkho" asp-action="Create" method="post" enctype="multipart/form-data">
+            <form id="formAdd" asp-controller="Phieuxuatkho" asp-action="Create" method="post" enctype="multipart/form-data">
 
                 <div class="modal-body">
 
@@ -132,13 +128,13 @@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Nhà cung cấp
+                                    Khách hàng
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdnccA" name="Idncc">
-                                        @foreach (var item in @ViewData["Nhacungcap"] as List<Nhacungcap>)
+                                    <select class="form-control" id="IdkhA" name="Idkh">
+                                        @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
                                         {
-                                            <option value="@item.Idncc">@item.Mancc-@item.Tenncc</option>
+                                            <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
                                         }
                                     </select>
 
@@ -182,10 +178,10 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formEdit" asp-controller="Phieunhapkho" asp-action="Edit" method="post" enctype="multipart/form-data">
+            <form id="formEdit" asp-controller="Phieuxuatkho" asp-action="Edit" method="post" enctype="multipart/form-data">
 
                 <div class="modal-body">
-                    <input id="id" name="Idpnk" class="d-none" type="text">
+                    <input id="id" name="Idpxk" class="d-none" type="text">
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="row d-flex align-items-center">
@@ -203,13 +199,13 @@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Nhà cung cấp
+                                    Khách hàng
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdnccE" name="Idncc">
-                                        @foreach (var item in @ViewData["Nhacungcap"] as List<Nhacungcap>)
+                                    <select class="form-control" id="IdkhE" name="Idkh">
+                                        @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
                                         {
-                                            <option value="@item.Idncc">@item.Mancc-@item.Tenncc</option>
+                                            <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
                                         }
                                     </select>
 
@@ -274,11 +270,11 @@
                     <div class="col-md-12 col-sm-12 mt-2">
                         <div class="row d-flex align-items-center">
                             <div class="col-md-2 col-sm-12">
-                                Nhà cung cấp
+                                Khách hàng
                             </div>
                             <div class="col-md-10 col-sm-12">
 
-                                <input id="IdnccD" name="Idncc" disabled
+                                <input id="IdkhD" name="Idkh" disabled
                                        class="form-control">
                             </div>
                         </div>
@@ -366,7 +362,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form asp-controller="Phieunhapkho" asp-action="Delete" method="post">
+            <form asp-controller="Phieuxuatkho" asp-action="Delete" method="post">
                 <input id="idD" name="id" class="d-none" type="text">
 
                 <div class="modal-body">
@@ -456,21 +452,21 @@
         const cells = row.parentElement.parentElement.cells;
         const Sophieu = cells[1].textContent;
         const Tennv = cells[2].textContent;
-        const Tenncc = cells[3].textContent;
+        const Tenkh = cells[3].textContent;
         const Ngaylap = cells[4].textContent;
         const Sohd = cells[5].textContent;
 
         const Ngayhd = cells[6].textContent;
 
         const Ghichu = cells[7].textContent;
-        const Idpnk = cells[8].textContent;
+        const Idpxk = cells[8].textContent;
         const Idnv = cells[9].textContent;
-        const Idncc = cells[10].textContent;
+        const Idkh = cells[10].textContent;
 
         // Gán giá trị cho các input trong modal
         document.querySelector('#SophieuD').value = Sophieu;
         document.querySelector('#IdnvD').value = Tennv;
-        document.querySelector('#IdnccD').value = Tenncc;
+        document.querySelector('#IdkhD').value = Tenkh;
 
         document.querySelector('#NgaylapD').value = Ngaylap;
         document.querySelector('#SohdD').value = Sohd;
@@ -485,28 +481,28 @@
         const cells = row.parentElement.parentElement.cells;
         const Sophieu = cells[1].textContent;
         const Tennv = cells[2].textContent;
-        const Tenncc = cells[3].textContent;
+        const Tenkh = cells[3].textContent;
         const Ngaylap = cells[4].textContent;
         const Sohd = cells[5].textContent;
 
         const Ngayhd = cells[6].textContent;
 
         const Ghichu = cells[7].textContent;
-        const Idpnk = cells[8].textContent;
+        const Idpxk = cells[8].textContent;
         const Idnv = cells[9].textContent;
-        const Idncc = cells[10].textContent;
+        const Idkh = cells[10].textContent;
 
         // Gán giá trị cho các input trong modal
         document.querySelector('#SophieuE').value = Sophieu;
         //document.querySelector('#IdnvE').value = Idnv;
-        //document.querySelector('#IdnccE').value = Idncc;
+        //document.querySelector('#IdkhE').value = Idkh;
 
         //document.querySelector('#NgaylapE').value = Ngaylap;
         //document.querySelector('#SohdD').value = Sohd;
-        document.querySelector('#IdnccE').value = Idncc;
+        document.querySelector('#IdkhE').value = Idkh;
         document.querySelector('#GhichuE').value = Ghichu;
 
-        document.querySelector('#id').value = Idpnk;
+        document.querySelector('#id').value = Idpxk;
 
         // Hiển thị modal
         $('#editModal').modal('show');

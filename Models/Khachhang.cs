@@ -13,6 +13,7 @@ namespace ElectronicsStore.Models
         {
             Ctnganhangkh = new HashSet<Ctnganhangkh>();
             Dondathang = new HashSet<Dondathang>();
+            Phieuxuatkho = new HashSet<Phieuxuatkho>();
         }
 
         public int Idkh { get; set; }
@@ -35,5 +36,6 @@ namespace ElectronicsStore.Models
 
         public virtual ICollection<Ctnganhangkh> Ctnganhangkh { get; set; }
         public virtual ICollection<Dondathang> Dondathang { get; set; }
+        public virtual ICollection<Phieuxuatkho> Phieuxuatkho { get; set; }
     }
 }

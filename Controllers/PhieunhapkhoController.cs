@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicsStore.Controllers
 {
-    [Authorize]
+    //[Authorize]
 
     public class PhieunhapkhoController : Controller
     {
@@ -35,7 +35,7 @@ namespace ElectronicsStore.Controllers
         {
             var electronicsStoreContext = await _context.Phieunhapkho.Where(a => a.Active == 0).Include(p => p.IdnccNavigation).Include(p => p.IdnvNavigation).ToListAsync();
 
-            ViewBag.Head = "Khôi Phục Phiếu Phiếu Nhập Kho";
+            ViewBag.Head = "Khôi Phục Phiếu Nhập Kho";
             return View(electronicsStoreContext);
         }
         public async Task<IActionResult> ReStore(int id)
@@ -55,17 +55,27 @@ namespace ElectronicsStore.Controllers
             {
                 return NotFound();
             }
+            
+           
+            TempData["Noidungpnk"] = await _context.Noidungpnk
+               .Include(n => n.IdpnkNavigation).Include(n => n.IdpnkNavigation.IdnvNavigation)
+               .Include(n => n.IdhhNavigation)
+               .Where(pn => pn.Idpnk == id)
+               .ToListAsync();
+            TempData["Phieunhapkho"] = await _context.Phieunhapkho
+               .Include(p => p.IdnccNavigation)
+               .Include(p => p.IdnvNavigation)
+               .FirstOrDefaultAsync(m => m.Idpnk == id);
+            TempData["Hinhthucthanhtoan"] = await _context.Hinhthucthanhtoan.Where(a=>a.Active==1).ToListAsync();
 
-            var phieunhapkho = await _context.Phieunhapkho
-                .Include(p => p.Idncc)
-                .Include(p => p.IdnvNavigation)
-                .FirstOrDefaultAsync(m => m.Idpnk == id);
-            if (phieunhapkho == null)
-            {
-                return NotFound();
-            }
+            TempData["Noidungtranoncc"] = await _context.Noidungtranoncc
+               .Include(n => n.IdpnkNavigation).Include(n => n.IdpnkNavigation.IdnvNavigation)
+               .Include(n => n.IdptnnccNavigation)
+               .Where(pn => pn.Idpnk == id)
+               .ToListAsync();
 
-            return View(phieunhapkho);
+            
+            return View();
         }
 
         // GET: Phieunhapkho/Create
@@ -100,6 +110,35 @@ namespace ElectronicsStore.Controllers
             }
 
             return View(phieunhapkho);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Actions(Noidungpnk noidungphieunhapkho, string action)
+        {
+            if (ModelState.IsValid)
+            {
+                if (action == "addItem")
+                {
+                    _context.Add(noidungphieunhapkho);
+                    await _context.SaveChangesAsync();
+                }
+                if(action == "editItem")
+                {
+                    _context.Update(noidungphieunhapkho);
+                    await _context.SaveChangesAsync();
+                }
+                if (action == "deleteItem")
+                {
+                    var Noidungpnk = await _context.Noidungpnk.FindAsync(noidungphieunhapkho.Idndpnk);
+                    _context.Noidungpnk.Remove(Noidungpnk);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction("Details","Phieunhapkho", new { id=noidungphieunhapkho.Idpnk});
+            }
+
+            return RedirectToAction("Details", "Phieunhapkho", new { id = noidungphieunhapkho.Idpnk });
+
         }
 
         // GET: Phieunhapkho/Edit/5
@@ -194,5 +233,8 @@ namespace ElectronicsStore.Controllers
         {
             return _context.Phieunhapkho.Any(e => e.Idpnk == id);
         }
+
+
+        
     }
 }

@@ -242,3 +242,7 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Donda
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Dondathang\Edit.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Dondathang\Index.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Dondathang\TrashList.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\Details.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\Index.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\TrashList.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\Fillter.cshtml.g.cs

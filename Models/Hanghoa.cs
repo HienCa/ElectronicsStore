@@ -13,6 +13,7 @@ namespace ElectronicsStore.Models
         {
             Noidungddh = new HashSet<Noidungddh>();
             Noidungpnk = new HashSet<Noidungpnk>();
+            Noidungpxk = new HashSet<Noidungpxk>();
         }
 
         public int Idhh { get; set; }
@@ -36,5 +37,6 @@ namespace ElectronicsStore.Models
         public virtual Thuonghieu IdthNavigation { get; set; }
         public virtual ICollection<Noidungddh> Noidungddh { get; set; }
         public virtual ICollection<Noidungpnk> Noidungpnk { get; set; }
+        public virtual ICollection<Noidungpxk> Noidungpxk { get; set; }
     }
 }

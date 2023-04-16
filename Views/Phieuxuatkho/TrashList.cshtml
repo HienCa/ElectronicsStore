@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ElectronicsStore.Models.Phieunhapkho>
+﻿@model IEnumerable<ElectronicsStore.Models.Phieuxuatkho>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +7,7 @@
 
 <div class="d-flex justify-content-between mb-2">
     <div class="d-flex justify-content-between  flex-row-reverse">
-        <form asp-controller="Phieunhapkho" asp-action="Index">
+        <form asp-controller="Phieuxuatkho" asp-action="Index">
             <button type="submit" class="btn btn-light ">
                 Quay lại
             </button>
@@ -21,7 +21,8 @@
         <tr>
             <th class="text-center">STT</th>
             <th>Số phiếu</th>
-            <th>Nhà cung cấp</th>
+            <th>Khách hàng</th>
+
             <th>Nhân viên lập</th>
             <th>Ngày lập</th>
             <th>Số hóa đơn</th>
@@ -40,7 +41,7 @@
         <tr>
             <td class="d-flex justify-content-center">@count</td>
             <td>@item.Sophieu</td>
-            <td>@item.IdnccNavigation.Tenncc</td>
+            <td>@item.IdkhNavigation.Tenkh</td>
 
             <td>@item.IdnvNavigation.Tennv</td>
             @{
@@ -61,12 +62,12 @@
             }
             <td>@item.Ghichu</td>
 
-            <td class="d-none">@item.Idpnk</td>
+            <td class="d-none">@item.Idpxk</td>
 
 
             <td>
-                <form asp-controller="Phieunhapkho" asp-action="ReStore">
-                    <input name="id" value="@item.Idpnk" class="d-none" type="text">
+                <form asp-controller="Phieuxuatkho" asp-action="ReStore">
+                    <input name="id" value="@item.Idpxk" class="d-none" type="text">
 
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-unlock text-white"></i>

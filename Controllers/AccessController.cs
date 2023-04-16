@@ -153,7 +153,7 @@ namespace ElectronicsStore.Controllers
                 }
                 mailContent.Body = "<h1>From HienCa Production</h1><br/>" + message;
 
-               
+
                 Service.SendMailService c = new Service.SendMailService();
                 c.SendMail(mailContent);
 

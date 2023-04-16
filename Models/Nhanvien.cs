@@ -14,6 +14,7 @@ namespace ElectronicsStore.Models
             Phieunhapkho = new HashSet<Phieunhapkho>();
             Phieuthunokh = new HashSet<Phieuthunokh>();
             Phieutranoncc = new HashSet<Phieutranoncc>();
+            Phieuxuatkho = new HashSet<Phieuxuatkho>();
         }
 
         public int Idnv { get; set; }
@@ -36,5 +37,6 @@ namespace ElectronicsStore.Models
         public virtual ICollection<Phieunhapkho> Phieunhapkho { get; set; }
         public virtual ICollection<Phieuthunokh> Phieuthunokh { get; set; }
         public virtual ICollection<Phieutranoncc> Phieutranoncc { get; set; }
+        public virtual ICollection<Phieuxuatkho> Phieuxuatkho { get; set; }
     }
 }

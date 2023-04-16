@@ -81,26 +81,66 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Phieuthunokh phieuthunokh)
+        public async Task<IActionResult> Create(Phieuthunokh phieuthunokh, int Idpxk)
         {
-            if (ModelState.IsValid)
-            {
+           
                 string employeeEmail = Request.Cookies["HienCaCookie"];
                 var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
 
                 phieuthunokh.Ngaylap = DateTime.Now;
                 if (phieuthunokh.Sophieu == null)
                 {
-                    phieuthunokh.Sophieu = "PTN" + nhanvien.Manv +'-'+ ((phieuthunokh.Ngaylap).ToString()).Replace("/", "").Replace(" ", "");
+                    phieuthunokh.Sophieu = "PTN" + nhanvien.Manv + '-' + ((phieuthunokh.Ngaylap).ToString()).Replace("/", "").Replace(" ", "");
                 }
                 phieuthunokh.Idnv = nhanvien.Idnv;
                 //Idnv từ đăng nhập
                 _context.Add(phieuthunokh);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                TempData["SoPhieu"] = phieuthunokh.Sophieu;
+                var phieuthuno = _context.Phieuthunokh.Where(e => (e.Idnv).Equals(nhanvien.Idnv)).Where(e => (e.Sophieu).Equals(phieuthunokh.Sophieu)).FirstOrDefault();
+
+                TempData["phieuthuno"] = phieuthuno.Idptnkh;
+                return RedirectToAction("Details", "Phieuxuatkho", new { id = Idpxk });
+
+          
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Actions(Noidungthunokh noidungphieuthuno, string action)
+        {
+            noidungphieuthuno.Ngaythuno = DateTime.Now;
+
+            if (action == "addItem")
+            {
+
+                _context.Add(noidungphieuthuno);
+                noidungphieuthuno.Idndtnkh = 0;
+                await _context.SaveChangesAsync();
+            }
+            if (action == "editItem")
+            {
+                var Phieuthunokh = await _context.Phieuthunokh.FindAsync(noidungphieuthuno.Idptnkh);
+
+                noidungphieuthuno.Ngaythuno = Phieuthunokh.Ngaylap;
+                _context.Update(noidungphieuthuno);
+                await _context.SaveChangesAsync();
+            }
+            if (action == "deleteItem")
+            {
+                var Noidung = _context.Noidungthunokh.Where(id => id.Idndtnkh == noidungphieuthuno.Idndtnkh).FirstOrDefault();
+                var phieuthu = _context.Phieuthunokh.Where(id => id.Idptnkh == noidungphieuthuno.Idptnkh).FirstOrDefault();
+
+                _context.Noidungthunokh.Remove(Noidung);
+                _context.Phieuthunokh.Remove(phieuthu);
+                await _context.SaveChangesAsync();
             }
 
-            return View(phieuthunokh);
+            return RedirectToAction("Details", "Phieuxuatkho", new { id = noidungphieuthuno.Idpxk });
+
+
         }
 
         // GET: Phieuthunokh/Edit/5
