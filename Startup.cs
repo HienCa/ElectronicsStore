@@ -64,7 +64,7 @@ namespace ElectronicsStore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Phieuxuatkho}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

@@ -133,10 +133,10 @@ namespace ElectronicsStore.Controllers
             if (action == "deleteItem")
             {
                 var Noidung = _context.Noidungtranoncc.Where(id=>id.Idndtnncc == noidungphieutrano.Idndtnncc).FirstOrDefault();
-                var phieutra = _context.Phieutranoncc.Where(id => id.Idptnncc == noidungphieutrano.Idptnncc).FirstOrDefault();
+                //var phieutra = _context.Phieutranoncc.Where(id => id.Idptnncc == noidungphieutrano.Idptnncc).FirstOrDefault();
 
                 _context.Noidungtranoncc.Remove(Noidung);
-                _context.Phieutranoncc.Remove(phieutra);
+                //_context.Phieutranoncc.Remove(phieutra);
                 await _context.SaveChangesAsync();
             }
 

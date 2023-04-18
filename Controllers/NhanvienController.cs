@@ -111,7 +111,7 @@ namespace ElectronicsStore.Controllers
                 nv.Sdt = nhanvien.Sdt;
                 nv.Email = nhanvien.Email;
                 nv.Masothue = nhanvien.Masothue;
-                if (nv.Matkhau != "")
+                if (nhanvien.Matkhau != "")
                 {
                     nv.Matkhau = nhanvien.Matkhau;
 
@@ -155,7 +155,7 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( NhanvienViewModel nhanvien)
+        public async Task<IActionResult> Edit(NhanvienViewModel nhanvien)
         {
 
             if (ModelState.IsValid)
@@ -176,7 +176,7 @@ namespace ElectronicsStore.Controllers
                     nv.Sdt = nhanvien.Sdt;
                     nv.Email = nhanvien.Email;
                     nv.Masothue = nhanvien.Masothue;
-                    if (nv.Matkhau != "")
+                    if (nhanvien.Matkhau != "")
                     {
                         nv.Matkhau = nhanvien.Matkhau;
 
@@ -202,21 +202,32 @@ namespace ElectronicsStore.Controllers
 
                         nv.Hinhanh = UploadedFile(nhanvien);
                     }
+                    else
+                    {
+                        Nhanvien nhanvienH = _context.Nhanvien.Where(id => id.Idnv == nhanvien.Idnv).FirstOrDefault();
+                        nv.Hinhanh = nhanvienH.Hinhanh;
+                    }
 
                     _context.Update(nv);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                   
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (InvalidOperationException)
+                {
+                    return RedirectToAction(nameof(Index));
+
                 }
             }
             return RedirectToAction(nameof(Index));
 
         }
 
-    // GET: Nhanvien/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+        // GET: Nhanvien/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {

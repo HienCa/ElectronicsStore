@@ -20,11 +20,15 @@
 }
 
 <ul class="tabs row text-center">
+    @*<li class="tab-link  col-md-4 current tab-11" data-tab="tab-1">Lịch Sử Nhập #@phieunhapkho.Sophieu</li>*@
+
     <li class="tab-link  col-md-6 current" data-tab="tab-1">Nội Dung Phiếu Nhập #@phieunhapkho.Sophieu</li>
 
     <li class="tab-link  col-md-6" data-tab="tab-2">Trả Nợ Nhà Cung Cấp #@phieunhapkho.Sophieu</li>
 
 </ul>
+
+
 <div id="tab-1" class="tab-content current">
     <form id="formNDPNK" asp-action="Actions" asp-controller="Phieunhapkho" method="post">
         <input id="Idndpnk" name="phieunhap" type="hidden" />
@@ -250,10 +254,11 @@
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            Ngày SX
+                            @*Ngày SX*@
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input type="date" name="Ngaysx" id="Ngaysx" class="form-control" />
+                            @*<input type="date" name="Ngaysx" id="Ngaysx" class="form-control" />*@
+                            <input type="hidden" name="Ngaysx" id="Ngaysx" class="form-control" />
 
                         </div>
                     </div>
@@ -261,10 +266,11 @@
                 <div class="col-md-3 col-sm-12">
                     <div class="row d-flex align-items-center">
                         <div class="col-md-4 col-sm-12">
-                            Hạn SD
+                            @*Hạn SD*@
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input type="date" id="Hansd" name="Hansd" class="form-control">
+                            @*<input type="date" id="Hansd" name="Hansd" class="form-control">*@
+                            <input type="hidden" id="Hansd" name="Hansd" class="form-control">
 
                         </div>
                     </div>
@@ -326,11 +332,11 @@
                 <tr class="tr">
                     <td class="d-flex justify-content-center">@count</td>
                     <td>@item.Solo</td>
-                    <td style="width:500px">@item.IdhhNavigation.Tenvl</td>
+                    <td style="width:500px">@item.IdhhNavigation.Mavl-@item.IdhhNavigation.Tenvl</td>
                     <td>@item.Soluong</td>
 
                     @{
-
+                        count++;
                         var Amount = item.Soluong * item.Dongia;
                         var CKTM = (Amount * item.Cktm) / 100;
                         var VAT = ((Amount - CKTM) * item.Vat) / 100;
@@ -387,13 +393,13 @@
 
                     <td class="table-td-center d-flex " style="justify-content:space-evenly;align-items:center">
 
-                        <a class="btn  btn-sm btn-warning " onclick="onEdit(this)"><i class="fas fa-edit text-white"></i></a>
+                        <a class="btn  btn-warning " onclick="onEdit(this)"><i class="fas fa-edit text-white"></i></a>
 
                         <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
                                 data-target="#detailModal">
                             <i class="fas fa-info-circle text-white"></i>
                         </button>
-                        <button data-id="@item.Idhh" data-code="@item.IdhhNavigation.Mavl" data-name="@item.IdhhNavigation.Tenvl" type="button" class="btn btn-danger deleteBtn"
+                        <button data-id="@item.Idndpnk" data-code="@item.IdhhNavigation.Mavl" data-name="@item.IdhhNavigation.Tenvl" type="button" class="btn btn-danger deleteBtn"
                                 data-toggle="modal" data-target="#deleteModal">
                             <i class="fas fa-trash text-white"></i>
                         </button>
@@ -405,62 +411,9 @@
     </div>
 
 
-    <div class="bg-light p-1 border border-secondary rounded mt-2">
-        <div class="row">
-            <div class="col-md-3 col-sm-12">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-4 col-sm-12">
-                        Tiền hàng
-                    </div>
-                    <div class="col-md-8 col-sm-12">
-                        <input readonly id="totalAmountThuc" type="text" value="@String.Format("{0:0,0}", (totalAmount)) đ" placeholder="Tiền hàng" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-12">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-4 col-sm-12">
-                        Tiền thuế
-                    </div>
-                    <div class="col-md-8 col-sm-12">
-                        <input readonly id="" value="@String.Format("{0:0,0}", (totalVAT)) đ" type="text" placeholder="Tiền thuế" class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-12">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-4 col-sm-12">
-                        Tiền CK
-                    </div>
-                    <div class="col-md-8 col-sm-12">
-                        <input id="" readonly type="text" value="@String.Format("{0:0,0}", (totalCKTM)) đ" placeholder="Tiền chiếc khấu" class="form-control">
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-3 col-sm-12">
-                <div class="row d-flex align-items-center">
-                    <div class="col-md-3 col-sm-12">
-                        Th.Toán
-                    </div>
-                    <div class="col-md-9 col-sm-12">
-                        <input readonly id="" value="@String.Format("{0:0,0}", (totalTotal)) đ" placeholder="Thanh toán" class="form-control">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-    <div class=" mt-2 d-flex flex-row-reverse">
-        <input type="submit" id="TaoPhieu" value="Tạo phiếu" class="btn btn-primary w-25" />
-
-        <a href="/Phieunhapkho/Index" class="btn btn-light w-25">Quay lại</a>
-
-
-    </div>
 </div>
+
 <div id="tab-2" class="tab-content ">
 
     <div class="bg-light p-1 mb-2  border border-secondary rounded">
@@ -689,11 +642,11 @@
                             <div class="col-md-12 col-sm-12 mt-2">
                                 <div class="row d-flex align-items-center">
                                     <div class="col-md-2 col-sm-12">
-                                        Ngày SX
+                                        @*Ngày SX*@
                                     </div>
                                     <div class="col-md-10 col-sm-12">
                                         <input id="NgaysxD" maxlength="12" disabled
-                                               type="text" class="form-control">
+                                               type="hidden" class="form-control">
 
                                     </div>
                                 </div>
@@ -701,11 +654,11 @@
                             <div class="col-md-12 col-sm-12 mt-2">
                                 <div class="row d-flex align-items-center">
                                     <div class="col-md-2 col-sm-12">
-                                        Hạn SD
+                                        @*Hạn SD*@
                                     </div>
                                     <div class="col-md-10 col-sm-12">
                                         <input id="HansdD" name="" disabled
-                                               type="text" class="form-control">
+                                               type="hidden" class="form-control">
 
                                     </div>
                                 </div>
@@ -809,7 +762,8 @@
                 </button>
             </div>
             <form asp-controller="Phieunhapkho" asp-action="Actions" method="post">
-                <input id="idD" name="id" class="d-none" type="text">
+                <input id="idD" name="Idndpnk" class="d-none" type="text">
+                <input id="Idpnk" name="Idpnk" value="@phieunhapkho.Idpnk" class="d-none" type="text">
                 <input name="action" value="deleteItem" class="d-none" type="hidden">
 
                 <div class="modal-body">
@@ -857,7 +811,7 @@
 
 
 
-@{ 
+@{
     var SoTienConNo = @totalTotal - @TienDaThanhToan;
 }
 <input type="hidden" value="@totalTotal" id="SoTienCanThanhToan" />
@@ -1134,7 +1088,10 @@
 <script>
     //NỘI DUNG PHIẾU TRẢ
     function onEditNdptnncc(td) {
-
+        //document.getElementById("tab-1").classList.remove("current");
+        //document.querySelector(".tab-11").classList.remove("current");
+        //document.getElementById("tab-2").classList.add("current");
+        //document.querySelector(".tab-22").classList.add("current");
         selectedRow = td.parentElement.parentElement;
         document.getElementById("SotienNdpt").value = (selectedRow.cells[2].innerHTML).replaceAll(",", "");
 
@@ -1164,6 +1121,6 @@
 
 
 
-   
+
 
 </script>

@@ -1,0 +1,146 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Noidungpnk>
+
+@using ElectronicsStore.Models;
+
+@{
+    Layout = "_Layout";
+    ElectronicsStoreContext _context = new ElectronicsStoreContext();
+
+}
+<div class="row">
+    <div class="col-md-10 col-sm-12">
+
+        <div class="row" style="position:relative">
+
+            <form asp-action="Report" asp-controller="Report" method="post">
+
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="">Từ: </div>
+                        <input style="z-index:1" type="date" id="from" name="from" placeholder="Từ" class=" form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-around align-items-center">
+                        <div class="">Đến: </div>
+                        <input style="z-index:1" type="date" id="to" name="to" placeholder="Đến" class=" form-control" />
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary"><i  class="fas fa-file-excel"></i></button>
+                </div>
+                <input type="hidden" value="report" name="action" />
+             
+
+            </form>
+        </div>
+
+    </div>
+    <div class=" col-sm-12" style="position:absolute; left:750px">
+        <div class="row">
+
+            <form id="fromReport" asp-action="Report" asp-controller="Report" method="post">
+
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" id="search"><i class="fas fa-search"></i></button>
+                    <input type="hidden" id="toInput" name="to" placeholder="Đến" class=" form-control" />
+                    <input type="hidden" id="fromInput" name="from" placeholder="Từ" class=" form-control" />
+                    <input type="hidden" value="search" name="action" />
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-2">
+    <h2 class=" text-center text-danger">BÁO CÁO NHẬP, XUẤT, TỒN</h2>
+    @*<h5 class=" text-center text-danger">Tháng 02/2023</h5>*@
+    <div class="row text-center bg-light p-1" style="border-bottom:2px solid #ccc;border-top:2px solid #ccc">
+        <div class="col-1 pt-2" style="border-right:2px solid #ccc">Mã hàng</div>
+        <div class="col-2 pt-2" style="border-right:2px solid #ccc">Tên hàng hóa</div>
+        <div class="col-1 pt-2" style="border-right:2px solid #ccc">Đơn vị tính</div>
+        <div class="col-2" style="border-right:2px solid #ccc">
+            <div class="" style="border-bottom:2px solid #ccc">Tồn kho đầu kỳ</div>
+            <div class="row">
+                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                <div class="col-6">Thành tiền</div>
+            </div>
+        </div>
+        <div class="col-2" style="border-right:2px solid #ccc">
+            <div class="" style="border-bottom:2px solid #ccc">Nhập trong kỳ</div>
+            <div class="row">
+                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                <div class="col-6">Thành tiền</div>
+            </div>
+        </div>
+        <div class="col-2" style="border-right:2px solid #ccc">
+            <div class="" style="border-bottom:2px solid #ccc">Xuất trong kỳ</div>
+            <div class="row">
+                <div class="col-5" style="border-right:2px solid #ccc">Giá</div>
+                <div class="col-2" style="border-right:2px solid #ccc">SL</div>
+                <div class="col-5">Thành tiền</div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="" style="border-bottom:2px solid #ccc">Tồn kho cuối kỳ</div>
+            <div class="row">
+                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                <div class="col-6">Thành tiền</div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center p-1">
+        @*@foreach (var rp in TempData["Listreport"] as List<Report>)
+        {
+            <div class="col-1" style="border:2px solid #ccc">@rp.Mavl</div>
+            <div class="col-2" style="border:2px solid #ccc">@rp.Tenvl</div>
+            <div class="col-1" style="border:2px solid #ccc">@rp.Donvitinh</div>
+            <div class="col-2" style="border:2px solid #ccc">
+
+                <div class="row">
+                    <div class="col-6" style="border-right:2px solid #ccc">@rp.SLdauky</div>
+                    <div class="col-6">@rp.Tongtiendauky</div>
+                </div>
+            </div>
+            <div class="col-2" style="border:2px solid #ccc">
+
+                <div class="row">
+                    <div class="col-6" style="border-right:2px solid #ccc">@rp.SLnhaptrongky</div>
+                    <div class="col-6">@rp.Tongtiennhaptrongky</div>
+                </div>
+            </div>
+            <div class="col-2" style="border:2px solid #ccc">
+
+                <div class="row">
+                    <div class="col-2" style="border-right:2px solid #ccc">@rp.SLxuattrongky</div>
+                    <div class="col-5" style="border-right:2px solid #ccc">@rp.Giaxuattrongky</div>
+                    <div class="col-5">@rp.Tongtienxuattrongky</div>
+                </div>
+            </div>
+            <div class="col-2" style="border:2px solid #ccc">
+
+                <div class="row">
+                    <div class="col-6" style="border-right:2px solid #ccc">@rp.SLtoncuoiky</div>
+                    <div class="col-6">@rp.Tongtientoncuoiky</div>
+                </div>
+            </div>
+        }*@
+    </div>
+</div>
+
+<script>
+    let from = document.getElementById("from");
+    let to = document.getElementById("to");
+    let fromInput = document.getElementById("fromInput");
+    let toInput = document.getElementById("toInput");
+    let search = document.getElementById("search");
+    const fromReport = document.getElementById("fromReport");
+
+    search.addEventListener("click", function () {
+        fromInput.value = from.value;
+        toInput.value = to.value;
+        fromReport.submit();
+    })
+</script>

@@ -614,7 +614,7 @@ namespace ElectronicsStore.Models
             modelBuilder.Entity<Noidungpxk>(entity =>
             {
                 entity.HasKey(e => new { e.Idndpxk, e.Idpxk, e.Idhh })
-                    .HasName("PK__NOIDUNGP__249494B6742CCB04");
+                    .HasName("PK__NOIDUNGP__249494B6CB257D67");
 
                 entity.ToTable("NOIDUNGPXK");
 
@@ -629,12 +629,6 @@ namespace ElectronicsStore.Models
                 entity.Property(e => e.Cktm).HasColumnName("CKTM");
 
                 entity.Property(e => e.Dongia).HasColumnName("DONGIA");
-
-                entity.Property(e => e.Donvitinh)
-                    .IsRequired()
-                    .HasColumnName("DONVITINH")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.Soluong).HasColumnName("SOLUONG");
 
@@ -694,7 +688,7 @@ namespace ElectronicsStore.Models
             modelBuilder.Entity<Noidungthunokh>(entity =>
             {
                 entity.HasKey(e => new { e.Idndtnkh, e.Idptnkh, e.Idpxk })
-                    .HasName("PK__NOIDUNGT__045AACC6636C958F");
+                    .HasName("PK__NOIDUNGT__045AACC69D595EE8");
 
                 entity.ToTable("NOIDUNGTHUNOKH");
 
@@ -929,13 +923,11 @@ namespace ElectronicsStore.Models
             modelBuilder.Entity<Phieuxuatkho>(entity =>
             {
                 entity.HasKey(e => e.Idpxk)
-                    .HasName("PK__PHIEUXUA__98FA1D5058BB7428");
+                    .HasName("PK__PHIEUXUA__98FA1D50B7610995");
 
                 entity.ToTable("PHIEUXUATKHO");
 
-                entity.Property(e => e.Idpxk)
-                    .HasColumnName("IDPXK")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Idpxk).HasColumnName("IDPXK");
 
                 entity.Property(e => e.Active)
                     .HasColumnName("ACTIVE")

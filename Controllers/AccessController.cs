@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Cryptography;
 using ElectronicsStore.Models;
 using ElectronicsStore.ViewModel;
-
+//Scaffold-DbContext “Data Source=.;Initial Catalog=ElectronicsStore;Persist Security Info=True;User ID=sa;Password=sa”  Microsoft.EntityFrameworkCore.SQLServer -f –Output Models
 namespace ElectronicsStore.Controllers
 {
     public class AccessController : Controller

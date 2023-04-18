@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+          crossorigin="anonymous" />
+    <!-- ===== CSS ===== -->
+    <!-- ===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+
+    <link href="~/css/Index.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav>
+        <div class="nav-bar ">
+            <i class='bx bx-menu sidebarOpen'></i>
+            <span class="logo navLogo"><a href="/Home/Index">Electronics Store</a></span>
+            <div class="w-50">
+                <input type="text" class="form-control w-100" style="border:none" placeholder="Bạn tìm linh kiện gì...">
+
+            </div>
+            <div class="">
+                <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px;">
+                    <i class="fas fa-shipping-fast" style="color: #de0146"></i> Tra cứu đơn
+                </a>
+            </div>
+            <div class="menu ">
+                <div class="logo-toggle">
+                    <span class="logo"><a href="#">Electronics Store</a></span>
+                    <i class='bx bx-x siderbarClose'></i>
+                </div>
+                <div class="row">
+
+                    <!-- <div class="col-4">
+                        <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px;">
+                            <i class="fas fa-shipping-fast" style="color: #de0146"></i> Tra cứu đơn
+                        </a>
+                    </div> -->
+                    <!-- <div class="">
+                        <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px;"><i class="fas fa-phone-alt"
+                            style="color: #de0146"></i> Gọi mua</a>
+                    </div> -->
+                    <div class="col-12">
+                        <a href="/Home/Cart" class="bg-white p-2 text-dark" style="border-radius: 5px;">
+                            <i class="fas fa-cart-plus"
+                               style="color: #de0146"></i> Giỏ hàng
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="darkLight-searchBox">
+                <div class="dark-light">
+                    <i class='bx bx-moon moon'></i>
+                    <i class='bx bx-sun sun'></i>
+                </div>
+
+                <div class="searchBox">
+                    <div class="searchToggle">
+                        <i class='bx bx-x cancel'></i>
+                        <i class='bx bx-search search'></i>
+                    </div>
+
+                    <div class="search-field">
+                        <input type="text" placeholder="Nhập tên linh kiện...">
+                        <i class='bx bx-search'></i>
+                    </div>
+                </div>
+            </div>
+            <div class="text-white d-flex justify-content-center align-items-center">
+                <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> Tài khoản</span>
+            </div>
+        </div>
+    </nav>
+    @RenderBody()
+
+    <footer class="text-center text-lg-start bg-white text-muted mt-3">
+
+
+        <!-- Section: Links  -->
+        <section class="pt-3">
+            <div class="container text-center text-md-start mt-5">
+                <!-- Grid row -->
+                <div class="row mt-3">
+                    <!-- Grid column -->
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <!-- Content -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i> Electronics Store
+                        </h6>
+                        <p>
+                            Cảm Ơn !!!
+                        </p>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <!-- Links -->
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Sản Phẩm
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">Linh kiện điện tử</a>
+                        </p>
+
+                        <p>
+                            <a href="#!" class="text-reset">Main Board</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">Màn Hình</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">VGA</a>
+                        </p>
+                    </div>
+
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Trang liên quan
+                        </h6>
+                        <p>
+                            <a href="#!" class="text-reset">...</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">...</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">...</a>
+                        </p>
+                        <p>
+                            <a href="#!" class="text-reset">...</a>
+                        </p>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+                        <p><i class="fas fa-home me-3"></i> Bình Mỹ, Củ Chi, Hồ Chí Minh</p>
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            electronicsstore@gmail.com
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i> + 0384319202</p>
+                        <p><i class="fas fa-print me-3"></i> + 0384319203</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center p-4 " style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2023. Công ty cổ phần ElectronicsStore. GPDKKD: 0303217... do sở KH & ĐT TP.HCM cấp ngày dd/MM/yyyy.
+            GPMXH: 5-0-0/GP-BTTTT do Bộ Thông Tin và Truyền Thông cấp ngày dd/MM/yyyy.
+            Địa chỉ: 001A, Bình Mỹ, Củ Chi, TP.Hồ Chí Minh. Điện thoại: 028 38122001. Email:
+            cskh@ElectronicsStore.com. Chịu trách nhiệm nội dung: Nguyễn Văn Hiền.
+        </div>
+    </footer>
+    <script>
+
+        const body = document.querySelector("body"),
+            nav = document.querySelector("nav"),
+            modeToggle = document.querySelector(".dark-light"),
+            searchToggle = document.querySelector(".searchToggle"),
+            sidebarOpen = document.querySelector(".sidebarOpen"),
+            siderbarClose = document.querySelector(".siderbarClose");
+
+        let getMode = localStorage.getItem("mode");
+        if (getMode && getMode === "dark-mode") {
+            body.classList.add("dark");
+        }
+
+        // js code to toggle dark and light mode
+        modeToggle.addEventListener("click", () => {
+            modeToggle.classList.toggle("active");
+            body.classList.toggle("dark");
+
+            // js code to keep user selected mode even page refresh or file reopen
+            if (!body.classList.contains("dark")) {
+                localStorage.setItem("mode", "light-mode");
+            } else {
+                localStorage.setItem("mode", "dark-mode");
+            }
+        });
+
+        // js code to toggle search box
+        searchToggle.addEventListener("click", () => {
+            searchToggle.classList.toggle("active");
+        });
+
+
+        //   js code to toggle sidebar
+        sidebarOpen.addEventListener("click", () => {
+            nav.classList.add("active");
+        });
+
+        body.addEventListener("click", e => {
+            let clickedElm = e.target;
+
+            if (!clickedElm.classList.contains("sidebarOpen") && !clickedElm.classList.contains("menu")) {
+                nav.classList.remove("active");
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

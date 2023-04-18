@@ -246,3 +246,17 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieu
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\Index.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\TrashList.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\Fillter.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\contact.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\ClosedXML.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\Irony.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\SixLabors.Fonts.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\XLParser.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\ShowReport.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieuxuatkho\ShowReport.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\Report.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Cart.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Home.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Details.cshtml.g.cs

@@ -15,11 +15,11 @@ namespace ElectronicsStore.Controllers
     public class KhachhangController : Controller
     {
         private readonly ElectronicsStoreContext _context;
-        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IWebHostEnvironment webHostEkhironment;
         public KhachhangController(ElectronicsStoreContext context, IWebHostEnvironment webHost)
         {
             _context = context;
-            webHostEnvironment = webHost;
+            webHostEkhironment = webHost;
 
         }
         private string UploadedFile(KhachhangViewModel model)
@@ -28,7 +28,7 @@ namespace ElectronicsStore.Controllers
 
             if (model.Hinhanh != null)
             {
-                string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "Images");
+                string uploadsFolder = Path.Combine(webHostEkhironment.WebRootPath, "Images");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Hinhanh.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -43,7 +43,7 @@ namespace ElectronicsStore.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Head = "Quản Lý Khách Hàng";
-            ViewData["Nhanvien"]= await _context.Nhanvien.Where(a => a.Active == 1).ToListAsync();
+            ViewData["Nhanvien"] = await _context.Nhanvien.Where(a => a.Active == 1).ToListAsync();
 
             return View(await _context.Khachhang.Where(a => a.Active == 1).ToListAsync());
         }
@@ -98,35 +98,35 @@ namespace ElectronicsStore.Controllers
             {
 
                 //copy lại khachhang vì KhachhangViewModel không được gán bằng Khachhang
-                Khachhang nv = new Khachhang();
+                Khachhang kh = new Khachhang();
                 //lấy hình ảnh
-                nv.Hinhanh = uniqueFileName;
-                nv.Idkh = khachhang.Idkh;
-                nv.Makh = khachhang.Makh;
-                nv.Tenkh = khachhang.Tenkh;
-                nv.Cccd = khachhang.Cccd;
-                nv.Ngaysinh = khachhang.Ngaysinh;
-                nv.Gioitinh = khachhang.Gioitinh;
-                nv.Diachi = khachhang.Diachi;
-                nv.Sdt = khachhang.Sdt;
-                nv.Email = khachhang.Email;
-                nv.Masothue = khachhang.Masothue;
-                if (nv.Matkhau != "")
+                kh.Hinhanh = uniqueFileName;
+                kh.Idkh = khachhang.Idkh;
+                kh.Makh = khachhang.Makh;
+                kh.Tenkh = khachhang.Tenkh;
+                kh.Cccd = khachhang.Cccd;
+                kh.Ngaysinh = khachhang.Ngaysinh;
+                kh.Gioitinh = khachhang.Gioitinh;
+                kh.Diachi = khachhang.Diachi;
+                kh.Sdt = khachhang.Sdt;
+                kh.Email = khachhang.Email;
+                kh.Masothue = khachhang.Masothue;
+                if (khachhang.Matkhau != "")
                 {
-                    nv.Matkhau = khachhang.Matkhau;
+                    kh.Matkhau = khachhang.Matkhau;
 
                 }
                 else
                 {
-                    nv.Matkhau = "NV12345";
+                    kh.Matkhau = "NV12345";
 
                 }
-                nv.Ghichu = khachhang.Ghichu;
-                nv.Facebook = khachhang.Facebook;
-                nv.Zalo = khachhang.Zalo;
+                kh.Ghichu = khachhang.Ghichu;
+                kh.Facebook = khachhang.Facebook;
+                kh.Zalo = khachhang.Zalo;
 
-                nv.Active = 1;
-                _context.Add(nv);
+                kh.Active = 1;
+                _context.Add(kh);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -162,52 +162,63 @@ namespace ElectronicsStore.Controllers
             {
                 try
                 {
-                    Khachhang nv = new Khachhang();
+                    Khachhang kh = new Khachhang();
 
                     //lấy hình ảnh
-                    //nv.Hinhanh = uniqueFileName;
-                    nv.Idkh = khachhang.Idkh;
-                    nv.Makh = khachhang.Makh;
-                    nv.Tenkh = khachhang.Tenkh;
-                    nv.Cccd = khachhang.Cccd;
-                    nv.Ngaysinh = khachhang.Ngaysinh;
-                    nv.Gioitinh = khachhang.Gioitinh;
-                    nv.Diachi = khachhang.Diachi;
-                    nv.Sdt = khachhang.Sdt;
-                    nv.Email = khachhang.Email;
-                    nv.Masothue = khachhang.Masothue;
-                    if (nv.Matkhau != "")
+                    //kh.Hinhanh = uniqueFileName;
+                    kh.Idkh = khachhang.Idkh;
+                    kh.Makh = khachhang.Makh;
+                    kh.Tenkh = khachhang.Tenkh;
+                    kh.Cccd = khachhang.Cccd;
+                    kh.Ngaysinh = khachhang.Ngaysinh;
+                    kh.Gioitinh = khachhang.Gioitinh;
+                    kh.Diachi = khachhang.Diachi;
+                    kh.Sdt = khachhang.Sdt;
+                    kh.Email = khachhang.Email;
+                    kh.Masothue = khachhang.Masothue;
+                    if (khachhang.Matkhau != "")
                     {
-                        nv.Matkhau = khachhang.Matkhau;
+                        kh.Matkhau = khachhang.Matkhau;
 
                     }
                     else
                     {
-                        nv.Matkhau = "NV12345";
+                        kh.Matkhau = "NV12345";
 
                     }
-                    nv.Ghichu = khachhang.Ghichu;
-                    nv.Facebook = khachhang.Facebook;
-                    nv.Zalo = khachhang.Zalo;
+                    kh.Ghichu = khachhang.Ghichu;
+                    kh.Facebook = khachhang.Facebook;
+                    kh.Zalo = khachhang.Zalo;
 
-                    nv.Active = 1;
+                    kh.Active = 1;
 
                     if (khachhang.Hinhanh != null)
                     {
                         if (khachhang.ExistingImage != null)
                         {
-                            string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Images", khachhang.ExistingImage);
+                            string filePath = Path.Combine(webHostEkhironment.WebRootPath, "Images", khachhang.ExistingImage);
                             System.IO.File.Delete(filePath);
                         }
 
-                        nv.Hinhanh = UploadedFile(khachhang);
+                        kh.Hinhanh = UploadedFile(khachhang);
+                    }
+                    else
+                    {
+                        Khachhang khachhangH = _context.Khachhang.Where(id => id.Idkh == khachhang.Idkh).FirstOrDefault();
+                        kh.Hinhanh = khachhangH.Hinhanh;
                     }
 
-                    _context.Update(nv);
+                    _context.Update(kh);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (InvalidOperationException)
+                {
+                    return RedirectToAction(nameof(Index));
 
                 }
             }

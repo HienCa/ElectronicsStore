@@ -16,7 +16,6 @@ namespace ElectronicsStore.Models
         public float? Cktm { get; set; }
         public int Idpxk { get; set; }
         public int Idhh { get; set; }
-        public string Donvitinh { get; set; }
 
         public virtual Hanghoa IdhhNavigation { get; set; }
         public virtual Phieuxuatkho IdpxkNavigation { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ElectronicsStore.ViewModel;
+using System;
 using System.Collections.Generic;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
@@ -38,5 +39,10 @@ namespace ElectronicsStore.Models
         public virtual ICollection<Noidungddh> Noidungddh { get; set; }
         public virtual ICollection<Noidungpnk> Noidungpnk { get; set; }
         public virtual ICollection<Noidungpxk> Noidungpxk { get; set; }
+
+        internal object Select(Func<object, HanghoaViewModel> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

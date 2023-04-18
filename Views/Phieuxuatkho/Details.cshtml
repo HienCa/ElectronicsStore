@@ -306,7 +306,7 @@
                     <td class="d-flex justify-content-center">@count</td>
                     <td>@item.IdhhNavigation.Mavl</td>
                     <td class="d-none" style="width:500px">@item.IdhhNavigation.Tenvl</td>
-                    <td class="d-flex justify-content-center"><input id="SoluongEE" oninput="changeCountNDPXK(this)" class="form-control" type="number" min="1" value="@item.Soluong" style="width:80px" /></td>
+                    <td class="d-flex justify-content-center"><input id="SoluongEE" oninput="changeCountNDPXK(this)" class="form-control" type="number" min="1" value="@item.Soluong" max="" style="width:80px" /></td>
 
                     @{
 
@@ -332,7 +332,7 @@
 
 
 
-                    <td class="d-none">@item.Donvitinh</td>
+                    <td class="d-none">Cái</td>
                     <td class="d-none">@item.Idndpxk</td>
                     <td class="d-none">@item.Vat</td>
                     <td class="d-none">@item.Cktm</td>
@@ -364,6 +364,8 @@
         <input id="SoluongE" min="1" name="Soluong" type="hidden" />
         <input id="IdndpxkEE" name="Idndpxk" type="hidden" value="" />
         <input id="DongiaE" name="Dongia" type="hidden" value="" />
+        <input id="" name="Idpxk" type="hidden" value="@phieuxuatkho.Idpxk" />
+
         <input id="IdhhE" name="Idhh" type="hidden" value="" />
         <input name="action" value="editItem" type="hidden" />
     </form>

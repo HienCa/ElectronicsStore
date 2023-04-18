@@ -8,7 +8,7 @@
 
 
     //int id = ViewBag.Idpxk;
-    Phieuxuatkho phieuxuatkho = TempData["Phieuxuatkho"] as Phieuxuatkho;
+    Phieuxuatkho phieuxuatkho = ViewData["Phieuxuatkho"] as Phieuxuatkho;
 
     List<Hanghoa> vatlieu = _context.Hanghoa.Where(active => active.Active == 1).ToList();
     List<Nhacungcap> nhacungcap = _context.Nhacungcap.Where(n => n.Active == 1).ToList();
@@ -140,22 +140,41 @@
                     int counttt = 1;
 
                 }
-                @foreach (var item in TempData["HanghoaCanXuat"] as List<Noidungpnk>)
+                @foreach (var item in ViewData["HanghoaCanXuat"] as List<Noidungpnk>)
                 {
-                    <tr class="tr">
-                        <td class="d-flex justify-content-center">@counttt</td>
-                        <td>@item.Solo</td>
-                        <td>@item.IdhhNavigation.Mavl</td>
-                        <td>@item.IdhhNavigation.Tenvl</td>
-                        @{
-                            DateTime Ngaysx = (DateTime)item.Ngaysx;
-                            DateTime Hansd = (DateTime)item.Hansd;
+            <tr class="tr">
+                <td class="d-flex justify-content-center">@counttt</td>
+                <td>@item.Solo</td>
+                <td>@item.IdhhNavigation.Mavl</td>
+                <td>@item.IdhhNavigation.Tenvl</td>
 
-                        }
-                        <td>@item.Soluong</td>
+                <td>@item.Soluong</td>
+                @{
+              
+                    if (item.Ngaysx != null)
+                    {
+                        DateTime Ngaysx = (DateTime)item.Ngaysx;
                         <td>@Ngaysx.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    if (item.Ngaysx != null)
+                    {
+                        DateTime Hansd = (DateTime)item.Hansd;
                         <td>@Hansd.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                    </tr>
+
+                    }
+                    else
+                    {
+                        <td></td>
+
+                    }
+
+                }
+            </tr>
                 }
             </table>
         </div>
@@ -186,7 +205,7 @@
                             Hiện có
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input id="CountCurrent" type="number" readonly class="form-control" name="" value="@TempData["SoLuongCon"]" />
+                            <input id="CountCurrent" type="number" readonly class="form-control" name="" value="@ViewData["SoLuongCon"]" />
 
                         </div>
                     </div>
@@ -197,7 +216,7 @@
                             SL Xuất
                         </div>
                         <div class="col-md-8 col-sm-12">
-                            <input type="number" name="Soluong" id="Soluongcanxuat" placeholder="0.0" class="form-control" min="1" value="1" required max="@TempData["SoLuongCon"]">
+                            <input type="number" name="Soluong" id="Soluongcanxuat" placeholder="0.0" class="form-control" min="1" value="1" required max="@ViewData["SoLuongCon"]">
 
                         </div>
                     </div>
@@ -207,7 +226,7 @@
 
             <div class="row mt-2">
                 @{
-                    Hanghoa hanghoa = TempData["ThongTinHanghoa"] as Hanghoa;
+                    Hanghoa hanghoa = ViewData["ThongTinHanghoa"] as Hanghoa;
                     var Giagoc = String.Format("{0:0,0}", (hanghoa.Giaban));
                     var Giakm = String.Format("{0:0,0}", (hanghoa.Giakm));
                     var tongtienmacdinh = String.Format("{0:0,0}", (hanghoa.Giaban * 1));
@@ -365,13 +384,13 @@
                 double totalCKTM = 0;
                 double totalTotal = 0;
             }
-            @foreach (var item in TempData["Noidungpxk"] as List<Noidungpxk>)
+            @foreach (var item in ViewData["Noidungpxk"] as List<Noidungpxk>)
             {
                 <tr class="tr">
                     <td class="d-flex justify-content-center">@count</td>
                     <td>@item.IdhhNavigation.Mavl</td>
                     <td class="d-none" style="width:500px">@item.IdhhNavigation.Tenvl</td>
-                    <td class="d-flex justify-content-center"><input id="" oninput="changeCountNDPXK(this)" class="form-control SoluongEE" type="number" min="1" value="@item.Soluong" style="width:80px" /></td>
+                    <td class="d-flex justify-content-center"><input id="" oninput="changeCountNDPXK(this)" class="form-control SoluongEE" type="number" min="1"  value="@item.Soluong" max="@ViewData["SoLuongCon"]" style="width:80px" /></td>
 
                     @{
 
@@ -397,7 +416,7 @@
 
 
 
-                    <td class="d-none">@item.Donvitinh</td>
+                    <td class="d-none">Cái</td>
                     <td class="d-none">@item.Idndpxk</td>
                     <td class="d-none">@item.Vat</td>
                     <td class="d-none">@item.Cktm</td>
@@ -429,6 +448,7 @@
         <input id="SoluongE" min="1" name="Soluong" type="hidden" />
         <input id="IdndpxkEE" name="Idndpxk" type="hidden" value="" />
         <input id="DongiaE" name="Dongia" type="hidden" value="" />
+        <input id="" name="Idpxk" type="hidden" value="@phieuxuatkho.Idpxk" />
         <input id="IdhhE" name="Idhh" type="hidden" value="" />
         <input name="action" value="editItem" type="hidden" />
     </form>
@@ -502,7 +522,7 @@
                         <div class="col-md-9 col-sm-12">
                             <select name="Idhttt">
 
-                                @foreach (var item in TempData["Hinhthucthanhtoan"] as List<Hinhthucthanhtoan>)
+                                @foreach (var item in ViewData["Hinhthucthanhtoan"] as List<Hinhthucthanhtoan>)
                                 {
                                     <option value="@item.Idhttt">@item.Tenhttt</option>
                                 }
@@ -536,7 +556,7 @@
     <form asp-action="Actions" asp-controller="Phieuthunokh" id="formNDTNNCC" method="post">
         <input type="hidden" name="Idpxk" value="@phieuxuatkho.Idpxk" />
         <input type="hidden" name="Idndtnkh" id="Idndtnkh" />
-        <input type="hidden" name="Idptnkh" id="Idptnkh" value="@TempData["phieuthuno"]" />
+        <input type="hidden" name="Idptnkh" id="Idptnkh" value="@ViewData["phieuthuno"]" />
         <input type="hidden" name="action" id="actionNDPTN" value="addItem" />
 
         <div class="bg-light p-1  border border-secondary rounded">
@@ -559,9 +579,9 @@
                             P.Trả
                         </div>
                         <div class="col-md-9 col-sm-12">
-                            @if (TempData["SoPhieu"] != null)
+                            @if (ViewData["SoPhieu"] != null)
                             {
-                                <textarea id="SoPhieuTra" readonly style="height:40px;" value="" name="" class="form-control">@TempData["SoPhieu"]</textarea>
+                                <textarea id="SoPhieuTra" readonly style="height:40px;" value="" name="" class="form-control">@ViewData["SoPhieu"]</textarea>
                             }
                             else
                             {
@@ -616,7 +636,7 @@
                     double TienDaThanhToan = 0;
 
                 }
-                @foreach (var item in TempData["Noidungthunokh"] as List<Noidungthunokh>)
+                @foreach (var item in ViewData["Noidungthunokh"] as List<Noidungthunokh>)
                 {
                     <tr class="trNDTNNCC">
                         <td class="d-flex justify-content-center">@countt</td>

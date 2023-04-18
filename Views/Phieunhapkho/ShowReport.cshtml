@@ -1,0 +1,189 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Noidungpnk>
+
+@using ElectronicsStore.Models;
+
+@{
+    Layout = "_Admin";
+    ElectronicsStoreContext _context = new ElectronicsStoreContext();
+    List<Hanghoa> hanghoa = _context.Hanghoa.Where(V => V.Active == 1).ToList();
+}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="position: relative;" class="card-box table-responsive filterTable">
+                <form id="reportForm" asp-action="ShowReport" asp-controller="Phieunhapkho" method="post">
+                    <div  class="searchToFrom row mb-2">
+
+                        <div class="col-md-2 col-sm-12">
+                            <div class="d-flex justify-content-around align-items-center">
+                                <div class="">Từ: </div>
+                                <input type="date" id="from" name="from" placeholder="Từ" class=" form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="d-flex justify-content-around align-items-center">
+                                <div class="">Đến: </div>
+                                <input type="date" id="to" name="to" placeholder="Đến" class=" form-control" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 col-sm-12" style="z-index:1">
+
+                            <select data-search="true" name="Idhh"
+                                    id="multipleSelect">
+                                <option value="">Tất cả</option>
+                                @foreach (var item in hanghoa)
+                                {
+                                    <option value="@item.Idhh">@item.Tenvl</option>
+
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-md-1 col-sm-12">
+                            <input type="button" id="searchDate" value="Tìm" class="btn btn-primary" />
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="col-md-1 col-sm-12">
+                            <button type="button" id="export" class="btn btn-success text-white"><i class="fas fa-file-excel"></i></button>
+                        </div>
+                        <div class="col-md-1 col-sm-12">
+                            <button type="button" id="csv" class="btn btn-success text-white"><i class="fas fa-file-csv"></i></button>
+                        </div>
+                        <div class="col-md-10 col-sm-12">
+                        </div>
+                        <input name="action" type="hidden" id="action" />
+                    </div>
+                </form>
+                <table class="table table-striped table-bordered" id="productTable" style="max-height:60vh;overflow-y:scroll">
+                    <thead>
+                        <tr class="text-center">
+
+                            <th scope="col">Nhà cung cấp</th>
+                            <th scope="col">Ngày nhập</th>
+                            <th scope="col">Số Phiếu</th>
+                            <th scope="col">Số lô</th>
+                            <th scope="col">Mã hàng hóa</th>
+                            <th scope="col">Tên hàng hóa</th>
+                            <th scope="col">ĐVT</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn giá nhập(đ)</th>
+                            <th scope="col">Thành tiền(đ)</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr class="tr">
+                                <td>@item.IdpnkNavigation.IdnccNavigation.Tenncc</td>
+
+                                @{
+                                    DateTime Ngaylap = (DateTime)item.IdpnkNavigation.Ngaylap;
+
+                                }
+                                <td class="text-center">@Ngaylap.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                <td>@item.IdpnkNavigation.Sophieu</td>
+                                <td>@item.Solo</td>
+                                <td>@item.IdhhNavigation.Mavl</td>
+                                <td>@item.IdhhNavigation.Tenvl</td>
+                                <td>@item.Donvitinh</td>
+                                <td class="soluong text-right">@item.Soluong</td>
+
+
+                                @{
+                                    var Dongia = String.Format("{0:0,0}", (@item.Dongia));
+                                    var ThanhTien = String.Format("{0:0,0}", (@item.Soluong * @item.Dongia));
+                                }
+                                <td class="gianhap text-right">@Dongia</td>
+                                <td class="thanhtien text-right">@ThanhTien</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td style="border:none"></td>
+                            <td style="border:none"></td>
+                            <td style="border:none"></td>
+                            <td style="border: none; font-weight: bolder">TỔNG CỘNG</td>
+                            <td style="border:none"></td>
+                            <td style="border:none"></td>
+                            <td style="border:none"></td>
+                            <td style="font-weight:bolder;" class="text-right" id="Tongsoluong"></td>
+                            <td style="font-weight:bolder" class="text-right" id="Tonggianhap"></td>
+                            <td style="font-weight:bolder" class="text-right" id="Tongthanhtien"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    window.addEventListener("load", totalReportNhapKho);
+
+    function totalReportNhapKho() {
+        let Tongsoluong = document.getElementById("Tongsoluong");
+        let Tonggianhap = document.getElementById("Tonggianhap");
+        let Tongthanhtien = document.getElementById("Tongthanhtien");
+        let soluong = document.querySelectorAll(".soluong");
+        let gianhap = document.querySelectorAll(".gianhap");
+        let thanhtien = document.querySelectorAll(".thanhtien");
+        let tr = document.querySelectorAll(".tr");
+        let SL = 0, Gia = 0, Tong = 0;
+
+        for (let i = 0; i < tr.length; i++) {
+            SL += Number(soluong[i].innerText);
+            Gia += Number(((gianhap[i].innerText).replaceAll(",", "")));
+            Tong += Number(((thanhtien[i].innerText).replaceAll(",", "")));
+
+        };
+        console.log(SL);
+        console.log(Gia);
+        console.log(Tong);
+        Formater = new Intl.NumberFormat('vi-VN');
+
+        Tongsoluong.innerText = SL;
+        Tonggianhap.innerText = (Formater.format(Gia)).replaceAll(".", ",");
+        Tongthanhtien.innerText = (Formater.format(Tong)).replaceAll(".", ",");
+
+    }
+
+
+</script>
+
+<script>
+    const reportForm = document.getElementById("reportForm");
+    const exportBtn = document.getElementById("export");
+    const csvBtn = document.getElementById("csv");
+    const searchDateBtn = document.getElementById("searchDate");
+    let action = document.getElementById("action");
+
+    exportBtn.addEventListener("click", function () {
+        action.value = "export";
+        reportForm.submit();
+    });
+    csvBtn.addEventListener("click", function () {
+        action.value = "csv";
+        reportForm.submit();
+    });
+    searchDateBtn.addEventListener("click", function () {
+        action.value = "searchDate";
+        reportForm.submit();
+    })
+</script>
+<script src="~/multiSelectDropdown/virtual-select.min.js"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: 'select'
+    });
+</script>

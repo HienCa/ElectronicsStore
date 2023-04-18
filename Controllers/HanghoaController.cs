@@ -49,7 +49,7 @@ namespace ElectronicsStore.Controllers
             ViewData["Nuosx"] = await _context.Nuosx.Where(a => a.Active == 1).ToListAsync();
             ViewData["Thuonghieu"] = await _context.Thuonghieu.Where(a => a.Active == 1).ToListAsync();
 
-            return View(await _context.Hanghoa.Where(a => a.Active == 1).Include(a=>a.IdnhhNavigation).Include(a => a.IdnsxNavigation).Include(a => a.IdthNavigation).ToListAsync());
+            return View(await _context.Hanghoa.Where(a => a.Active == 1).Include(a => a.IdnhhNavigation).Include(a => a.IdnsxNavigation).Include(a => a.IdthNavigation).ToListAsync());
         }
         public async Task<IActionResult> TrashList(int id)
         {
@@ -96,7 +96,7 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( HanghoaViewModel hanghoa)
+        public async Task<IActionResult> Create(HanghoaViewModel hanghoa)
         {
             string uniqueFileName = UploadedFile(hanghoa);
             if (ModelState.IsValid)
@@ -150,58 +150,62 @@ namespace ElectronicsStore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( HanghoaViewModel hanghoa)
+        public async Task<IActionResult> Edit(HanghoaViewModel hanghoa)
         {
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                Hanghoa hh = new Hanghoa();
+
+                //lấy hình ảnh
+                //hh.Hinhanh = uniqueFileName;
+
+                hh.Idhh = hanghoa.Idhh;
+                hh.Mavl = hanghoa.Mavl;
+                hh.Tenvl = hanghoa.Tenvl;
+                hh.Giakm = hanghoa.Giakm;
+                hh.Giaban = hanghoa.Giaban;
+                hh.Tinhtrang = hanghoa.Tinhtrang;
+                hh.Mausac = hanghoa.Mausac;
+                hh.Donvitinh = hanghoa.Donvitinh;
+                hh.Thoigianbh = hanghoa.Thoigianbh;
+                hh.Mota = hanghoa.Mota;
+                hh.Idnsx = hanghoa.Idnsx;
+                hh.Idth = hanghoa.Idth;
+                hh.Idnhh = hanghoa.Idnhh;
+                hh.Active = 1;
+
+                if (hanghoa.Hinhanh != null)
                 {
-                    Hanghoa hh = new Hanghoa();
-
-                    //lấy hình ảnh
-                    //hh.Hinhanh = uniqueFileName;
-                   
-                    hh.Idhh = hanghoa.Idhh;
-                    hh.Mavl = hanghoa.Mavl;
-                    hh.Tenvl = hanghoa.Tenvl;
-                    hh.Giakm = hanghoa.Giakm;
-                    hh.Giaban = hanghoa.Giaban;
-                    hh.Tinhtrang = hanghoa.Tinhtrang;
-                    hh.Mausac = hanghoa.Mausac;
-                    hh.Donvitinh = hanghoa.Donvitinh;
-                    hh.Thoigianbh = hanghoa.Thoigianbh;
-                    hh.Mota = hanghoa.Mota;
-                    hh.Idnsx = hanghoa.Idnsx;
-                    hh.Idth = hanghoa.Idth;
-                    hh.Idnhh = hanghoa.Idnhh;
-                    hh.Active = 1;
-
-                    if (hanghoa.Hinhanh != null)
+                    if (hanghoa.ExistingImage != null)
                     {
-                        if (hanghoa.ExistingImage != null)
-                        {
-                            string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Images", hanghoa.ExistingImage);
-                            System.IO.File.Delete(filePath);
-                        }
-
-                        hh.Hinhanh = UploadedFile(hanghoa);
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath, "Images", hanghoa.ExistingImage);
+                        System.IO.File.Delete(filePath);
                     }
 
-                    _context.Update(hh);
-                    await _context.SaveChangesAsync();
+                    hh.Hinhanh = UploadedFile(hanghoa);
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                   
+                    Hanghoa hanghoacu = _context.Hanghoa.Where(id => id.Idhh == hh.Idhh).FirstOrDefault();
+                    hh.Hinhanh = hanghoacu.Hinhanh;
                 }
+
+                _context.Update(hh);
+                await _context.SaveChangesAsync();
             }
+            catch 
+            {
+                return RedirectToAction(nameof(Index));
+
+            }
+
             return RedirectToAction(nameof(Index));
 
         }
 
-    // GET: Hanghoa/Delete/5
-    public async Task<IActionResult> Delete(int? id)
+        // GET: Hanghoa/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
