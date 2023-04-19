@@ -8,6 +8,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace ElectronicsStore.Controllers
 {
@@ -16,10 +20,12 @@ namespace ElectronicsStore.Controllers
         private readonly ILogger<HomeController> _logger;
 
         private readonly ElectronicsStoreContext _context;
-
-        public HomeController(ElectronicsStoreContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public HomeController(ElectronicsStoreContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            //action Cart
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -88,10 +94,41 @@ namespace ElectronicsStore.Controllers
             }
 
         }
-        public async Task<IActionResult> Cart(int id)
+        public async Task<IActionResult> Cart()
         {
-            List<Hanghoa> h = await _context.Hanghoa.Where(a => a.Idhh == id).Where(a => a.Active == 1).ToListAsync();
-            return View(h);
+
+            string cartId = Request.Cookies["ElectronicsStore_shopping_cart_id"];
+
+            // Nếu cookie không tồn tại thì tạo mới cookie và lưu vào client
+            if (string.IsNullOrEmpty(cartId))
+            {
+                // Lấy địa chỉ IP của khách hàng
+                string ipAddress = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                // Mã hóa địa chỉ IP bằng SHA512
+                byte[] ipBytes = Encoding.ASCII.GetBytes(ipAddress);
+                byte[] hashedIpBytes = SHA512.Create().ComputeHash(ipBytes);
+                string hashedIpString = BitConverter.ToString(hashedIpBytes).Replace("-", "").ToLower();
+
+                // Lưu chuỗi đã mã hóa vào cookie
+                CookieOptions cookieOptions = new CookieOptions();
+                cookieOptions.Expires = DateTime.Now.AddYears(1); // Thiết lập thời gian sống của cookie
+                Response.Cookies.Append("ElectronicsStore_shopping_cart_id", hashedIpString, cookieOptions);
+
+                // Gán giá trị mới tạo cho biến cartId
+                cartId = hashedIpString;
+            }
+            else
+            {
+                //truy xuất cart theo cartId;
+
+
+            }
+
+            // Tiếp tục xử lý dữ liệu và trả về View
+            //List<Hanghoa> h = await _context.Hanghoa.Where(a => a.Idhh == id).Where(a => a.Active == 1).ToListAsync();
+            return View();
+
         }
         public IActionResult Privacy()
         {

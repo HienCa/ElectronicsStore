@@ -39,6 +39,9 @@ namespace ElectronicsStore
 
             services.AddControllersWithViews();
             services.AddDbContext<ElectronicsStoreContext>(option => option.UseSqlServer(Configuration.GetConnectionString("MyConnectionString")));
+           
+            //luu Id Cart ma hoa sha512
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
