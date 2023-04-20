@@ -17,7 +17,7 @@ namespace ElectronicsStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        //private readonly ILogger<HomeController> _logger;
 
         private readonly ElectronicsStoreContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -29,10 +29,21 @@ namespace ElectronicsStore.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            TempData["Nhomhh"] = await _context.Nhomhh.Where(a => a.Active == 1).ToListAsync();
-            List<Hanghoa> h = await _context.Hanghoa.Where(a => a.Active == 1).ToListAsync();
+            List<Hanghoa> h = new List<Hanghoa>();
+            if (id != null)
+            {
+                h = await _context.Hanghoa.Where(a => a.Active == 1 && a.IdnhhNavigation.Idnhh == id).Include(a=>a.IdnhhNavigation).ToListAsync();
+
+            }
+            else
+            {
+                h = await _context.Hanghoa.Where(a => a.Active == 1).Include(a => a.IdnhhNavigation).ToListAsync();
+
+            }
+            ViewData["Nhomhh"] = await _context.Nhomhh.Where(a => a.Active == 1).ToListAsync();
+
 
 
             List<HanghoaViewModel> hanghoaviewmodel = h
@@ -51,7 +62,7 @@ namespace ElectronicsStore.Controllers
                                                         Mota = hanghoa.Mota,
                                                         Idnsx = hanghoa.Idnsx,
                                                         Idth = hanghoa.Idth,
-                                                        Idnhh = hanghoa.Idnhh
+                                                        Idnhh = hanghoa.Idnhh,
                                                     })
                                                     .ToList();
 

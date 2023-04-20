@@ -7,17 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElectronicsStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Http;
+using ElectronicsStore.ViewModel;
+using Newtonsoft.Json;
 
 namespace ElectronicsStore.Controllers
 {
-    [Authorize]
     public class DondathangController : Controller
     {
         private readonly ElectronicsStoreContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DondathangController(ElectronicsStoreContext context)
+        public DondathangController(ElectronicsStoreContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Dondathang
@@ -76,6 +81,7 @@ namespace ElectronicsStore.Controllers
         // POST: Dondathang/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -98,6 +104,174 @@ namespace ElectronicsStore.Controllers
 
             return View(dondathang);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForGuest(Noidungddh ddh, Khachhang kh, string noidungphu, int ngaybaohanh)
+        {
+            try
+            {
+
+                string ipAddress = "";
+                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface ni in interfaces)
+                {
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    {
+                        IPInterfaceProperties ipProps = ni.GetIPProperties();
+                        foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                        {
+                            if (addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                ipAddress = addr.Address.ToString();
+                            }
+                        }
+                    }
+                }
+                //ip có dấu chấm thay bằng X
+                kh.Makh = ipAddress.Replace(".", "X") + kh.Sdt;
+                Khachhang khachhangmoi = _context.Khachhang.Where(a => a.Makh.Equals(kh.Makh)).FirstOrDefault();
+                if (khachhangmoi == null)
+                {
+                    kh.Gioitinh = 2.ToString();
+                    _context.Khachhang.Add(kh);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                Khachhang khachhang = _context.Khachhang.Where(a => a.Makh.Equals(kh.Makh)).FirstOrDefault();
+                Dondathang dondathang = new Dondathang();
+                dondathang.Idkh = khachhang.Idkh;
+                dondathang.Madh = GenerateOrderCode() + khachhang.Idkh;
+                dondathang.Ngaydat = DateTime.Now;
+                dondathang.Trangthai = 0;
+                dondathang.Ghichu = noidungphu;
+
+                _context.Dondathang.Add(dondathang);
+                await _context.SaveChangesAsync();
+                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+
+                Noidungddh noidungddhmoi = new Noidungddh();
+                noidungddhmoi.Iddh = dondathangmoi.Iddh;
+                noidungddhmoi.Idhh = ddh.Idhh;
+                noidungddhmoi.Soluong = ddh.Soluong;
+                noidungddhmoi.Dongia = ddh.Dongia;
+
+                DateTime today = DateTime.Today;
+                DateTime hanbaohanh = today.AddDays(ngaybaohanh);
+                noidungddhmoi.Hethanbh = hanbaohanh;
+
+                _context.Noidungddh.Add(noidungddhmoi);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+            }
+            catch
+            {
+                return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+            }
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForGuestMultiOrder(Khachhang kh, string noidungphu, string cartItemsInput)
+        {
+            try
+            {
+
+                string ipAddress = "";
+                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface ni in interfaces)
+                {
+                    if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+                    {
+                        IPInterfaceProperties ipProps = ni.GetIPProperties();
+                        foreach (UnicastIPAddressInformation addr in ipProps.UnicastAddresses)
+                        {
+                            if (addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                ipAddress = addr.Address.ToString();
+                            }
+                        }
+                    }
+                }
+                //ip có dấu chấm thay bằng X
+                kh.Makh = ipAddress.Replace(".", "X") + kh.Sdt;
+                Khachhang khachhangmoi = _context.Khachhang.Where(a => a.Makh.Equals(kh.Makh)).FirstOrDefault();
+                if (khachhangmoi == null)
+                {
+                    kh.Gioitinh = 2.ToString();
+                    _context.Khachhang.Add(kh);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                Khachhang khachhang = _context.Khachhang.Where(a => a.Makh.Equals(kh.Makh)).FirstOrDefault();
+                Dondathang dondathang = new Dondathang();
+                dondathang.Idkh = khachhang.Idkh;
+                dondathang.Madh = GenerateOrderCode() + khachhang.Idkh;
+                dondathang.Ngaydat = DateTime.Now;
+                dondathang.Trangthai = 0;
+                dondathang.Ghichu = noidungphu;
+
+                _context.Dondathang.Add(dondathang);
+                await _context.SaveChangesAsync();
+                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+
+
+                List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
+
+                foreach (CartItemViewModel item in cartItems)
+                {
+                    Noidungddh noidungddhmoi = new Noidungddh();
+                    noidungddhmoi.Iddh = dondathangmoi.Iddh;
+
+                    noidungddhmoi.Idhh = int.Parse(item.productId);
+                    noidungddhmoi.Soluong = int.Parse(item.count);
+                    noidungddhmoi.Dongia = int.Parse(item.productPrice);
+
+                    Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                    DateTime today = DateTime.Today;
+                    DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                    noidungddhmoi.Hethanbh = hanbaohanh;
+
+                    _context.Noidungddh.Add(noidungddhmoi);
+                    await _context.SaveChangesAsync();
+
+                }
+                ViewData["success"] = "Đặt hàng thành công!!!";
+                return RedirectToAction("Cart", "Home");
+
+            }
+            catch
+            {
+                return RedirectToAction("Cart", "Home");
+
+            }
+
+        }
+        public static string GenerateOrderCode()
+        {
+            string orderCode = "";
+            DateTime now = DateTime.Now;
+            orderCode += now.Year.ToString().Substring(2, 2);
+            orderCode += now.Month.ToString("00");
+            orderCode += now.Day.ToString("00");
+            orderCode += now.Hour.ToString("00");
+            orderCode += now.Minute.ToString("00");
+            orderCode += now.Second.ToString("00");
+            orderCode += now.Millisecond.ToString("000");
+
+            // Sinh chuỗi ngẫu nhiên với độ dài 4 ký tự
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            orderCode += new string(Enumerable.Repeat(chars, 4).Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return orderCode;
+        }
+
 
         // GET: Dondathang/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -20,6 +20,7 @@
         a{
             text-decoration:none;
         }
+
     </style>
 </head>
 
@@ -29,7 +30,7 @@
             <i class='bx bx-menu sidebarOpen'></i>
             <span class="logo navLogo"><a href="/Home/Index">Electronics Store</a></span>
             <div class="w-50">
-                <input type="text" class="form-control w-100" style="border:none" placeholder="Bạn tìm linh kiện gì...">
+                <input id="search-input" type="text" class="form-control w-100" style="border:none" placeholder="Bạn tìm linh kiện gì...">
 
             </div>
             <div class="">
@@ -77,13 +78,17 @@
                     </div>
 
                     <div class="search-field">
-                        <input type="text" placeholder="Nhập tên linh kiện...">
+                        <input id="search-input2" type="text" placeholder="Nhập tên linh kiện...">
                         <i class='bx bx-search'></i>
                     </div>
                 </div>
             </div>
-            <div class="text-white d-flex justify-content-center align-items-center">
-                <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> Tài khoản</span>
+            <div class="text-white " style="cursor:pointer">
+                <a style="text-decoration:none;color:white " href="/Home/Login">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> Tài khoản</span>
+                    </div>
+                </a>
             </div>
         </div>
     </nav>
@@ -168,6 +173,9 @@
             cskh@ElectronicsStore.com. Chịu trách nhiệm nội dung: Nguyễn Văn Hiền.
         </div>
     </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
     <script>
 
         const body = document.querySelector("body"),
@@ -216,6 +224,71 @@
 
     </script>
 
+
+    <script>
+        //search product
+        // Lấy danh sách sản phẩm
+        // Lấy danh sách sản phẩm
+        const productList = document.getElementById('product-list').querySelectorAll('.productItem');
+
+        // Lấy ô input và thêm sự kiện khi người dùng nhập giá trị vào ô input
+        const searchInput = document.getElementById('search-input');
+        const searchInput2 = document.getElementById('search-input2');
+        searchInput.addEventListener('input', () => {
+            const keyword = searchInput.value.toLowerCase(); // Chuyển giá trị nhập vào thành chữ thường
+            productList.forEach((product) => {
+                const productName = product.querySelector('.card-title').innerText.toLowerCase(); // Lấy tên sản phẩm và chuyển thành chữ thường
+                if (productName.includes(keyword)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
+                    product.style.display = 'block';
+                } else { // Nếu không, ẩn sản phẩm đó đi
+                    product.style.display = 'none';
+                }
+            });
+        });
+        searchInput2.addEventListener('input', () => {
+            const keyword = searchInput2.value.toLowerCase(); // Chuyển giá trị nhập vào thành chữ thường
+            productList.forEach((product) => {
+                const productName = product.querySelector('.card-title').innerText.toLowerCase(); // Lấy tên sản phẩm và chuyển thành chữ thường
+                if (productName.includes(keyword)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
+                    product.style.display = 'block';
+                } else { // Nếu không, ẩn sản phẩm đó đi
+                    product.style.display = 'none';
+                }
+            });
+        });
+
+
+        // Đẩy các sản phẩm block lại gần nhau
+        let visibleProducts = document.querySelectorAll(".card.product:not([style*='display: none'])");
+        for (let i = 0; i < visibleProducts.length; i++) {
+            visibleProducts[i].classList.remove("mb-2");
+            if (i !== visibleProducts.length - 1) {
+                visibleProducts[i].classList.add("mb-2");
+            }
+        }
+
+
+
+        const productType = document.querySelectorAll('.product-type');
+       
+        productType.forEach((type) => {
+                type.addEventListener('click', () => {
+                    let Nhomhh = type.querySelector('.Idnhh').value;
+
+                    productList.forEach((product) => {
+                        const productType = product.querySelector('.Idnhh').value.trim(); // Lấy tên sản phẩm và chuyển thành chữ thường
+                        if (productType.includes(Nhomhh)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
+                            product.style.display = 'block';
+                        } else { // Nếu không, ẩn sản phẩm đó đi
+                            product.style.display = 'none';
+
+                        }
+                    });
+                });
+
+                
+            });
+    </script>
 </body>
 
 </html>

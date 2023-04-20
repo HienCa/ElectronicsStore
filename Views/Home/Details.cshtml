@@ -2,6 +2,14 @@
 @{
     Layout = "_Home";
 }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+    .modal-dialog {
+        max-width: none !important;
+    }
+</style>
 <div class="" style="margin-top:70px;">
     <div class="">
         <div class="card">
@@ -17,34 +25,48 @@
                     </div>
                     <div class="col-lg-7 col-md-12 col-sm-12">
 
-                     
+
                         @if (Model.Giakm != null)
                         {
-                        float? giakm = Model.Giakm;
-                                        string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
+                            float? giakm = Model.Giakm;
+                            string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
 
-                                        string giabans = (Model.Giaban).ToString("#,###.##");
-                        <div class="d-flex mt-2">
-                            <h1 class="text-danger font-weight-bolder mr-2">@giakms đ</h1>
-                            <h5 class="text-dark " style="text-decoration: line-through; opacity: 0.7;">@giabans đ</h5>
-                        </div>
+                            string giabans = (Model.Giaban).ToString("#,###.##");
+                            <div class="d-flex mt-2">
+                                <h1 class="text-danger font-weight-bolder mr-2">@giakms đ</h1>
+                                <h5 class="text-dark " style="text-decoration: line-through; opacity: 0.7;">@giabans đ</h5>
+                            </div>
                         }
                         else
                         {
                             string giabans = (Model.Giaban).ToString("#,###.##");
 
-                        <h1 class="text-danger font-weight-bolder mr-2">@giabans đ</h1>
+                            <h1 class="text-danger font-weight-bolder mr-2">@giabans đ</h1>
 
                         }
+                        <input type="hidden" id="product-id" value="@Model.Idhh" />
+                        <input type="hidden" id="product-name" value="@Model.Tenvl" />
+                        <input type="hidden" id="product-image" value="@Model.ExistingImage" />
+                        @if (Model.Giakm != null)
+                        {
+                            <input type="hidden" id="product-price" value="@Model.Giakm" />
 
+                        }
+                        else
+                        {
+                            <input type="hidden" id="product-price" value="@Model.Giaban" />
+
+                        }
 
                         <h4 class="box-title mt-3">Mô tả sản phẩm</h4>
                         <p>
                             @Model.Mota
                         </p>
                         <div class="d-flex mt-5 mb-1">
-                            <button class="btn btn-lg btn-danger text-white w-75 mr-2">MUA NGAY</button>
-                            <button class="btn btn-lg w-25 btn-primary btn-rounded">TRẢ GÓP</button>
+                            @*<button id="buy-btn" class="btn btn-lg btn-danger text-white w-75 mr-2">MUA NGAY</button>*@
+                            <button type="button" class="btn btn-lg btn-danger text-white w-75 mr-2" data-toggle="modal" data-target="#myModal">MUA NGAY</button>
+
+                            <button id="add-btn" class="btn btn-lg w-25 btn-primary btn-rounded"><i class="fas fa-cart-plus text-white" style="color: #de0146; font-size:50px"></i> THÊM</button>
                         </div>
                         <span>Gọi <span class="text-danger">0506-2001</span> để được tư vấn mua hàng (Miễn phí)</span>
                         <h3 class="box-title mt-4">Key Highlights</h3>
@@ -148,3 +170,291 @@
 
     </div>
 </div>
+
+
+<div id="myModal" class="modal fade " tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content container">
+            <div class="modal-header">
+                <h5 class="modal-title">Thông tin giao hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-ordered" asp-controller="Dondathang" asp-action="CreateForGuest" method="post"
+                      enctype="multipart/form-data">
+                    <div class="" style="position: relative;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Ảnh sản phẩm</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Đơn giá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><img src="/Images/@Model.ExistingImage" style="width: 200px;height: 200px; border-radius:5px" alt="Ảnh minh họa" /></td>
+                                    <td style="max-width:300px">@Model.Tenvl</td>
+                                    <td><input type="number" class="form-control" name="Soluong" style="max-width: 80px" min="1" id="product-count" value="1" /></td>
+                                    @if (Model.Giakm != null)
+                                    {
+                                        float? giakm = Model.Giakm;
+                                        string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
+
+                                        <td>@giakms đ</td>
+
+                                    }
+                                    else
+                                    {
+                                        string giabans = (Model.Giaban).ToString("#,###.##");
+
+                                        <td>@giabans đ</td>
+
+                                    }
+                                </tr>
+
+                            </tbody>
+                        </table>
+                       
+
+                        <input type="hidden" class="form-control" value="@Model.Idhh" id="Idhh" name="Idhh" />
+                        <input type="hidden" class="form-control" value="@Model.Tenvl" id="Tenhh" />
+                        @if (Model.Giakm != null)
+                        {
+                            <input type="hidden" class="form-control" value="@Model.Giakm" id="Dongia" name="Dongia" />
+
+                        }
+                        else
+                        {
+                            <input type="hidden" class="form-control" value="@Model.Giaban" id="Dongia" name="Dongia"/>
+
+                        }
+                    </div>
+                    <div class="row d-flex justify-content-center  ">
+                        <div class="col-md-8 p-3  bg-white">
+                            <div class=" mb-4">
+                                <div class="mb-3">
+                                    <label for="Tenkh">Tên</label>
+                                    <input id="Tenkh" type="text" class="form-control" name="Tenkh" required maxlength="255"
+                                           placeholder="Họ tên nhận hàng">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Sdt">Số điện thoại</label>
+                                    <input id="Sdt" type="text" class="form-control" name="Sdt" required maxlength="255"
+                                           placeholder="Số điện thoại nhận hàng">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Email">Email</label>
+                                    <input id="Email" type="email" class="form-control" name="Email"
+                                           placeholder="Số điện thoại nhận hàng">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Diachi">Địa chỉ nhận hàng</label>
+                                    <textarea id="Diachi" type="text" class="form-control" name="Diachi" maxlength="4000"
+                                              required placeholder="Địa chỉ nhận hàng"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Diachi">Lưu ý</label>
+                                    <textarea  type="text" class="form-control" name="noidungphu" 
+                                               placeholder="Địa chỉ nhận hàng"></textarea>
+                                </div>
+                                <input type="hidden" class="form-control" value="@Model.Thoigianbh" name="ngaybaohanh" />
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-4 mt-4">
+                            <div class="card mb-4">
+                                <div class="card-header py-3">
+                                    <h5 class="mb-0">Tổng đơn hàng</h5>
+                                </div>
+                                <div class="card-body">
+                                    <input type="hidden" value="15000" id="shipping" />
+
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                            Tổng tiền
+
+                                            @if (Model.Giakm != null)
+                                            {
+                                                float? giakm = Model.Giakm;
+                                                string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
+
+                                                <span id="Tongtien">@giakm đ</span>
+                                            }
+                                            else
+                                            {
+                                                string giabans = (Model.Giaban).ToString("#,###.##");
+
+                                                <span id="Tongtien">@giabans đ</span>
+                                            }
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                            Shipping
+                                            <span>15.000 đ</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                            
+                                            Số tiền cần trả (đã bao gồm VAT)
+
+                                            @if (Model.Giakm != null)
+                                            {
+                                                float? giakm = Model.Giakm;
+                                                string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
+
+                                                string giabsotiencantraans = (Model.Giaban + 15000).ToString("#,###.##");
+                                                <span id="Sotiencantra" style="font-weight:bolder">@giabsotiencantraans đ</span>
+                                            }
+                                            else
+                                            {
+                                                string giabsotiencantraans = (Model.Giaban + 15000).ToString("#,###.##");
+
+                                                <span  id="Sotiencantra" style="font-weight:bolder">@giabsotiencantraans đ</span>
+                                            }
+
+                                            
+                                        </li>
+                                    </ul>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                        <button type="submit" id="ordered-btn" disabled class="btn btn-primary">Đặt hàng</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    const addButton = document.querySelector('#add-btn');
+    addButton.addEventListener('click', () => {
+        console.log('click add');
+
+        // Lấy các giá trị input của card-product
+        const productId = document.querySelector('#product-id').value;
+        const productName = document.querySelector('#product-name').value;
+        const productImage = document.querySelector('#product-image').value;
+        const productPrice = (document.querySelector('#product-price').value).replaceAll(",", "");
+        const count = 1;
+
+
+        console.log('Product ID:', productId);
+        console.log('Product name:', productName);
+        console.log('Product image:', productImage);
+        console.log('product price:', productPrice);
+        //console.log('Count:', count);
+        let item = {
+            productId,
+            productName,
+            productImage,
+            productPrice,
+            count
+
+        };
+        if (productId !== '' || productName !== '' || realPrice !== '') {
+
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            let existedItemIndex = cartItems.findIndex((cartItem) => cartItem.productId === productId);
+
+            if (existedItemIndex > -1) {
+                cartItems[existedItemIndex].count = parseInt(cartItems[existedItemIndex].count) + parseInt(count);
+            } else {
+                cartItems.push(item);
+            }
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+
+        }
+        window.location.href = "/Home/Cart";
+    });
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+<script>
+
+    const formOrdered = document.getElementById("form-ordered");
+    const orderedbtn = document.getElementById("ordered-btn");
+
+    formOrdered.addEventListener('change', function () {
+        if (formOrdered.checkValidity()) {
+            orderedbtn.disabled = false;
+        } else {
+            orderedbtn.disabled = true;
+        }
+    });
+    formOrdered.addEventListener("change", () => {
+        validateForm(formOrdered, orderedbtn);
+    });
+    function validateForm(form, saveButton) {
+        // Lặp qua tất cả các trường input, textarea và select của form
+        let formIsValid = true;
+        const fields = form.querySelectorAll("input, textarea, select");
+        let currentFieldIsValid = true;
+        fields.forEach((field) => {
+            if (field === event.target) {
+                currentFieldIsValid = field.checkValidity();
+            }
+
+            if (!currentFieldIsValid || !field.checkValidity()) {
+                // Nếu trường không hợp lệ, đánh dấu form không hợp lệ và hiển thị lỗi
+                formIsValid = false;
+                field.classList.add("is-invalid");
+                field.setAttribute('placeholder', 'Trường dữ liệu bắt buộc!');
+                field.style.color = "red";
+            } else {
+                field.classList.remove("is-invalid");
+                field.setAttribute('placeholder', '');
+                field.style.color = "black";
+            }
+        });
+
+        // Enable hoặc disable nút lưu dữ liệu tùy thuộc vào trạng thái hợp lệ của form
+        orderedbtn.disabled = !formIsValid;
+    }
+
+    const VND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    });
+    //cập nhật tổng tiền
+    const countInput = document.getElementById("product-count");
+    const priceProduct = document.getElementById("Dongia");
+    const Tongtien = document.getElementById("Tongtien");
+    const Sotiencantra = document.getElementById("Sotiencantra");
+    const shipping = document.getElementById("shipping");
+    countInput.addEventListener('input', function () {
+        let count = countInput.value;
+        let price = priceProduct.value;
+        let ship = shipping.value;
+        if (count < 1) {
+            countInput.value = 1;
+            count = 1;
+        }
+        Tongtien.innerText = VND.format(parseInt(count) * parseInt(price));
+        Sotiencantra.innerText = VND.format(parseInt(ship) + (parseInt(count) * parseInt(price)));
+        console.log(parseInt(count));
+        console.log(parseInt(price));
+    });
+</script>
