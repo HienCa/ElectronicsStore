@@ -27,7 +27,7 @@ namespace ElectronicsStore.Controllers
         // GET: Phieuxuatkho
         public async Task<IActionResult> Index()
         {
-            var electronicsStoreContext = await _context.Phieuxuatkho.Where(a => a.Active == 1).Include(p => p.IdkhNavigation).Include(p => p.IdnvNavigation).ToListAsync();
+            var electronicsStoreContext = await _context.Phieuxuatkho.Where(a => a.Active == 1).Include(p => p.IdkhNavigation).Include(p => p.IdnvNavigation).OrderByDescending(a => a.Idpxk).ToListAsync();
 
             ViewBag.Head = "Quản Lý Phiếu Xuất Kho";
             ViewData["Nhanvien"] = await _context.Nhanvien.Where(a => a.Active == 1).ToListAsync();

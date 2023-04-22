@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ElectronicsStore.ViewModel;
+<!DOCTYPE html>
 
 <html lang="en">
 
@@ -14,13 +15,23 @@
     <!-- ===== Boxicons CSS ===== -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 
+    <!-- ===== Modal ===== -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <link href="~/css/Index.css" rel="stylesheet" />
+    <link href="~/tab/tab.css" rel="stylesheet" />
     <style>
-        a{
-            text-decoration:none;
+        a {
+            text-decoration: none;
         }
 
+        .div-hover:hover {
+            opacity: 0.6;
+        }
+
+        
     </style>
 </head>
 
@@ -34,9 +45,10 @@
 
             </div>
             <div class="">
-                <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px; text-decoration: none">
-                    <i class="fas fa-shipping-fast" style="color: #de0146"></i> Tra cứu đơn
-                </a>
+                <button type="button" class="bg-white border-0 p-2 text-dark" style="border-radius: 5px" data-bs-toggle="modal" data-bs-target="#OrderDetail">
+                    Đơn hàng
+                </button>
+
             </div>
             <div class="menu ">
                 <div class="logo-toggle">
@@ -45,19 +57,12 @@
                 </div>
                 <div class="row">
 
-                    <!-- <div class="col-4">
-                        <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px;">
-                            <i class="fas fa-shipping-fast" style="color: #de0146"></i> Tra cứu đơn
-                        </a>
-                    </div> -->
-                    <!-- <div class="">
-                        <a href="#" class="bg-white p-2 text-dark" style="border-radius: 5px;"><i class="fas fa-phone-alt"
-                            style="color: #de0146"></i> Gọi mua</a>
-                    </div> -->
+
+
                     <div class="col-12">
-                        <a href="/Home/Cart" class="bg-white p-2 text-dark" style="border-radius: 5px;text-decoration:none">
+                        <a href="/Home/Cart" class="bg-white p-2 text-dark" style="border-radius: 5px; text-decoration: none; position: relative;">
                             <i class="fas fa-cart-plus"
-                               style="color: #de0146"></i> Giỏ hàng
+                               style="color: #de0146"></i> Giỏ hàng <span class="p-1" style="position:absolute;background-color: #fff;border-radius: 10px;color: #de0146;font-weight: bolder;top:-15px;right: -20px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;">+<span id="count-items">0</span></span>
                         </a>
                     </div>
 
@@ -84,14 +89,88 @@
                 </div>
             </div>
             <div class="text-white " style="cursor:pointer">
-                <a style="text-decoration:none;color:white " href="/Home/Login">
-                    <div class="d-flex justify-content-center align-items-center">
-                        <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> Tài khoản</span>
+                @if (ViewData["Login"] != null)
+                {
+                    KhachhangViewModel khachhangview = ViewData["Login"] as KhachhangViewModel;
+                <div id="InfoDropDown">
+                    <div class="d-flex justify-content-center align-items-center div1" style="position: relative;">
+                        @if (khachhangview.ExistingImage != null)
+                        {
+                            <img src="/Images/@khachhangview.ExistingImage" class="mr-2" style="width: 50px; height: 50px;border-radius: 50%;border:4px solid #fff" /> <span> @khachhangview.Tenkh</span>
+                            <div class="p-2 div2 product" id="InfoDropDownItem"
+                                 style="display:none;position: absolute;top: 50px;right:-50px;box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;background-color: #de0146;border-radius: 5px;width:250px">
+
+                                <div class="p-2 div-hover">
+                                    <a class="div-hover-a" href="/Home/PersonalPage"
+                                       style="color: #fff;text-decoration: none;">Thông tin cá nhân</a>
+                                </div>
+                                <div class="p-2 div-hover">
+                                    <a class="div-hover-a" href="/Home/OrderedDetails"
+                                       style="color: #fff;text-decoration: none;">Lịch sử đơn hàng</a>
+                                </div>
+                                @*<div class="p-2 div-hover">
+                        <a class="div-hover-a" href="/Home/PersonalPage"
+                           style="color: #fff;text-decoration: none;">Cá nhân</a>
+                    </div>*@
+                                <div class="mt-2 p-2 div-hover">
+                                    <a href="/Access/Logout"
+                                       class="div-hover-a" style="color: #fff;text-decoration: none;">Đăng xuất</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> @khachhangview.Tenkh</span>
+
+                        }
+
                     </div>
-                </a>
+                </div>
+                }
+                else
+                {
+                    <a style="text-decoration:none;color:white " href="/Access/Login">
+
+                        <div class="d-flex justify-content-center align-items-center">
+                            <i class="fas fa-user-circle mr-3" style="font-size: 32px"></i> <span> Tài khoản</span>
+                        </div>
+                    </a>
+
+                }
+
             </div>
         </div>
     </nav>
+
+    <div id="OrderDetail" class="modal fade " tabindex="-1">
+
+        <div class="modal-dialog">
+            <div class="modal-content container  text-white" style="background-color: #de0146;">
+                <form asp-action="OrderedDetails" asp-controller="Home">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Thông tin đơn hàng</h1>
+                        <button type="button" class="btn-close  text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center">Electronics Store</h3>
+                        <h4 class="text-center mt-3">Vui lòng cung cấp thông tin!</h4>
+                        <div class="d-flex justify-content-center mt-4">
+                            <div class=" w-75 ">
+                                <span>Mã đơn hàng</span>
+                                <textarea type="text" autofocus class="form-control w-100 mb-2" style="height: 40px;" required name="Madh" placeholder="Nhập mã đơn hàng..."></textarea>
+                                <span>Số điện thoại khi mua hàng</span>
+                                <input type="number" minlength="9" maxlength="12" class="form-control w-100 " required name="Sdt" placeholder="Nhập số điện thoại khi đặt hàng...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="submit" class="btn btn-lg text-white" style="border: 4px solid #fff;">Tra cứu</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
     @RenderBody()
 
     <footer class="text-center text-lg-start bg-white text-muted mt-3">
@@ -176,6 +255,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
+
+    <script src="~/tab/tab.js"></script>
     <script>
 
         const body = document.querySelector("body"),
@@ -270,24 +351,46 @@
 
 
         const productType = document.querySelectorAll('.product-type');
-       
+
         productType.forEach((type) => {
-                type.addEventListener('click', () => {
-                    let Nhomhh = type.querySelector('.Idnhh').value;
+            type.addEventListener('click', () => {
+                let Nhomhh = type.querySelector('.Idnhh').value;
 
-                    productList.forEach((product) => {
-                        const productType = product.querySelector('.Idnhh').value.trim(); // Lấy tên sản phẩm và chuyển thành chữ thường
-                        if (productType.includes(Nhomhh)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
-                            product.style.display = 'block';
-                        } else { // Nếu không, ẩn sản phẩm đó đi
-                            product.style.display = 'none';
+                productList.forEach((product) => {
+                    const productType = product.querySelector('.Idnhh').value.trim(); // Lấy tên sản phẩm và chuyển thành chữ thường
+                    if (productType.includes(Nhomhh)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
+                        product.style.display = 'block';
+                    } else { // Nếu không, ẩn sản phẩm đó đi
+                        product.style.display = 'none';
 
-                        }
-                    });
+                    }
                 });
-
-                
             });
+
+
+        });
+    </script>
+    <script>
+
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        document.getElementById("count-items").innerText = cartItems.length;
+
+
+    </script>
+    <script>
+        const InfoDropDown = document.getElementById("InfoDropDown");
+        const InfoDropDownItem = document.getElementById("InfoDropDownItem");
+        InfoDropDown.addEventListener("click", function () {
+            if (InfoDropDownItem.style.display == "none") {
+                InfoDropDownItem.style.display = "block"
+                console.log("sssss")
+            } else if (InfoDropDownItem.style.display == "block") {
+                InfoDropDownItem.style.display = "none"
+                console.log("aaaa")
+
+
+            }
+        })
     </script>
 </body>
 

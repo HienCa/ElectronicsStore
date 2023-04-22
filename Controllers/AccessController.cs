@@ -57,7 +57,7 @@ namespace ElectronicsStore.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Account account)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && account.Email != null)
             {
                 Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
                 Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();

@@ -1,0 +1,283 @@
+﻿@model ElectronicsStore.ViewModel.KhachhangViewModel
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "_Home";
+}
+
+<div class="container bg-white p-3" style="border-radius: 20px; margin-top: 85px; height: 85vh; overflow-y: scroll">
+    <div class="">
+        <h2>Thông tin cá nhân</h2>
+    </div>
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-7 col-sm-12" style="border-right:1px solid #ccc">
+            <div class="d-flex justify-content-center align-items-center">
+                <label for="UpdateImage">
+                    <img src="/Images/@Model.ExistingImage" alt=""
+                         style="width: 200px; height: 200px; border-radius: 50%; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; ">
+                </label>
+                <form id="formUpdateImage" asp-action="PersonalPageEditImage" asp-controller="Home" method="post" enctype="multipart/form-data">
+                    <input id="UpdateImage" type="file" class="d-none" name="Hinhanh" />
+                </form>
+                <div class="ml-3">
+                    <span class="font-weight-bolder">Nguyễn Văn Hiền</span>
+                    <p style="color: #ccc;">Khách hàng</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-5 col-sm-12">
+            <h5>Thông tin tài khoản</h5>
+            <div class="">
+                <i class="fas fa-envelope mr-1"></i> @Model.Email
+
+            </div>
+            <div class="">
+                <i class="fab fa-facebook-square mr-1"></i> Chưa xác định
+            </div>
+            <div class="">
+                <i class="fas fa-dollar-sign mr-2"></i> Chưa xác định
+            </div>
+        </div>
+
+    </div>
+    <div class="">
+        <ul class="tabs row text-center">
+            <li class="tab-link  col-md-4 current" data-tab="tab-1">Trang cá nhân</li>
+            <li class="tab-link  col-md-4 " data-tab="tab-2">Đổi mật khẩu</li>
+            <li class="tab-link  col-md-4 " data-tab="tab-3">Cài đặt</li>
+
+        </ul>
+
+
+        <div id="tab-1" class="tab-content current">
+            <form id="formEdit" asp-controller="Home" asp-action="PersonalPageEdit" method="post"
+                  enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <input name="Idkh" class="d-none" value="@Model.Idkh" type="text">
+                    <input name="Makh" class="d-none" value="@Model.Makh" type="text">
+                    <input name="Matkhau" class="d-none" value="@Model.Matkhau" type="text">
+                    <input name="Hinhanh" class="d-none" value="@Model.Hinhanh" type="text">
+                    <input name="Facebook" class="d-none" value="@Model.Facebook" type="text">
+                    <input name="Zalo" class="d-none" value="@Model.Zalo" type="text">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Họ tên
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="TenkhE" name="Tenkh" value="@Model.Tenkh" maxlength="255" required type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            CCCD
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="CCCDE" name="CCCD" value="@Model.Cccd" maxlength="12" type="number"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Ngày sinh
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="NgaysinhE" name="Ngaysinh" value="@Model.Ngaysinh" type="date" class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Giới tính
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="GioitinhE" value="@Model.Gioitinh" name="Gioitinh" required>
+                                                <option value="0">Nam</option>
+                                                <option value="1">Nữ</option>
+                                                <option value="2">Khác</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            SĐT
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="SdtE" name="Sdt" value="@Model.Sdt" maxlength="255" required type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+
+                            <div class="row">
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Email
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="EmailE" name="Email" readonly value="@Model.Email" maxlength="255" type="email"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Số thuế
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="MasothueE" value="@Model.Masothue" name="Masothue" maxlength="255" type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Địa chỉ
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <textarea id="DiachiE" name="Diachi" maxlength="255" required
+                                                      type="text" class="form-control">@Model.Diachi</textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Ghi chú
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <textarea id="GhichuE" name="Ghichu" maxlength="4000" type="text"
+                                                      class="form-control">@Model.Ghichu</textarea>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" id="editButtonInfo" class="btn btn-primary w-25">Lưu</button>
+                </div>
+            </form>
+        </div>
+        <div id="tab-2" class="tab-content ">
+            <form method="post" asp-action="PersonalPageEditPass" asp-controller="Home">
+
+                <div class="row">
+
+                    <div class="col-6 col-sm-12">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Mật khẩu mới
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+                                <input id="matkhaumoi" name="Matkhau" maxlength="255" required type="password"
+                                       class="form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-12 mt-2">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-md-2 col-sm-12">
+                                Nhập lại mật khẩu
+                            </div>
+                            <div class="col-md-10 col-sm-12">
+                                <input id="nhaplaimatkhaumoi" maxlength="255" required type="password"
+                                       class="form-control" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="editButtonPass" disabled class="btn btn-primary w-25">Lưu</button>
+                </div>
+            </form>
+
+        </div>
+        <div id="tab-3" class="tab-content ">
+            Đang triển khai
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+
+<script>
+    const matkhaumoi = document.getElementById("matkhaumoi");
+    const nhaplaimatkhaumoi = document.getElementById("nhaplaimatkhaumoi");
+    const editButtonPass = document.getElementById("editButtonPass");
+    nhaplaimatkhaumoi.addEventListener("input", function () {
+
+
+        if ((matkhaumoi.value) == (nhaplaimatkhaumoi.value) && matkhaumoi.value.length >= 8) {
+            document.getElementById("editButtonPass").disabled = false;
+        } else {
+            document.getElementById("editButtonPass").disabled = true;
+
+        }
+    })
+    matkhaumoi.addEventListener("input", function () {
+
+        if (matkhaumoi.value.length <= 8) {
+            matkhaumoi.style.border = "2px solid red";
+        } else {
+            matkhaumoi.style.border = "2px solid green";
+
+        }
+        if (matkhaumoi.value.length == 0) {
+            matkhaumoi.style.border = "1px solid #ced4da";
+
+        }
+
+    })
+
+
+    //Update Image
+    const formUpdateImage = document.getElementById("formUpdateImage");
+    const UpdateImage = document.getElementById("UpdateImage");
+    UpdateImage.addEventListener("change", function () {
+        formUpdateImage.submit();
+    })
+</script>

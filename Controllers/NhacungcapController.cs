@@ -24,7 +24,7 @@ namespace ElectronicsStore.Controllers
             ViewBag.Head = "Quản Lý Nhà Cung Cấp";
 
 
-            return View(await _context.Nhacungcap.Where(a => a.Active == 1).ToListAsync());
+            return View(await _context.Nhacungcap.Where(a => a.Active == 1).OrderByDescending(a => a.Idncc).ToListAsync());
         }
         public async Task<IActionResult> TrashList(int id)
         {

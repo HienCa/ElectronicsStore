@@ -45,7 +45,7 @@ namespace ElectronicsStore.Controllers
             ViewBag.Head = "Quản Lý Khách Hàng";
             ViewData["Nhanvien"] = await _context.Nhanvien.Where(a => a.Active == 1).ToListAsync();
 
-            return View(await _context.Khachhang.Where(a => a.Active == 1).ToListAsync());
+            return View(await _context.Khachhang.Where(a => a.Active == 1).OrderByDescending(a => a.Idkh).ToListAsync());
         }
         public async Task<IActionResult> TrashList(int id)
         {

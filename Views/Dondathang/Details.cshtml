@@ -1,60 +1,75 @@
-﻿@model ElectronicsStore.Models.Dondathang
+﻿@model IEnumerable<ElectronicsStore.Models.Noidungddh>
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
 }
 
-<h1>Details</h1>
+<table class="table table-striped table-bordered  " id="productTable">
+    <thead>
+        <tr>
+            <th class="text-center">STT</th>
+            <th class="text-center" style="width:150px;">Ảnh</th>
+            <th class="text-center" style="width:400px">Sản phẩm</th>
+            <th class="text-center">SL</th>
+            <th class="text-center">Giá</th>
+            <th class="text-center">Hạn bảo hành</th>
+            <th class="text-center">Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int count = 1;
+            float total = 0;
+        }
+        @if (Model != null)
+        {
+            @foreach (var item in Model as List<Noidungddh>)
+            {
 
-<div>
-    <h4>Dondathang</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Madh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Madh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ngaydat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ngaydat)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ngaygiao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ngaygiao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Trangthai)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Trangthai)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ghichu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ghichu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdkhNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdkhNavigation.Diachi)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Iddh">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td><img src="/Images/@item.IdhhNavigation.Hinhanh" style="width:100%;height:150px" /></td>
+                    <td>@item.IdhhNavigation.Tenvl</td>
+                    <td class="text-center">@item.Soluong</td>
+                    @{
+                        string Dongia = (item.Dongia).ToString("#,###.##");
+                        string Thanhtien = (item.Soluong * item.Dongia).ToString("#,###.##");
+                        total = total + (item.Soluong * item.Dongia);
+                    }
+                    <td class="text-right">@Dongia đ</td>
+
+                    @if (item.Hethanbh != null)
+                    {
+                        DateTime Hethanbh = (DateTime)item.Hethanbh;
+                        <td class="text-center">@Hethanbh.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td class="text-right">@Thanhtien đ</td>
+
+                    @{ count++; }
+                </tr>
+            }
+
+        }
+        <tr>
+            <td></td>
+            <td style="font-weight:bolder">Tổng đơn</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            @{
+                string Tongtien = total.ToString("#,###.##");
+            }
+            <td class="text-right" style="font-weight:bolder">@Tongtien đ</td>
+
+        </tr>
+
+
+    </tbody>
+</table>

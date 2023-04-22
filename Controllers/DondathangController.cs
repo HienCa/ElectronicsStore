@@ -28,7 +28,7 @@ namespace ElectronicsStore.Controllers
         // GET: Dondathang
         public async Task<IActionResult> Index()
         {
-            var electronicsStoreContext = await _context.Dondathang.Where(a => a.Active == 1).Include(p => p.IdkhNavigation).ToListAsync();
+            var electronicsStoreContext = await _context.Dondathang.Where(a => a.Active == 1).Include(p => p.IdkhNavigation).OrderByDescending(a => a.Iddh).ToListAsync();
 
             ViewBag.Head = "Quản Lý Đơn Đặt Hàng";
             ViewData["Khachhang"] = await _context.Khachhang.Where(a => a.Active == 1).ToListAsync();
@@ -55,21 +55,43 @@ namespace ElectronicsStore.Controllers
         // GET: Dondathang/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                var noidungddh = await _context.Noidungddh
+                                                 .Where(i => i.Iddh == id)
+                                                .Include(p => p.IddhNavigation)
+                                                .Include(p => p.IddhNavigation.IdkhNavigation)
+                                                .Include(p => p.IdhhNavigation)
+                                                .ToListAsync();
+                return View(noidungddh);
             }
-
-            var dondathang = await _context.Dondathang
-                .Include(p => p.Idkh)
-                .FirstOrDefaultAsync(m => m.Iddh == id);
-            if (dondathang == null)
+            catch
             {
-                return NotFound();
-            }
+                return RedirectToAction("Index", "Dondathang");
 
-            return View(dondathang);
+            }
         }
+        //public async Task<IActionResult> Noidungdondat(int? id)
+        //{
+
+        //    try
+        //    {
+        //        var noidungddh = await _context.Noidungddh
+        //                                         .Where(i => i.Iddh == id)
+        //                                        .Include(p => p.IddhNavigation)
+        //                                        .Include(p => p.IddhNavigation.IdkhNavigation)
+        //                                        .Include(p => p.IdhhNavigation)
+        //                                        .ToListAsync();
+        //        return View(noidungddh);
+        //    }
+        //    catch
+        //    {
+        //        return RedirectToAction("Index", "Dondathang");
+
+        //    }
+
+
+        //}
 
         // GET: Dondathang/Create
         public IActionResult Create()
@@ -135,7 +157,7 @@ namespace ElectronicsStore.Controllers
                 {
                     kh.Gioitinh = 2.ToString();
                     _context.Khachhang.Add(kh);
-                    await _context.SaveChangesAsync();
+                    //await _context.SaveChangesAsync();
                 }
 
 
@@ -148,7 +170,48 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
+                //await _context.SaveChangesAsync();
+                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+
+                Noidungddh noidungddhmoi = new Noidungddh();
+                noidungddhmoi.Iddh = dondathangmoi.Iddh;
+                noidungddhmoi.Idhh = ddh.Idhh;
+                noidungddhmoi.Soluong = ddh.Soluong;
+                noidungddhmoi.Dongia = ddh.Dongia;
+
+                DateTime today = DateTime.Today;
+                DateTime hanbaohanh = today.AddDays(ngaybaohanh);
+                noidungddhmoi.Hethanbh = hanbaohanh;
+
+                _context.Noidungddh.Add(noidungddhmoi);
                 await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+            }
+            catch
+            {
+                return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+            }
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForGuestAuthen(Noidungddh ddh, Khachhang kh, string noidungphu, int ngaybaohanh)
+        {
+            try
+            {
+
+                Dondathang dondathang = new Dondathang();
+                dondathang.Idkh = kh.Idkh;
+                dondathang.Madh = GenerateOrderCode() + kh.Idkh;
+                dondathang.Ngaydat = DateTime.Now;
+                dondathang.Trangthai = 0;
+                dondathang.Ghichu = noidungphu;
+
+                _context.Dondathang.Add(dondathang);
+                //await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
                 Noidungddh noidungddhmoi = new Noidungddh();
@@ -204,7 +267,7 @@ namespace ElectronicsStore.Controllers
                 {
                     kh.Gioitinh = 2.ToString();
                     _context.Khachhang.Add(kh);
-                    await _context.SaveChangesAsync();
+                    //await _context.SaveChangesAsync();
                 }
 
 
@@ -217,7 +280,58 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
+                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+
+
+                List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
+
+                foreach (CartItemViewModel item in cartItems)
+                {
+                    Noidungddh noidungddhmoi = new Noidungddh();
+                    noidungddhmoi.Iddh = dondathangmoi.Iddh;
+
+                    noidungddhmoi.Idhh = int.Parse(item.productId);
+                    noidungddhmoi.Soluong = int.Parse(item.count);
+                    noidungddhmoi.Dongia = int.Parse(item.productPrice);
+
+                    Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                    DateTime today = DateTime.Today;
+                    DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                    noidungddhmoi.Hethanbh = hanbaohanh;
+
+                    _context.Noidungddh.Add(noidungddhmoi);
+                    await _context.SaveChangesAsync();
+
+                }
+                ViewData["success"] = "Đặt hàng thành công!!!";
+                return RedirectToAction("Cart", "Home");
+
+            }
+            catch
+            {
+                return RedirectToAction("Cart", "Home");
+
+            }
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForGuestMultiOrderAuthen(Khachhang kh, string noidungphu, string cartItemsInput)
+        {
+            try
+            {
+                //khách hàng đã đăng nhập hệ thống
+
+                Dondathang dondathang = new Dondathang();
+                dondathang.Idkh = kh.Idkh;
+                dondathang.Madh = GenerateOrderCode() + kh.Idkh;
+                dondathang.Ngaydat = DateTime.Now;
+                dondathang.Trangthai = 0;
+                dondathang.Ghichu = noidungphu;
+
+                _context.Dondathang.Add(dondathang);
+                //await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
 
@@ -271,6 +385,8 @@ namespace ElectronicsStore.Controllers
 
             return orderCode;
         }
+
+
 
 
         // GET: Dondathang/Edit/5

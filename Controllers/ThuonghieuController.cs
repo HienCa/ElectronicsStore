@@ -23,7 +23,7 @@ namespace ElectronicsStore.Controllers
         {
             ViewBag.Head = "Quản Lý Thương Hiệu";
 
-            return View(await _context.Thuonghieu.Where(a => a.Active == 1).ToListAsync());
+            return View(await _context.Thuonghieu.Where(a => a.Active == 1).OrderByDescending(a => a.Idth).ToListAsync());
         }
         public async Task<IActionResult> TrashList(int id)
         {

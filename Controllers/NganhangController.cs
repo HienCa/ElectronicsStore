@@ -24,7 +24,7 @@ namespace ElectronicsStore.Controllers
             ViewBag.Head = "Quản Lý Thông Tin STK Ngân Hàng";
 
             var electronicsStoreContext = _context.Nganhang.Where(a => a.Active == 1).Include(n => n.IdhtttNavigation);
-            return View(await electronicsStoreContext.ToListAsync());
+            return View(await electronicsStoreContext.OrderByDescending(a => a.Idnh).ToListAsync());
 
 
         }

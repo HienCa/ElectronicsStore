@@ -49,7 +49,7 @@ namespace ElectronicsStore.Controllers
             ViewData["Nuosx"] = await _context.Nuosx.Where(a => a.Active == 1).ToListAsync();
             ViewData["Thuonghieu"] = await _context.Thuonghieu.Where(a => a.Active == 1).ToListAsync();
 
-            return View(await _context.Hanghoa.Where(a => a.Active == 1).Include(a => a.IdnhhNavigation).Include(a => a.IdnsxNavigation).Include(a => a.IdthNavigation).ToListAsync());
+            return View(await _context.Hanghoa.Where(a => a.Active == 1).Include(a => a.IdnhhNavigation).Include(a => a.IdnsxNavigation).Include(a => a.IdthNavigation).OrderByDescending(a => a.Idhh).ToListAsync());
         }
         public async Task<IActionResult> TrashList(int id)
         {
