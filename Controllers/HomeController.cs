@@ -265,7 +265,7 @@ namespace ElectronicsStore.Controllers
                                                                  .OrderByDescending(a => a.Iddh)
                                                                 .ToListAsync();
                 ViewData["OrderedDetailsMulti"] = noidungdonhang;
-
+                ViewData["Dondathang"] = await _context.Dondathang.Where(ma => ma.Iddh == id).FirstOrDefaultAsync();
                 string employeeEmail = Request.Cookies["HienCaCookie"];
                 if (employeeEmail != null)
                 {
