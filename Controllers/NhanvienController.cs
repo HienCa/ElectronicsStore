@@ -9,9 +9,12 @@ using ElectronicsStore.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using ElectronicsStore.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicsStore.Controllers
 {
+    [Authorize]
+
     public class NhanvienController : Controller
     {
         private readonly ElectronicsStoreContext _context;

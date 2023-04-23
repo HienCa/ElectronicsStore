@@ -227,20 +227,72 @@ namespace ElectronicsStore.Controllers
                         return View();
 
                     }
+                    else
+                    {
+                        //thông qua mã đơn khách cung cấp
+                        var donhang = await _context.Dondathang.Include(kh => kh.IdkhNavigation)
+                                                                        .Where(ma => ma.Madh.Equals(Madh) && ma.IdkhNavigation.Sdt.Equals(sdt))
+                                                                         .OrderByDescending(a => a.Iddh)
+                                                                        .ToListAsync();
+                        ViewData["OrderedDetails"] = donhang;
 
+                        return View();
+
+                    }
                 }
-                else
+
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Home");
+
+            }
+
+
+        }
+        public async Task<IActionResult> OrderedDetailsRedict(int id)
+        {
+            try
+            {
+                string employeeEmail = Request.Cookies["HienCaCookie"];
+                if (employeeEmail != null)
                 {
-                    //thông qua mã đơn khách cung cấp
-                    var donhang = await _context.Dondathang.Include(kh => kh.IdkhNavigation)
-                                                                    .Where(ma => ma.Madh.Equals(Madh) && ma.IdkhNavigation.Sdt.Equals(sdt))
-                                                                     .OrderByDescending(a => a.Iddh)
-                                                                    .ToListAsync();
-                    ViewData["OrderedDetails"] = donhang;
+                    var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
+                    if (khachhang != null)
+                    {
+                        // khách đã đăng nhập
+                        var donhang = await _context.Dondathang
+                                                               .Where(ma => ma.Idkh == khachhang.Idkh)
+                                                               .OrderByDescending(a => a.Iddh)
+                                                                        .ToListAsync();
+                        ViewData["OrderedDetails"] = donhang;
 
-                    return View();
+                        KhachhangViewModel khachhangview = new KhachhangViewModel();
+                        khachhangview.Tenkh = khachhang.Tenkh;
+                        khachhangview.ExistingImage = khachhang.Hinhanh;
+                        ViewData["Login"] = khachhangview;
+                        return RedirectToAction("OrderedDetails", "Home");
 
+
+                    }
+                    else
+                    {
+                        //thông qua mã đơn khách cung cấp
+                        var donhang = await _context.Dondathang.Include(kh => kh.IdkhNavigation)
+                                                                        .Where(ma => ma.Iddh == id)
+                                                                         .OrderByDescending(a => a.Iddh)
+                                                                        .ToListAsync();
+                        ViewData["OrderedDetails"] = donhang;
+
+                        return RedirectToAction("OrderedDetails", "Home");
+
+
+                    }
                 }
+
                 return RedirectToAction("Index", "Home");
 
 

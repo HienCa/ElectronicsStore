@@ -9,9 +9,12 @@ using ElectronicsStore.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using ElectronicsStore.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicsStore.Controllers
 {
+    [Authorize]
+
     public class HanghoaController : Controller
     {
         private readonly ElectronicsStoreContext _context;
@@ -41,6 +44,7 @@ namespace ElectronicsStore.Controllers
         }
 
         // GET: Hanghoa
+
         public async Task<IActionResult> Index()
         {
             ViewBag.Head = "Quản Lý Hàng Hóa";

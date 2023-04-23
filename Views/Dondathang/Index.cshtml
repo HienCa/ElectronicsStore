@@ -5,217 +5,348 @@
     Layout = "_Admin";
 }
 
-<div class="d-flex justify-content-between mb-2">
+<ul class="tabs row text-center">
+    @*<li class="tab-link  col-md-4 current tab-11" data-tab="tab-1">Lịch Sử Nhập #@phieunhapkho.Sophieu</li>*@
 
-    <div class="d-flex justify-content-between ">
-        <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
-            Thêm mới đơn đặt hàng
-        </button>
-        <form asp-controller="Dondathang" asp-action="TrashList">
-            <button type="submit" class="btn btn-info">
-                <i class="fas fa-trash-restore"></i>
+    <li class="tab-link  col-md-2 current" data-tab="tab-1">Tất Cả Đơn Hàng</li>
+    <li class="tab-link  col-md-2" data-tab="tab-2">Đang xử lý</li>
+    <li class="tab-link  col-md-2" data-tab="tab-3">Đóng Gói</li>
+    <li class="tab-link  col-md-2" data-tab="tab-4">Xuất Kho</li>
+    <li class="tab-link  col-md-2" data-tab="tab-5">Thanh Toán</li>
+    <li class="tab-link  col-md-2" data-tab="tab-6">Trả Hàng</li>
+
+</ul>
+
+<div id="tab-1" class="tab-content current">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
+                Thêm mới đơn đặt hàng
             </button>
-        </form>
-
-    </div>
-</div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Mã đơn</th>
-            <th>Khách hàng</th>
-            <th>Ngày đặt</th>
-            <th>Ngày giao</th>
-            <th>Trạng thái</th>
-            <th class="d-none">Ghi chú</th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
-
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Madh</td>
-            <td>@item.IdkhNavigation.Tenkh</td>
-
-            @{
-                DateTime Ngaydat = (DateTime)item.Ngaydat;
-
-            }
-            <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
-            @if (item.Ngaygiao != null)
-            {
-                DateTime Ngaygiao = (DateTime)item.Ngaygiao;
-                <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
-
-            }
-            else
-            {
-                <td></td>
-            }
-
-            @if (item.Trangthai == 0)
-            {
-                <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
-
-            }@if (item.Trangthai == 1)
-            {
-                <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
-            }
-            @if (item.Trangthai == 2)
-            {
-                <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
-            }
-            @if (item.Trangthai == 3)
-            {
-                <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
-            }
-            @if (item.Trangthai == 4)
-            {
-                <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
-            }
-            <td class="d-none">@item.Ghichu</td>
-            <td class="d-none">@item.Iddh</td>
-            <td class="d-none">@item.IdkhNavigation.Idkh</td>
-            <td class="d-none">@item.Trangthai</td>
-            <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
-
-            <td>
-                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#editModal">
-                    <i class="fas fa-pen text-white"></i>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
                 </button>
-                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                        data-target="#detailModal">
-                    <i class="fas fa-info-circle text-white"></i>
-                </button>
-                <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
-                        data-toggle="modal" data-target="#deleteModal">
-                    <i class="fas fa-trash text-white"></i>
-                </button>
-                <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
-            </td>
-            @{ count++; }
-        </tr>
-
-
-        }
-
-
-    </tbody>
-</table>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog w-90" role="document" style="display: flex;
-        align-items: center;
-        justify-content: center;">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
-
-                <div class="modal-body">
-
-                    <div class="row">
-                        @*<div class="col-md-12 col-sm-12">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-2 col-sm-12">
-                                    Mã đơn
-                                </div>
-                                <div class="col-md-10 col-sm-12">
-                                    <input id="MadhA" name="Madh" maxlength="255" type="text"
-                                           class="form-control">
-
-                                </div>
-                            </div>
-                        </div>*@
-                        <div class="col-md-12 col-sm-12 mt-2">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-2 col-sm-12">
-                                    Khách hàng
-                                </div>
-                                <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdkhA" name="Idkh">
-                                        @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
-                                        {
-                                            <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
-                                        }
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
-                        @*<div class="col-md-12 col-sm-12 mt-2">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-2 col-sm-12">
-                                    Hàng hóa
-                                </div>
-                                <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdhhA" name="Idhh">
-                                        @foreach (var item in @ViewData["Hanghoa"] as List<Hanghoa>)
-                                        {
-                                            <option value="@item.Idhh">@item.Mavl-@item.Tenvl</option>
-                                        }
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>*@
-
-                        <div class="col-md-12 col-sm-12 mt-2">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-2 col-sm-12">
-                                    Ghi chú
-                                </div>
-                                <div class="col-md-10 col-sm-12">
-                                    <textarea id="GhichuA" name="Ghichu" maxlength="4000"
-                                              type="text" class="form-control"></textarea>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
-                </div>
-
             </form>
 
         </div>
     </div>
-</div>
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
-    <div class="modal-dialog w-90" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModal">Cập nhật thông tin</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="formEdit" asp-controller="Dondathang" asp-action="Edit" method="post" enctype="multipart/form-data">
 
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Madh</td>
+                    <td>@item.IdkhNavigation.Tenkh</td>
+
+                    @{
+                        DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                    }
+                    <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    @if (item.Ngaygiao != null)
+                    {
+                        DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                        <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+
+                    @if (item.Trangthai == 0)
+                    {
+                        <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                    }@if (item.Trangthai == 1)
+                    {
+                        <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                    }
+                    @if (item.Trangthai == 2)
+                    {
+                        <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                    }
+                    @if (item.Trangthai == 3)
+                    {
+                        <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                    }
+                    @if (item.Trangthai == 4)
+                    {
+                        <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                    }
+                    <td class="d-none">@item.Ghichu</td>
+                    <td class="d-none">@item.Iddh</td>
+                    <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                    <td class="d-none">@item.Trangthai</td>
+                    <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                        <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                    </td>
+                    @{ count++; }
+                </tr>
+
+
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+                            @*<div class="col-md-12 col-sm-12">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Mã đơn
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <input id="MadhA" name="Madh" maxlength="255" type="text"
+                                                   class="form-control">
+
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Hàng hóa
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdhhA" name="Idhh">
+                                                @foreach (var item in @ViewData["Hanghoa"] as List<Hanghoa>)
+                                                {
+                                                    <option value="@item.Idhh">@item.Mavl-@item.Tenvl</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog w-90" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModal">Cập nhật thông tin</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formEdit" asp-controller="Dondathang" asp-action="Edit" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+                        <input id="id" name="Iddh" class="d-none" type="text">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Mã đơn
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="MadhE" name="Madh" maxlength="255" type="text" readonly
+                                               class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ngày đặt
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input id="NgaydatE" name="Ngaydat" type="datetime" readonly
+                                               class="form-control">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhE" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="col-md-12 col-sm-12 mt-2">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Hàng hóa
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
+                                            <select class="form-control" id="IdhhE" name="Idhh">
+                                                @foreach (var item in @ViewData["Hanghoa"] as List<Hanghoa>)
+                                                {
+                                                    <option value="@item.Idhh">@item.Mavl-@item.Tenvl</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Trạng thái
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="TrangthaiE" name="Trangthai">
+
+                                            <option value="0">Chờ duyệt</option>
+                                            <option value="1">Đóng gói</option>
+                                            <option value="2">Xuất kho</option>
+                                            <option value="3">Thanh toán</option>
+                                            <option value="4">Trả hàng</option>
+
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuE" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="editButton" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <input id="id" name="Iddh" class="d-none" type="text">
+
                     <div class="row">
                         <div class="col-md-12 col-sm-12">
                             <div class="row d-flex align-items-center">
@@ -223,7 +354,19 @@
                                     Mã đơn
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="MadhE" name="Madh" maxlength="255" type="text" readonly
+                                    <input id="MadhD" name="Madh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Khách hàng
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="TenkhD" name="Tenkh" maxlength="255" type="text" disabled
                                            class="form-control">
 
                                 </div>
@@ -235,7 +378,297 @@
                                     Ngày đặt
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="NgaydatE" name="Ngaydat"  type="datetime" readonly
+
+                                    <input id="NgaydatD" name="Ngaydat" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Trạng thái
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="TrangthaiD" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuD" name="Ghichu" maxlength="4000" disabled
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="tab-2" class="tab-content ">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModalTab2">
+                Thêm mới đơn đặt hàng
+            </button>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int countt = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+
+                @if (item.Trangthai == 0)
+                {
+                    <tr>
+                        <td class="d-flex justify-content-center">@countt</td>
+                        <td>@item.Madh</td>
+                        <td>@item.IdkhNavigation.Tenkh</td>
+
+                        @{
+                            DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                        }
+                        <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @if (item.Ngaygiao != null)
+                        {
+                            DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                            <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item.Trangthai == 0)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                        }@if (item.Trangthai == 1)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                        }
+                        @if (item.Trangthai == 2)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                        }
+                        @if (item.Trangthai == 3)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                        }
+                        @if (item.Trangthai == 4)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                        }
+                        <td class="d-none">@item.Ghichu</td>
+                        <td class="d-none">@item.Iddh</td>
+                        <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                        <td class="d-none">@item.Trangthai</td>
+                        <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        <td>
+                            <div class="d-flex justify-content-lg-between align-items-center">
+                                <form asp-action="Edit" asp-controller="Dondathang" method="post">
+                                    <input type="hidden" value="@item.Iddh" name="Iddh" />
+                                    <input type="hidden" value="1" name="Trangthai" />
+                                    <button type="submit" class="btn btn-info text-white" style="text-decoration:none">Đóng gói</button>
+
+                                </form>
+
+                                <button onclick="showModalDetailTab2(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#detailModalTab2">
+                                    <i class="fas fa-info-circle text-white"></i>
+                                </button>
+                                <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                        data-toggle="modal" data-target="#deleteModalTab2">
+                                    <i class="fas fa-trash text-white"></i>
+                                </button>
+                                <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                            </div>
+                            
+                        </td>
+                        @{ count++; }
+                    </tr>
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModalTab2" tabindex="-1" role="dialog" aria-labelledby="addModalTab2"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModalTab2" tabindex="-1" role="dialog" aria-labelledby="detailModalTab2"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Mã đơn
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="MadhD2" name="Madh" maxlength="255" type="text" disabled
                                            class="form-control">
 
                                 </div>
@@ -247,47 +680,310 @@
                                     Khách hàng
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdkhE" name="Idkh">
-                                        @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
-                                        {
-                                            <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
-                                        }
-                                    </select>
+                                    <input id="TenkhD2" name="Tenkh" maxlength="255" type="text" disabled
+                                           class="form-control">
 
                                 </div>
                             </div>
                         </div>
-                        @*<div class="col-md-12 col-sm-12 mt-2">
+                        <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
-                                    Hàng hóa
+                                    Ngày đặt
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdhhE" name="Idhh">
-                                        @foreach (var item in @ViewData["Hanghoa"] as List<Hanghoa>)
-                                        {
-                                            <option value="@item.Idhh">@item.Mavl-@item.Tenvl</option>
-                                        }
-                                    </select>
 
+                                    <input id="NgaydatD2" name="Ngaydat" disabled
+                                           class="form-control">
                                 </div>
                             </div>
-                        </div>*@
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD2" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
                                     Trạng thái
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="TrangthaiE" name="Trangthai">
 
-                                        <option value="0">Chờ duyệt</option>
-                                        <option value="1">Đóng gói</option>
-                                        <option value="2">Xuất kho</option>
-                                        <option value="3">Thanh toán</option>
-                                        <option value="4">Trả hàng</option>
+                                    <input id="TrangthaiD2" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
 
-                                    </select>
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuD2" name="Ghichu" maxlength="4000" disabled
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalTab2" tabindex="-1" role="dialog" aria-labelledby="deleteModalTab2"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD2" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="tab-3" class="tab-content ">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModalTab3">
+                Thêm mới đơn đặt hàng
+            </button>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counttt = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+
+                @if (item.Trangthai == 1)
+                {
+                    <tr>
+                        <td class="d-flex justify-content-center">@counttt</td>
+                        <td>@item.Madh</td>
+                        <td>@item.IdkhNavigation.Tenkh</td>
+
+                        @{
+                            DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                        }
+                        <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @if (item.Ngaygiao != null)
+                        {
+                            DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                            <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item.Trangthai == 0)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                        }@if (item.Trangthai == 1)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                        }
+                        @if (item.Trangthai == 2)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                        }
+                        @if (item.Trangthai == 3)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                        }
+                        @if (item.Trangthai == 4)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                        }
+                        <td class="d-none">@item.Ghichu</td>
+                        <td class="d-none">@item.Iddh</td>
+                        <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                        <td class="d-none">@item.Trangthai</td>
+                        <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        <td>
+
+                            <div class="d-flex justify-content-lg-between align-items-center">
+                                <form asp-action="Edit" asp-controller="Dondathang" method="post">
+                                    <input type="hidden" value="@item.Iddh" name="Iddh" />
+                                    <input type="hidden" value="@item.Idkh" name="Idkh" />
+                                    <input type="hidden" value="2" name="Trangthai" />
+                                    <button type="submit" class="btn btn-secondary text-white" style="text-decoration:none">Xuất kho</button>
+
+                                </form>
+                                <button onclick="showModalDetailTab3(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#detailModalTab3">
+                                    <i class="fas fa-info-circle text-white"></i>
+                                </button>
+                                <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                        data-toggle="modal" data-target="#deleteModalTab3">
+                                    <i class="fas fa-trash text-white"></i>
+                                </button>
+                                <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                            </div>
+                            
+                        </td>
+                        @{ count++; }
+                    </tr>
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModalTab3" tabindex="-1" role="dialog" aria-labelledby="addModalTab3"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModalTab3" tabindex="-1" role="dialog" aria-labelledby="detailModalTab3"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Mã đơn
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="MadhD3" name="Madh" maxlength="255" type="text" disabled
+                                           class="form-control">
 
                                 </div>
                             </div>
@@ -295,157 +991,1035 @@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
+                                    Khách hàng
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="TenkhD3" name="Tenkh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày đặt
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaydatD3" name="Ngaydat" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD3" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Trạng thái
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="TrangthaiD3" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
                                     Ghi chú
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <textarea id="GhichuE" name="Ghichu" maxlength="4000"
+                                    <textarea id="GhichuD3" name="Ghichu" maxlength="4000" disabled
                                               type="text" class="form-control"></textarea>
 
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" id="editButton" class="btn btn-primary">Lưu</button>
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalTab3" tabindex="-1" role="dialog" aria-labelledby="deleteModalTab3"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD3" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="tab-4" class="tab-content ">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModalTab4">
+                Thêm mới đơn đặt hàng
+            </button>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
             </form>
 
         </div>
     </div>
 
-</div>
-<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModal"
-     aria-hidden="true">
-    <div class="modal-dialog w-90" role="document" style="display: flex;
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int countttt = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+
+                @if (item.Trangthai == 2)
+                {
+                    <tr>
+                        <td class="d-flex justify-content-center">@countttt</td>
+                        <td>@item.Madh</td>
+                        <td>@item.IdkhNavigation.Tenkh</td>
+
+                        @{
+                            DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                        }
+                        <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @if (item.Ngaygiao != null)
+                        {
+                            DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                            <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item.Trangthai == 0)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                        }@if (item.Trangthai == 1)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                        }
+                        @if (item.Trangthai == 2)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                        }
+                        @if (item.Trangthai == 3)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                        }
+                        @if (item.Trangthai == 4)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                        }
+                        <td class="d-none">@item.Ghichu</td>
+                        <td class="d-none">@item.Iddh</td>
+                        <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                        <td class="d-none">@item.Trangthai</td>
+                        <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        <td>
+                            <div class="d-flex justify-content-lg-between align-items-center">
+                                <form asp-action="Edit" asp-controller="Dondathang" method="post">
+                                    <input type="hidden" value="@item.Iddh" name="Iddh" />
+                                    <input type="hidden" value="3" name="Trangthai" />
+                                    <input type="hidden" value="@item.Idkh" name="Idkh" />
+
+                                    <button type="submit" class="btn btn-success text-white" style="text-decoration:none">Đã thanh toán</button>
+
+                                </form>
+                                <form asp-action="Edit" asp-controller="Dondathang" method="post">
+                                    <input type="hidden" value="@item.Iddh" name="Iddh" />
+                                    <input type="hidden" value="@item.Idkh" name="Idkh" />
+
+                                    <input type="hidden" value="4" name="Trangthai" />
+                                    <button type="submit" class="btn btn-danger text-white" style="text-decoration:none">Trả hàng</button>
+
+                                </form>
+                                <button onclick="showModalDetailTab4(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                        data-target="#detailModalTab4">
+                                    <i class="fas fa-info-circle text-white"></i>
+                                </button>
+                                <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                        data-toggle="modal" data-target="#deleteModalTab4">
+                                    <i class="fas fa-trash text-white"></i>
+                                </button>
+                                <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                            </div>
+                            
+                        </td>
+                        @{ count++; }
+                    </tr>
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModalTab4" tabindex="-1" role="dialog" aria-labelledby="addModalTab4"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
         align-items: center;
         justify-content: center;">
-        <div class="modal-content ">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-md-12 col-sm-12">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Mã đơn
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-                                <input id="MadhD" name="Madh" maxlength="255" type="text" disabled
-                                       class="form-control">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 mt-2">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Khách hàng
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-                                <input id="TenkhD" name="Tenkh" maxlength="255" type="text" disabled
-                                       class="form-control">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 mt-2">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Ngày đặt
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-
-                                <input id="NgaydatD" name="Ngaydat" disabled
-                                       class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 mt-2">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Ngày giao
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-
-                                <input id="NgaygiaoD" name="Ngaygiao" disabled
-                                       class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 mt-2">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Trạng thái
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-
-                                <input id="TrangthaiD" name="Trangthai" disabled
-                                       class="form-control">
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="col-md-12 col-sm-12 mt-2">
-                        <div class="row d-flex align-items-center">
-                            <div class="col-md-2 col-sm-12">
-                                Ghi chú
-                            </div>
-                            <div class="col-md-10 col-sm-12">
-                                <textarea id="GhichuD" name="Ghichu" maxlength="4000" disabled
-                                          type="text" class="form-control"></textarea>
-
-                            </div>
-                        </div>
-                    </div>
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-            </div>
+                    <div class="modal-body">
 
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form asp-controller="Dondathang" asp-action="Delete" method="post">
-                <input id="idD" name="id" class="d-none" type="text">
-
-                <div class="modal-body">
-                    Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+    <div class="modal fade" id="detailModalTab4" tabindex="-1" role="dialog" aria-labelledby="detailModalTab4"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Mã đơn
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="MadhD4" name="Madh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Khách hàng
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="TenkhD4" name="Tenkh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày đặt
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaydatD4" name="Ngaydat" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD4" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Trạng thái
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="TrangthaiD4" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuD4" name="Ghichu" maxlength="4000" disabled
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalTab4" tabindex="-1" role="dialog" aria-labelledby="deleteModalTab4"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD4" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="tab-5" class="tab-content ">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModalTab5">
+                Thêm mới đơn đặt hàng
+            </button>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
             </form>
 
         </div>
     </div>
 
-</div>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int counttttt = 1;
+            }
+            @foreach (var item in Model)
+            {
 
+
+                @if (item.Trangthai == 3)
+                {
+                    <tr>
+                        <td class="d-flex justify-content-center">@counttttt</td>
+                        <td>@item.Madh</td>
+                        <td>@item.IdkhNavigation.Tenkh</td>
+
+                        @{
+                            DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                        }
+                        <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @if (item.Ngaygiao != null)
+                        {
+                            DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                            <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item.Trangthai == 0)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                        }@if (item.Trangthai == 1)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                        }
+                        @if (item.Trangthai == 2)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                        }
+                        @if (item.Trangthai == 3)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                        }
+                        @if (item.Trangthai == 4)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                        }
+                        <td class="d-none">@item.Ghichu</td>
+                        <td class="d-none">@item.Iddh</td>
+                        <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                        <td class="d-none">@item.Trangthai</td>
+                        <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        <td>
+                            
+                            <button onclick="showModalDetailTab5(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#detailModalTab5">
+                                <i class="fas fa-info-circle text-white"></i>
+                            </button>
+                            <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                    data-toggle="modal" data-target="#deleteModalTab5">
+                                <i class="fas fa-trash text-white"></i>
+                            </button>
+                            <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                        </td>
+                        @{ count++; }
+                    </tr>
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModalTab5" tabindex="-1" role="dialog" aria-labelledby="addModalTab5"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModalTab5" tabindex="-1" role="dialog" aria-labelledby="detailModalTab5"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Mã đơn
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="MadhD5" name="Madh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Khách hàng
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="TenkhD5" name="Tenkh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày đặt
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaydatD5" name="Ngaydat" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD5" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Trạng thái
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="TrangthaiD5" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuD5" name="Ghichu" maxlength="4000" disabled
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalTab5" tabindex="-1" role="dialog" aria-labelledby="deleteModalTab5"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD5" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="tab-6" class="tab-content ">
+
+    <div class="d-flex justify-content-between mb-2">
+
+        <div class="d-flex justify-content-between ">
+            <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModalTab6">
+                Thêm mới đơn đặt hàng
+            </button>
+            <form asp-controller="Dondathang" asp-action="TrashList">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-trash-restore"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Ngày giao</th>
+                <th>Trạng thái</th>
+                <th class="d-none">Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int countttttt = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+
+                @if (item.Trangthai == 4)
+                {
+                    <tr>
+                        <td class="d-flex justify-content-center">@countttttt</td>
+                        <td>@item.Madh</td>
+                        <td>@item.IdkhNavigation.Tenkh</td>
+
+                        @{
+                            DateTime Ngaydat = (DateTime)item.Ngaydat;
+
+                        }
+                        <td>@Ngaydat.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @if (item.Ngaygiao != null)
+                        {
+                            DateTime Ngaygiao = (DateTime)item.Ngaygiao;
+                            <td>@Ngaygiao.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        @if (item.Trangthai == 0)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-primary" style="border-radius:20px">Chờ duyệt</span></td>
+
+                        }@if (item.Trangthai == 1)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-info" style="border-radius:20px">Đóng gói</span></td>
+                        }
+                        @if (item.Trangthai == 2)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-secondary" style="border-radius:20px">Xuất kho</span></td>
+                        }
+                        @if (item.Trangthai == 3)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-success" style="border-radius:20px">Thanh toán</span></td>
+                        }
+                        @if (item.Trangthai == 4)
+                        {
+                            <td class="d-flex justify-content-center text-white"><span class="p-2 bg-danger" style="border-radius:20px">Trả hàng</span></td>
+                        }
+                        <td class="d-none">@item.Ghichu</td>
+                        <td class="d-none">@item.Iddh</td>
+                        <td class="d-none">@item.IdkhNavigation.Idkh</td>
+                        <td class="d-none">@item.Trangthai</td>
+                        <td class="d-none">@Ngaydat.ToString("yyyy-MM-ddTHH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        <td>
+                            
+                            <button onclick="showModalDetailTab6(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                    data-target="#detailModalTab6">
+                                <i class="fas fa-info-circle text-white"></i>
+                            </button>
+                            <button data-id="@item.Iddh" data-code="@item.Madh" data-name="@item.IdkhNavigation.Tenkh" type="button" class="btn btn-danger deleteBtn"
+                                    data-toggle="modal" data-target="#deleteModalTab6">
+                                <i class="fas fa-trash text-white"></i>
+                            </button>
+                            <a href="/Dondathang/Details/@item.Iddh" class="btn btn-info text-white" style="text-decoration:none">Xem</a>
+                        </td>
+                        @{ count++; }
+                    </tr>
+
+                }
+            }
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="addModalTab6" tabindex="-1" role="dialog" aria-labelledby="addModalTab6"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm mới đơn đặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formAdd" asp-controller="Dondathang" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Khách hàng
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdkhA" name="Idkh">
+                                            @foreach (var item in @ViewData["Khachhang"] as List<Khachhang>)
+                                            {
+                                                <option value="@item.Idkh">@item.Makh-@item.Tenkh</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 mt-2">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Ghi chú
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <textarea id="GhichuA" name="Ghichu" maxlength="4000"
+                                                  type="text" class="form-control"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailModalTab6" tabindex="-1" role="dialog" aria-labelledby="detailModalTab6"
+         aria-hidden="true">
+        <div class="modal-dialog w-90" role="document" style="display: flex;
+        align-items: center;
+        justify-content: center;">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModal">Thông tin chi tiết</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Mã đơn
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="MadhD6" name="Madh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Khách hàng
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <input id="TenkhD6" name="Tenkh" maxlength="255" type="text" disabled
+                                           class="form-control">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày đặt
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaydatD6" name="Ngaydat" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ngày giao
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="NgaygiaoD6" name="Ngaygiao" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Trạng thái
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+
+                                    <input id="TrangthaiD6" name="Trangthai" disabled
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 col-sm-12 mt-2">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-md-2 col-sm-12">
+                                    Ghi chú
+                                </div>
+                                <div class="col-md-10 col-sm-12">
+                                    <textarea id="GhichuD6" name="Ghichu" maxlength="4000" disabled
+                                              type="text" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModalTab6" tabindex="-1" role="dialog" aria-labelledby="deleteModalTab6"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModal">Bạn có chắc chắn muốn xóa?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-controller="Dondathang" asp-action="Delete" method="post">
+                    <input id="idD6" name="id" class="d-none" type="text">
+
+                    <div class="modal-body">
+                        Dòng dữ liệu này sẽ bị mất, bạn có muốn tiếp tục xóa?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="submit" id="deleteModalBtn" class="btn btn-primary">Xóa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
 <script>
     const formAdd = document.getElementById("formAdd");
     const addButton = document.getElementById("addButton");
@@ -609,4 +2183,360 @@
 
 
 </script>
+<script>
 
+    //tab 2
+    function showModalDetailTab2(row) {
+
+
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.parentElement.cells;
+        const Madh = cells[1].textContent;
+        const Tenkh = cells[2].textContent;
+
+        const Ngaydat = cells[3].textContent;
+
+        const Ngaygiao = cells[4].textContent;
+
+        const Trangthai = cells[5].textContent;
+        const Ghichu = cells[6].textContent;
+
+
+        const Iddh = cells[7].textContent;
+
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MadhD2').value = Madh;
+        document.querySelector('#NgaydatD2').value = Ngaydat;
+        document.querySelector('#NgaygiaoD2').value = Ngaygiao;
+
+        if (Trangthai == 0) {
+            document.querySelector('#TrangthaiD2').value = "Chờ duyệt";
+
+        }
+        if (Trangthai == 1) {
+            document.querySelector('#TrangthaiD2').value = "Đóng gói";
+
+        }
+        if (Trangthai == 2) {
+            document.querySelector('#TrangthaiD2').value = "Xuất kho";
+
+        }
+        if (Trangthai == 3) {
+            document.querySelector('#TrangthaiD2').value = "Thanh toán";
+
+        }
+        if (Trangthai == 4) {
+            document.querySelector('#TrangthaiD2').value = "Trả hàng";
+
+        }
+        document.querySelector('#GhichuD2').value = Ghichu;
+        document.querySelector('#TenkhD2').value = Tenkh;
+
+        //document.querySelector('#id2').value = Iddh;
+
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModalTab2').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD2").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có Mã đơn đặt là ' + code + ' và Tên khách hàng là ' + name);
+    });
+
+
+
+</script>
+<script>
+
+    //tab 3
+    function showModalDetailTab3(row) {
+
+
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.parentElement.cells;
+
+        const Madh = cells[1].textContent;
+        const Tenkh = cells[2].textContent;
+        const Ngaydat = cells[3].textContent;
+        const Ngaygiao = cells[4].textContent;
+        const Trangthai = cells[5].textContent;
+        const Ghichu = cells[6].textContent;
+
+        const Iddh = cells[7].textContent;
+
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MadhD3').value = Madh;
+        document.querySelector('#NgaydatD3').value = Ngaydat;
+        document.querySelector('#NgaygiaoD3').value = Ngaygiao;
+
+        if (Trangthai == 0) {
+            document.querySelector('#TrangthaiD3').value = "Chờ duyệt";
+
+        }
+        if (Trangthai == 1) {
+            document.querySelector('#TrangthaiD3').value = "Đóng gói";
+
+        }
+        if (Trangthai == 2) {
+            document.querySelector('#TrangthaiD3').value = "Xuất kho";
+
+        }
+        if (Trangthai == 3) {
+            document.querySelector('#TrangthaiD3').value = "Thanh toán";
+
+        }
+        if (Trangthai == 4) {
+            document.querySelector('#TrangthaiD3').value = "Trả hàng";
+
+        }
+        document.querySelector('#GhichuD3').value = Ghichu;
+        document.querySelector('#TenkhD3').value = Tenkh;
+
+        //document.querySelector('#id3').value = Iddh;
+
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModalTab3').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD3").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có Mã đơn đặt là ' + code + ' và Tên khách hàng là ' + name);
+    });
+
+
+
+</script>
+<script>
+
+    //tab 4
+    function showModalDetailTab4(row) {
+
+
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.parentElement.cells;
+
+        const Madh = cells[1].textContent;
+        const Tenkh = cells[2].textContent;
+        const Ngaydat = cells[3].textContent;
+        const Ngaygiao = cells[4].textContent;
+        const Trangthai = cells[5].textContent;
+        const Ghichu = cells[6].textContent;
+
+        const Iddh = cells[7].textContent;
+
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MadhD4').value = Madh;
+        document.querySelector('#NgaydatD4').value = Ngaydat;
+        document.querySelector('#NgaygiaoD4').value = Ngaygiao;
+
+        if (Trangthai == 0) {
+            document.querySelector('#TrangthaiD4').value = "Chờ duyệt";
+
+        }
+        if (Trangthai == 1) {
+            document.querySelector('#TrangthaiD4').value = "Đóng gói";
+
+        }
+        if (Trangthai == 2) {
+            document.querySelector('#TrangthaiD4').value = "Xuất kho";
+
+        }
+        if (Trangthai == 3) {
+            document.querySelector('#TrangthaiD4').value = "Thanh toán";
+
+        }
+        if (Trangthai == 4) {
+            document.querySelector('#TrangthaiD4').value = "Trả hàng";
+
+        }
+        document.querySelector('#GhichuD4').value = Ghichu;
+        document.querySelector('#TenkhD4').value = Tenkh;
+
+        //document.querySelector('#id3').value = Iddh;
+
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModalTab4').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD4").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có Mã đơn đặt là ' + code + ' và Tên khách hàng là ' + name);
+    });
+
+
+
+</script>
+<script>
+
+    //tab 5
+    function showModalDetailTab5(row) {
+
+
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.cells;
+        const Madh = cells[1].textContent;
+        const Tenkh = cells[2].textContent;
+        const Ngaydat = cells[3].textContent;
+        const Ngaygiao = cells[4].textContent;
+        const Trangthai = cells[5].textContent;
+        const Ghichu = cells[6].textContent;
+
+        const Iddh = cells[7].textContent;
+
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MadhD5').value = Madh;
+        document.querySelector('#NgaydatD5').value = Ngaydat;
+        document.querySelector('#NgaygiaoD5').value = Ngaygiao;
+
+        if (Trangthai == 0) {
+            document.querySelector('#TrangthaiD5').value = "Chờ duyệt";
+
+        }
+        if (Trangthai == 1) {
+            document.querySelector('#TrangthaiD5').value = "Đóng gói";
+
+        }
+        if (Trangthai == 2) {
+            document.querySelector('#TrangthaiD5').value = "Xuất kho";
+
+        }
+        if (Trangthai == 3) {
+            document.querySelector('#TrangthaiD5').value = "Thanh toán";
+
+        }
+        if (Trangthai == 4) {
+            document.querySelector('#TrangthaiD5').value = "Trả hàng";
+
+        }
+        document.querySelector('#GhichuD5').value = Ghichu;
+        document.querySelector('#TenkhD5').value = Tenkh;
+
+        //document.querySelector('#id3').value = Iddh;
+
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModalTab5').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD5").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có Mã đơn đặt là ' + code + ' và Tên khách hàng là ' + name);
+    });
+
+
+
+</script>
+<script>
+
+    //tab 6
+    function showModalDetailTab6(row) {
+
+
+        // Trích xuất thông tin từ các ô trong dòng được click
+        const cells = row.parentElement.parentElement.cells;
+        const Madh = cells[1].textContent;
+        const Tenkh = cells[2].textContent;
+        const Ngaydat = cells[3].textContent;
+        const Ngaygiao = cells[4].textContent;
+        const Trangthai = cells[5].textContent;
+        const Ghichu = cells[6].textContent;
+
+        const Iddh = cells[7].textContent;
+
+
+
+        // Gán giá trị cho các input trong modal
+        document.querySelector('#MadhD6').value = Madh;
+        document.querySelector('#NgaydatD6').value = Ngaydat;
+        document.querySelector('#NgaygiaoD6').value = Ngaygiao;
+
+        if (Trangthai == 0) {
+            document.querySelector('#TrangthaiD6').value = "Chờ duyệt";
+
+        }
+        if (Trangthai == 1) {
+            document.querySelector('#TrangthaiD6').value = "Đóng gói";
+
+        }
+        if (Trangthai == 2) {
+            document.querySelector('#TrangthaiD6').value = "Xuất kho";
+
+        }
+        if (Trangthai == 3) {
+            document.querySelector('#TrangthaiD6').value = "Thanh toán";
+
+        }
+        if (Trangthai == 4) {
+            document.querySelector('#TrangthaiD6').value = "Trả hàng";
+
+        }
+        document.querySelector('#GhichuD6').value = Ghichu;
+        document.querySelector('#TenkhD6').value = Tenkh;
+
+        //document.querySelector('#id3').value = Iddh;
+
+        // Hiển thị modal
+        $('#detailModal').modal('show');
+    }
+
+    //Khi nhấn xóa trên table
+    $('#deleteModalTab6').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Nút "Xóa" được nhấn
+        var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
+        var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
+        var code = button.data('code');
+        // Tiếp tục với các cột còn lại
+        document.getElementById("idD6").value = id;
+        // Hiển thị thông tin của dòng lên modal xác nhận
+        var modal = $(this);
+        modal.find('.modal-body').text('Bạn có chắc chắn muốn xóa dòng có Mã đơn đặt là ' + code + ' và Tên khách hàng là ' + name);
+    });
+
+
+
+</script>
+<script>
+    //bỏ xung đột lớp phủ khiến giao diện bị vô hiệu hóa bỏi modal-backdrop
+    $('.modal').on('hidden.bs.modal', function () {
+        $('.modal-backdrop').remove();
+    });
+</script>

@@ -26,6 +26,8 @@ namespace ElectronicsStore.Controllers
         }
 
         // GET: Dondathang
+        [Authorize]
+
         public async Task<IActionResult> Index()
         {
             var electronicsStoreContext = await _context.Dondathang.Where(a => a.Active == 1).Include(p => p.IdkhNavigation).OrderByDescending(a => a.Iddh).ToListAsync();
@@ -71,27 +73,7 @@ namespace ElectronicsStore.Controllers
 
             }
         }
-        //public async Task<IActionResult> Noidungdondat(int? id)
-        //{
-
-        //    try
-        //    {
-        //        var noidungddh = await _context.Noidungddh
-        //                                         .Where(i => i.Iddh == id)
-        //                                        .Include(p => p.IddhNavigation)
-        //                                        .Include(p => p.IddhNavigation.IdkhNavigation)
-        //                                        .Include(p => p.IdhhNavigation)
-        //                                        .ToListAsync();
-        //        return View(noidungddh);
-        //    }
-        //    catch
-        //    {
-        //        return RedirectToAction("Index", "Dondathang");
-
-        //    }
-
-
-        //}
+       
 
         // GET: Dondathang/Create
         public IActionResult Create()
@@ -157,7 +139,7 @@ namespace ElectronicsStore.Controllers
                 {
                     kh.Gioitinh = 2.ToString();
                     _context.Khachhang.Add(kh);
-                    //await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
 
@@ -170,7 +152,7 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
-                //await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
                 Noidungddh noidungddhmoi = new Noidungddh();
@@ -211,7 +193,7 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
-                //await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
                 Noidungddh noidungddhmoi = new Noidungddh();
@@ -267,7 +249,7 @@ namespace ElectronicsStore.Controllers
                 {
                     kh.Gioitinh = 2.ToString();
                     _context.Khachhang.Add(kh);
-                    //await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
 
@@ -280,7 +262,7 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
-                //await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
 
@@ -331,7 +313,7 @@ namespace ElectronicsStore.Controllers
                 dondathang.Ghichu = noidungphu;
 
                 _context.Dondathang.Add(dondathang);
-                //await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
 
@@ -409,35 +391,138 @@ namespace ElectronicsStore.Controllers
         // POST: Dondathang/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Dondathang dondathang)
         {
 
-
-            //string employeeEmail = Request.Cookies["HienCaCookie"];
-            //var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
-            //dondathang.Ngaydat = DateTime.Now;
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //dondathang.Madh = "DDH" + nhanvien.Manv + '-' + ((dondathang.Ngaydat).ToString()).Replace("/", "").Replace(" ", "");
                     dondathang.Active = 1;
-                    _context.Update(dondathang);
-                    await _context.SaveChangesAsync();
+
+                    string employeeEmail = Request.Cookies["HienCaCookie"];
+                    if (employeeEmail != null)
+                    {
+                        var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
+                        //0 chuẩn bị hàng
+                        //1 đóng gói
+                        //2 xuất kho
+                        //3 thanh toán
+                        //4 hủy
+                        if (nhanvien != null)
+                        {
+
+                            if (dondathang.Trangthai == 2)
+                            {
+                                List<Noidungddh> noidungdonhang = await _context.Noidungddh.Where(a => a.Iddh == dondathang.Iddh).Include(i => i.IddhNavigation).ToListAsync();
+
+                                Phieuxuatkho phieuxuatkho = new Phieuxuatkho();
+                                phieuxuatkho.Sophieu = GenerateOrderCode() + nhanvien.Idnv + dondathang.Idkh + dondathang.Iddh;
+                                phieuxuatkho.Ngaylap = DateTime.Now;
+                                phieuxuatkho.Idnv = nhanvien.Idnv;
+                                phieuxuatkho.Idkh = dondathang.Idkh;
+
+                                _context.Phieuxuatkho.Add(phieuxuatkho);
+                                await _context.SaveChangesAsync();
+
+                                Phieuxuatkho phieuxuatkhomoi = await _context.Phieuxuatkho.Where(a => a.Sophieu.Equals(phieuxuatkho.Sophieu)).FirstOrDefaultAsync();
+
+                                foreach (Noidungddh item in noidungdonhang)
+                                {
+                                    Noidungpxk noidungpxk = new Noidungpxk();
+                                    noidungpxk.Idpxk = phieuxuatkhomoi.Idpxk;
+
+                                    noidungpxk.Idhh = item.Idhh;
+                                    noidungpxk.Soluong = item.Soluong;
+                                    noidungpxk.Dongia = item.Dongia;
+                                    noidungpxk.Vat = 0;
+                                    noidungpxk.Cktm = 0;
+
+                                    _context.Noidungpxk.Add(noidungpxk);
+                                    await _context.SaveChangesAsync();
+
+                                }
+                                Dondathang donhang = await _context.Dondathang.Where(a => a.Iddh == dondathang.Iddh).FirstOrDefaultAsync();
+                                donhang.Trangthai = 2;
+                                _context.Dondathang.Update(donhang);
+                                await _context.SaveChangesAsync();
+
+                            }
+                            else if (dondathang.Trangthai == 3)
+                            {
+                                float Tongtien = 0;
+                                List<Noidungddh> noidungdonhang = await _context.Noidungddh.Where(a => a.Iddh == dondathang.Iddh).Include(i => i.IddhNavigation).ToListAsync();
+                                foreach (Noidungddh item in noidungdonhang)
+                                {
+                                    Tongtien += item.Soluong * item.Dongia;
+                                }
+
+                                Phieuthunokh phieuthunokh = new Phieuthunokh();
+                                phieuthunokh.Sophieu = "PTN" + GenerateOrderCode() + nhanvien.Idnv + dondathang.Idkh + dondathang.Iddh;
+                                phieuthunokh.Ngaylap = DateTime.Now;
+                                phieuthunokh.Idnv = nhanvien.Idnv;
+
+                                //1 tiền mặt
+                                //2 chuyển khoản
+                                //3 nợ
+                                phieuthunokh.Idhttt = 1;//mặc định
+                                _context.Phieuthunokh.Add(phieuthunokh);
+                                await _context.SaveChangesAsync();
+
+                                Phieuthunokh phieuthunokhmoi = await _context.Phieuthunokh.Where(a => a.Sophieu.Equals(phieuthunokh.Sophieu)).FirstOrDefaultAsync();
+
+                                Noidungthunoddh noidungthunoddh = new Noidungthunoddh();
+                                noidungthunoddh.Idptnkh = phieuthunokhmoi.Idptnkh;
+                                noidungthunoddh.Ngaythuno = DateTime.Now;
+                                noidungthunoddh.Iddh = dondathang.Iddh;
+
+                                //tổng tiền của đơn hàng - tất cả các nội dung đơn đặt hàng
+                                noidungthunoddh.Sotien = Tongtien;
+
+                                _context.Noidungthunoddh.Add(noidungthunoddh);
+                                await _context.SaveChangesAsync();
+
+
+                                Dondathang donhang = await _context.Dondathang.Where(a => a.Iddh == dondathang.Iddh).FirstOrDefaultAsync();
+                                donhang.Trangthai = 3;
+                                donhang.Ngaygiao = DateTime.Now;
+                                _context.Dondathang.Update(donhang);
+
+                                await _context.SaveChangesAsync();
+
+                            }
+                            //else if(dondathang.Trangthai == 4)
+                            //{
+                            //    List<Noidungddh> noidungddhtra = await _context.Noidungddh.Where(a => a.Iddh == dondathang.Iddh).ToListAsync();
+
+                            //    foreach(Noidungddh noidungtra in noidungddhtra)
+                            //    {
+                            //        _context.Noidungddh.Remove(noidungtra);
+                            //        await _context.SaveChangesAsync();
+                            //    }
+
+
+                            //}
+                            else if (dondathang.Trangthai == 0 || dondathang.Trangthai == 1 || dondathang.Trangthai == 4)
+                            {
+                                Dondathang donhang = await _context.Dondathang.Where(a => a.Iddh == dondathang.Iddh).FirstOrDefaultAsync();
+                                donhang.Trangthai = dondathang.Trangthai;
+                                _context.Dondathang.Update(donhang);
+                                await _context.SaveChangesAsync();
+
+                            }
+                        }
+                    }
+                   
+
                 }
-                catch (DbUpdateConcurrencyException)
+                catch
                 {
-                    if (!DondathangExists(dondathang.Iddh))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return RedirectToAction(nameof(Index));
+
                 }
                 return RedirectToAction(nameof(Index));
             }

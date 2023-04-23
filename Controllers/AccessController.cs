@@ -29,7 +29,7 @@ namespace ElectronicsStore.Controllers
             ClaimsPrincipal claimUser = HttpContext.User;
             if (claimUser.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Hanghoa");
+                return RedirectToAction("Index", "Dondathang");
 
             }
             return View();
@@ -47,7 +47,37 @@ namespace ElectronicsStore.Controllers
             }
             return RedirectToAction("Login", "Access");
         }
+        public async Task<IActionResult> Signin()
+        { 
+            return View();
+        }
+        [HttpPost]
 
+        public async Task<IActionResult> Signin(Khachhang khachhang, string Matkhaunhaplai)
+        {
+            if (khachhang.Matkhau.Equals(Matkhaunhaplai))
+            {
+                Khachhang khachhangcu = await _context.Khachhang.Where(a => a.Email.Equals(khachhang.Email)).FirstOrDefaultAsync();
+                if (khachhangcu == null)
+                {
+                    _context.Khachhang.Add(khachhang);
+                    await _context.SaveChangesAsync();
+                    ViewData["SigninSuccess"] = "Đăng ký thành công!!!";
+                }
+                else
+                {
+                    ViewData["SigninFailure"] = "Đăng ký thất bại!";
+
+                }
+            }
+            else
+            {
+                ViewData["PassInvalid"] = "Mật khẩu không trùng khớp!";
+
+            }
+
+            return View();
+        }
         public IActionResult Login()
         {
 
@@ -81,7 +111,7 @@ namespace ElectronicsStore.Controllers
 
                     if (employee != null)
                     {
-                        return RedirectToAction("Index", "Hanghoa");
+                        return RedirectToAction("Index", "Dondathang");
 
                     }
                     else
@@ -94,7 +124,7 @@ namespace ElectronicsStore.Controllers
                 }
                 else
                 {
-                    ViewData["ValidateMessage"] = "Tài khoản đăng nhập không hợp lệ";
+                    ViewData["LoginFailure"] = "Tài khoản đăng nhập không hợp lệ";
 
                 }
             }

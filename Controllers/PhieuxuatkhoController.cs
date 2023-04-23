@@ -13,7 +13,7 @@ using ClosedXML.Excel;
 
 namespace ElectronicsStore.Controllers
 {
-    //[Authorize]
+    [Authorize]
 
     public class PhieuxuatkhoController : Controller
     {

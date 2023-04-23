@@ -263,3 +263,4 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Donda
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\OrderedDetails.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\OrderedDetailsMulti.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\PersonalPage.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Access\Signin.cshtml.g.cs
