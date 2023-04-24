@@ -240,7 +240,18 @@ namespace ElectronicsStore.Controllers
 
                     }
                 }
+                else
+                {
+                    //thông qua mã đơn khách cung cấp
+                    var donhang = await _context.Dondathang.Include(kh => kh.IdkhNavigation)
+                                                                    .Where(ma => ma.Madh.Equals(Madh) && ma.IdkhNavigation.Sdt.Equals(sdt))
+                                                                     .OrderByDescending(a => a.Iddh)
+                                                                    .ToListAsync();
+                    ViewData["OrderedDetails"] = donhang;
 
+                    return View();
+
+                }
                 return RedirectToAction("Index", "Home");
 
 
@@ -292,7 +303,19 @@ namespace ElectronicsStore.Controllers
 
                     }
                 }
+                else
+                {
+                    //thông qua mã đơn khách cung cấp
+                    var donhang = await _context.Dondathang.Include(kh => kh.IdkhNavigation)
+                                                                    .Where(ma => ma.Iddh == id)
+                                                                     .OrderByDescending(a => a.Iddh)
+                                                                    .ToListAsync();
+                    ViewData["OrderedDetails"] = donhang;
 
+                    return RedirectToAction("OrderedDetails", "Home");
+
+
+                }
                 return RedirectToAction("Index", "Home");
 
 

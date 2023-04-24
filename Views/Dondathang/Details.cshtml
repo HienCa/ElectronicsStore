@@ -1,8 +1,10 @@
-﻿@model IEnumerable<ElectronicsStore.Models.Noidungddh>
-
+﻿@model IEnumerable<ElectronicsStore.ViewModel.NoidungddhViewModel>
+@using ElectronicsStore.ViewModel;
 @{
     ViewData["Title"] = "Index";
     Layout = "_Admin";
+    Dondathang dondathang = ViewData["Dondathang"] as Dondathang;
+    int statusviewmodel = (int)ViewData["Status"];
 }
 <div class="d-flex justify-content-between mb-2">
     <div class="d-flex justify-content-between  flex-row-reverse">
@@ -13,7 +15,30 @@
         </form>
 
     </div>
+    <div class="d-flex justify-content-between  flex-row-reverse">
+        @if (dondathang.Trangthai == 1)
+        {
+            //đủ số lượng để xuất
+            @if (statusviewmodel == 1)
+            {
+                <form asp-action="Edit" asp-controller="Dondathang" method="post">
+                    <input type="hidden" value="@dondathang.Iddh" name="Iddh" />
+                    <input type="hidden" value="@dondathang.Idkh" name="Idkh" />
+                    <input type="hidden" value="2" name="Trangthai" />
 
+                    <button type="submit" class="btn btn-success text-white" style="text-decoration:none">Xuất kho</button>
+                </form>
+
+            }
+            else
+            {
+                <span class="text-danger" style="font-weight: bolder; font-size: 24px">Lượng hàng trong kho không đủ</span>
+            }
+
+        }
+
+
+    </div>
 </div>
 <table class="table table-striped table-bordered  " id="productTable">
     <thead>
@@ -25,6 +50,7 @@
             <th class="text-center">Giá</th>
             <th class="text-center">Hạn bảo hành</th>
             <th class="text-center">Thành tiền</th>
+            <th class="text-center">Tồn Kho</th>
         </tr>
     </thead>
     <tbody>
@@ -34,13 +60,13 @@
         }
         @if (Model != null)
         {
-            @foreach (var item in Model as List<Noidungddh>)
+            @foreach (var item in Model)
             {
 
                 <tr>
                     <td class="d-flex justify-content-center">@count</td>
-                    <td><img src="/Images/@item.IdhhNavigation.Hinhanh" style="width:100%;height:150px" /></td>
-                    <td>@item.IdhhNavigation.Tenvl</td>
+                    <td><img src="/Images/@item.Hinhanh" style="width:100%;height:150px" /></td>
+                    <td>@item.Tenhh</td>
                     <td class="text-center">@item.Soluong</td>
                     @{
                         string Dongia = (item.Dongia).ToString("#,###.##");
@@ -60,6 +86,17 @@
                         <td></td>
                     }
                     <td class="text-right">@Thanhtien đ</td>
+                    @if (statusviewmodel == 1)
+                    {
+                        <td class="text-center"><span class="text-right bg-success text-white p-2" style="border-radius: 10px; font-weight: bolder">Còn: @item.SoLuongTon</span></td>
+
+                    }
+                    else
+                    {
+                        <td class="text-center"><span class="text-right bg-danger text-white p-2" style="border-radius: 10px; font-weight: bolder;">Thiếu: @item.SoLuongThieu</span></td>
+
+
+                    }
 
                     @{ count++; }
                 </tr>

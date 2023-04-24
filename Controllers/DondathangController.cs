@@ -65,7 +65,54 @@ namespace ElectronicsStore.Controllers
                                                 .Include(p => p.IddhNavigation.IdkhNavigation)
                                                 .Include(p => p.IdhhNavigation)
                                                 .ToListAsync();
-                return View(noidungddh);
+
+                List<NoidungddhViewModel> listnoidungviewmodel = new List<NoidungddhViewModel>();
+                foreach(Noidungddh item in noidungddh)
+                {
+                    NoidungddhViewModel noidungviewmodel = new NoidungddhViewModel();
+                    noidungviewmodel.Idndddh = item.Idndddh;
+                    noidungviewmodel.Soluong = item.Soluong;
+                    noidungviewmodel.Dongia = item.Dongia;
+                    noidungviewmodel.Hethanbh = item.Hethanbh;
+                    noidungviewmodel.Idhh = item.Idhh;
+                    noidungviewmodel.Iddh = item.Iddh;
+                    noidungviewmodel.Tenhh = item.IdhhNavigation.Tenvl;
+                    noidungviewmodel.Hinhanh = item.IdhhNavigation.Hinhanh;
+
+
+                    var currentStock = await _context.Noidungpnk
+                                                            .Where(p => p.Idhh == item.Idhh)
+                                                            .SumAsync(p => p.Soluong) - await _context.Noidungpxk
+                                                                                                                .Where(p => p.Idhh == item.Idhh)
+                                                                                                                .SumAsync(p => p.Soluong);
+                    
+                    noidungviewmodel.SoLuongTon = currentStock;
+
+                    //StatusViewModel statusviewmodel = new StatusViewModel();
+                    if (currentStock < item.Soluong)
+                    {
+                        //trong kho thiếu
+                        noidungviewmodel.SoLuongThieu = item.Soluong - currentStock;
+
+                        ViewData["Status"] = 0;
+
+                    }
+                    else
+                    {
+                        //trong kho đủ
+
+                        noidungviewmodel.SoLuongThieu = 0;
+                        ViewData["Status"] = 1;
+
+
+                    }
+
+                    listnoidungviewmodel.Add(noidungviewmodel);
+
+                }
+
+                ViewData["Dondathang"] = await _context.Dondathang.Where(a => a.Iddh == id).FirstOrDefaultAsync();
+                return View(listnoidungviewmodel);
             }
             catch
             {
@@ -286,12 +333,18 @@ namespace ElectronicsStore.Controllers
                     await _context.SaveChangesAsync();
 
                 }
-                ViewData["success"] = "Đặt hàng thành công!!!";
+                TempData["success"] = "Đặt hàng thành công!!!";
+                TempData["Madh"] = dondathang.Madh;
+                TempData["Sdt"] = kh.Sdt;
+
                 return RedirectToAction("Cart", "Home");
 
             }
             catch
             {
+                //Response.StatusCode = 400;
+                TempData["success"] = "Đặt hàng thất bại!!!";
+
                 return RedirectToAction("Cart", "Home");
 
             }
@@ -337,12 +390,16 @@ namespace ElectronicsStore.Controllers
                     await _context.SaveChangesAsync();
 
                 }
-                ViewData["success"] = "Đặt hàng thành công!!!";
+                TempData["success"] = "Đặt hàng thành công!!!";
+                TempData["Madh"] = dondathang.Madh;
+                TempData["Sdt"] = kh.Sdt;
                 return RedirectToAction("Cart", "Home");
 
             }
             catch
             {
+                TempData["success"] = "Đặt hàng thất bại!!!";
+
                 return RedirectToAction("Cart", "Home");
 
             }

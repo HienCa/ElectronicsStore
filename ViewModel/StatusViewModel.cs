@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace ElectronicsStore.ViewModel
 {
-    public class StatusViewModel
+    public class EditImageViewModel : UploadImageViewModel
     {
 
-        public int Status { get; set; }
+        public string ExistingImage { get; set; }
     }
 
 }
