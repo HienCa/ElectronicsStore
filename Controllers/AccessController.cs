@@ -45,6 +45,10 @@ namespace ElectronicsStore.Controllers
             {
                 Response.Cookies.Delete("HienCaCookie");
             }
+            else if (Request.Cookies["CustomerCookie"] != null)
+            {
+                Response.Cookies.Delete("CustomerCookie");
+            }
             return RedirectToAction("Login", "Access");
         }
         public async Task<IActionResult> Signin()
@@ -93,7 +97,16 @@ namespace ElectronicsStore.Controllers
                 Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
                 if (employee != null || customer != null)
                 {
-                    Response.Cookies.Append("HienCaCookie", account.Email);
+                    if (employee != null)
+                    {
+                        Response.Cookies.Append("HienCaCookie", account.Email);
+
+                    }
+                    else
+                    {
+                        Response.Cookies.Append("CustomerCookie", account.Email);
+
+                    }
                     List<Claim> claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Email),

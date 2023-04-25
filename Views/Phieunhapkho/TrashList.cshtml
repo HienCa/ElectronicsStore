@@ -16,71 +16,74 @@
     </div>
 
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Số phiếu</th>
-            <th>Nhà cung cấp</th>
-            <th>Nhân viên lập</th>
-            <th>Ngày lập</th>
-            <th>Số hóa đơn</th>
-            <th>Ngày hóa đơn</th>
-            <th>Ghi chú</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
 
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Sophieu</td>
-            <td>@item.IdnccNavigation.Tenncc</td>
-
-            <td>@item.IdnvNavigation.Tennv</td>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Số phiếu</th>
+                <th>Nhà cung cấp</th>
+                <th>Nhân viên lập</th>
+                <th>Ngày lập</th>
+                <th>Số hóa đơn</th>
+                <th>Ngày hóa đơn</th>
+                <th>Ghi chú</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
             @{
-                DateTime Ngaylap = (DateTime)item.Ngaylap;
-
+                int count = 1;
             }
-            <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
-            <td>@item.Sohd</td>
-
-            @if (item.Ngayhd != null)
+            @foreach (var item in Model)
             {
-                DateTime Ngayhd = (DateTime)item.Ngayhd;
-                <td class="d-none">@Ngayhd.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Sophieu</td>
+                    <td>@item.IdnccNavigation.Tenncc</td>
+
+                    <td>@item.IdnvNavigation.Tennv</td>
+                    @{
+                        DateTime Ngaylap = (DateTime)item.Ngaylap;
+
+                    }
+                    <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>@item.Sohd</td>
+
+                    @if (item.Ngayhd != null)
+                    {
+                        DateTime Ngayhd = (DateTime)item.Ngayhd;
+                        <td class="d-none">@Ngayhd.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    }
+                    else
+                    {
+                        <td class="d-none"></td>
+                    }
+                    <td>@item.Ghichu</td>
+
+                    <td class="d-none">@item.Idpnk</td>
+
+
+                    <td>
+                        <form asp-controller="Phieunhapkho" asp-action="ReStore">
+                            <input name="id" value="@item.Idpnk" class="d-none" type="text">
+
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-unlock text-white"></i>
+                            </button>
+                        </form>
+
+                    </td>
+                    @{ count++; }
+                </tr>
+
+
             }
-            else
-            {
-                <td class="d-none"></td>
-            }
-            <td>@item.Ghichu</td>
-
-            <td class="d-none">@item.Idpnk</td>
 
 
-            <td>
-                <form asp-controller="Phieunhapkho" asp-action="ReStore">
-                    <input name="id" value="@item.Idpnk" class="d-none" type="text">
-
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-unlock text-white"></i>
-                    </button>
-                </form>
-
-            </td>
-            @{ count++; }
-        </tr>
-
-
-        }
-
-
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 

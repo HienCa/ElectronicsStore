@@ -7,15 +7,17 @@
 
 <div class="d-flex justify-content-between mb-2">
     <div class="d-flex justify-content-between  flex-row-reverse">
-            <form asp-controller="Hanghoa" asp-action="Index">
-                <button type="submit" class="btn btn-light ">
-                    Quay lại
-                </button>
-            </form>
-           
-    </div>
+        <form asp-controller="Hanghoa" asp-action="Index">
+            <button type="submit" class="btn btn-light ">
+                Quay lại
+            </button>
+        </form>
 
     </div>
+
+</div>
+<div class="table-responsive">
+
     <table class="table table-striped table-bordered" id="productTable">
         <thead>
             <tr>
@@ -25,7 +27,7 @@
                 <th>Tên hàng hóa</th>
                 <th>Giá Bán</th>
                 <th>Giá khuyến mãi</th>
-                
+
                 <th class="d-none"></th>
 
                 <th></th>
@@ -38,29 +40,29 @@
             @foreach (var item in Model)
             {
 
-            <tr>
-                <td class="d-flex justify-content-center">@count</td>
-                <td><img style="height: 200px; width: 200px" src=".././Images/@item.Hinhanh" /></td>
-                <td>@item.Mavl</td>
-                <td>@item.Tenvl</td>
-                <td>@item.Giaban</td>
-                <td>@item.Giakm</td>
-                
-                <td class=d-none>@item.Idhh</td>
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td><img style="height: 200px; width: 200px" src=".././Images/@item.Hinhanh" /></td>
+                    <td>@item.Mavl</td>
+                    <td>@item.Tenvl</td>
+                    <td>@item.Giaban</td>
+                    <td>@item.Giakm</td>
+
+                    <td class=d-none>@item.Idhh</td>
 
 
-                <td>
-                    <form asp-controller="Hanghoa" asp-action="ReStore">
-                        <input name="id" value="@item.Idhh" class="d-none" type="text">
+                    <td>
+                        <form asp-controller="Hanghoa" asp-action="ReStore">
+                            <input name="id" value="@item.Idhh" class="d-none" type="text">
 
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-unlock text-white"></i>
-                        </button>
-                    </form>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-unlock text-white"></i>
+                            </button>
+                        </form>
 
-                </td>
-                @{ count++; }
-            </tr>
+                    </td>
+                    @{ count++; }
+                </tr>
 
 
             }
@@ -68,4 +70,5 @@
 
         </tbody>
     </table>
+</div>
 

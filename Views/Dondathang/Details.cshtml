@@ -40,83 +40,91 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered  " id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th class="text-center" style="width:150px;">Ảnh</th>
-            <th class="text-center" style="width:400px">Sản phẩm</th>
-            <th class="text-center">SL</th>
-            <th class="text-center">Giá</th>
-            <th class="text-center">Hạn bảo hành</th>
-            <th class="text-center">Thành tiền</th>
-            <th class="text-center">Tồn Kho</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-            float total = 0;
-        }
-        @if (Model != null)
-        {
-            @foreach (var item in Model)
-            {
+<div class="table-responsive">
 
-                <tr>
-                    <td class="d-flex justify-content-center">@count</td>
-                    <td><img src="/Images/@item.Hinhanh" style="width:100%;height:150px" /></td>
-                    <td>@item.Tenhh</td>
-                    <td class="text-center">@item.Soluong</td>
-                    @{
-                        string Dongia = (item.Dongia).ToString("#,###.##");
-                        string Thanhtien = (item.Soluong * item.Dongia).ToString("#,###.##");
-                        total = total + (item.Soluong * item.Dongia);
-                    }
-                    <td class="text-right">@Dongia đ</td>
-
-                    @if (item.Hethanbh != null)
-                    {
-                        DateTime Hethanbh = (DateTime)item.Hethanbh;
-                        <td class="text-center">@Hethanbh.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
-                    <td class="text-right">@Thanhtien đ</td>
-                    @if (statusviewmodel == 1)
-                    {
-                        <td class="text-center"><span class="text-right bg-success text-white p-2" style="border-radius: 10px; font-weight: bolder">Còn: @item.SoLuongTon</span></td>
-
-                    }
-                    else
-                    {
-                        <td class="text-center"><span class="text-right bg-danger text-white p-2" style="border-radius: 10px; font-weight: bolder;">Thiếu: @item.SoLuongThieu</span></td>
-
-
-                    }
-
-                    @{ count++; }
-                </tr>
-            }
-
-        }
-        <tr>
-            <td></td>
-            <td style="font-weight:bolder">Tổng đơn</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+    <table class="table table-striped table-bordered  " id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th class="text-center" style="width:150px;">Ảnh</th>
+                <th class="text-center" style="width:400px">Sản phẩm</th>
+                <th class="text-center">SL</th>
+                <th class="text-center">Giá</th>
+                <th class="text-center">Hạn bảo hành</th>
+                <th class="text-center">Thành tiền</th>
+                <th class="text-center">Tồn Kho</th>
+            </tr>
+        </thead>
+        <tbody>
             @{
-                string Tongtien = total.ToString("#,###.##");
+                int count = 1;
+                float total = 0;
             }
-            <td class="text-right" style="font-weight:bolder">@Tongtien đ</td>
+            @if (Model != null)
+            {
+                @foreach (var item in Model)
+                {
 
-        </tr>
+                    <tr>
+                        <td class="d-flex justify-content-center">@count</td>
+                        <td><img src="/Images/@item.Hinhanh" style="width:100%;height:150px" /></td>
+                        <td>@item.Tenhh</td>
+                        <td class="text-center">@item.Soluong</td>
+                        @{
+                            string Dongia = (item.Dongia).ToString("#,###.##");
+                            string Thanhtien = (item.Soluong * item.Dongia).ToString("#,###.##");
+                            total = total + (item.Soluong * item.Dongia);
+                        }
+                        <td class="text-right">@Dongia đ</td>
+
+                        @if (item.Hethanbh != null)
+                        {
+                            DateTime Hethanbh = (DateTime)item.Hethanbh;
+                            <td class="text-center">@Hethanbh.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td class="text-right">@Thanhtien đ</td>
+                        @if (dondathang.Trangthai == 1)
+                        {
+                            @if (statusviewmodel == 1)
+                            {
+                                <td class="text-center"><span class="text-right bg-success text-white p-2" style="border-radius: 10px; font-weight: bolder">Còn: @item.SoLuongTon</span></td>
+
+                            }
+                            else
+                            {
+                                <td class="text-center"><span class="text-right bg-danger text-white p-2" style="border-radius: 10px; font-weight: bolder;">Thiếu: @item.SoLuongThieu</span></td>
 
 
-    </tbody>
-</table>
+                            }
+                        }
+
+
+                        @{ count++; }
+                    </tr>
+                }
+
+            }
+            <tr>
+                <td></td>
+                <td style="font-weight:bolder">Tổng đơn</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                @{
+                    string Tongtien = total.ToString("#,###.##");
+                }
+                <td class="text-right" style="font-weight:bolder">@Tongtien đ</td>
+                <td></td>
+
+            </tr>
+
+
+        </tbody>
+    </table>
+</div>

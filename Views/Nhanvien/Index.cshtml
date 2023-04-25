@@ -19,92 +19,96 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Mã</th>
-            <th>Họ tên</th>
-            <th>Ngày sinh</th>
-            <th>Giới tính</th>
-            <th>SĐT</th>
-            <th>Email</th>
-            <th class="d-none"></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
 
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Manv</td>
-            <td>@item.Tennv</td>
-            <td class="d-none">@item.Cccd</td>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>Giới tính</th>
+                <th>SĐT</th>
+                <th>Email</th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
             @{
-                DateTime Dateofbirth = (DateTime)item.Ngaysinh;
-                int gioitinh = Int32.Parse(@item.Gioitinh);
-
+                int count = 1;
             }
-            <td>@Dateofbirth.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-
-            @if (gioitinh == 0)
+            @foreach (var item in Model)
             {
-                <td>Nam</td>
+
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Manv</td>
+                    <td>@item.Tennv</td>
+                    <td class="d-none">@item.Cccd</td>
+                    @{
+                        DateTime Dateofbirth = (DateTime)item.Ngaysinh;
+                        int gioitinh = Int32.Parse(@item.Gioitinh);
+
+                    }
+                    <td>@Dateofbirth.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    @if (gioitinh == 0)
+                    {
+                        <td>Nam</td>
+                    }
+                    @if (gioitinh == 1)
+
+                    {
+                        <td>Nữ</td>
+                    }
+                    @if (gioitinh == 2)
+
+                    {
+                        <td>Khác</td>
+                    }
+
+                    <td class="d-none">@item.Diachi</td>
+                    <td>@item.Sdt</td>
+                    <td>@item.Email</td>
+                    <td class="d-none">@item.Masothue</td>
+                    <td class="d-none">@item.Matkhau</td>
+                    <td class="d-none">@item.Hinhanh</td>
+                    <td class="d-none">@item.Ghichu</td>
+                    <td class="d-none">@item.Facebook</td>
+                    <td class="d-none">@item.Zalo</td>
+
+
+
+                    <td class=d-none>@item.Idnv</td>
+                    <td class="d-none">@Dateofbirth.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</td>
+
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Idnv" data-code="@item.Manv" data-name="@item.Tennv" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                    </td>
+                    @{ count++; }
+                </tr>
+
+
             }
-            @if (gioitinh == 1)
-
-            {
-                <td>Nữ</td>
-            }
-            @if (gioitinh == 2)
-
-            {
-                <td>Khác</td>
-            }
-
-            <td class="d-none">@item.Diachi</td>
-            <td>@item.Sdt</td>
-            <td>@item.Email</td>
-            <td class="d-none">@item.Masothue</td>
-            <td class="d-none">@item.Matkhau</td>
-            <td class="d-none">@item.Hinhanh</td>
-            <td class="d-none">@item.Ghichu</td>
-            <td class="d-none">@item.Facebook</td>
-            <td class="d-none">@item.Zalo</td>
 
 
+        </tbody>
+    </table>
+</div>
 
-            <td class=d-none>@item.Idnv</td>
-            <td class="d-none" >@Dateofbirth.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</td>
-
-            <td>
-                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#editModal">
-                    <i class="fas fa-pen text-white"></i>
-                </button>
-                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                        data-target="#detailModal">
-                    <i class="fas fa-info-circle text-white"></i>
-                </button>
-                <button data-id="@item.Idnv" data-code="@item.Manv" data-name="@item.Tennv" type="button" class="btn btn-danger deleteBtn"
-                        data-toggle="modal" data-target="#deleteModal">
-                    <i class="fas fa-trash text-white"></i>
-                </button>
-            </td>
-            @{ count++; }
-        </tr>
-
-
-        }
-
-
-    </tbody>
-</table>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
      aria-hidden="true">
     <div class="modal-dialog w-90" role="document" style="display: flex;
@@ -310,9 +314,9 @@
 
                             </div>
                             <div class="row mt-2">
-                                <div class="d-flex justify-content-center" >
+                                <div class="d-flex justify-content-center">
                                     <div>
-                                        <img src="" id="previewAdd" alt="Chưa có ảnh"/>
+                                        <img src="" id="previewAdd" alt="Chưa có ảnh" />
 
                                     </div>
                                 </div>
@@ -537,18 +541,18 @@
                     <div class="row mt-2">
                         <div class="col-md-6 col-sm-12">
                             <h3 class="text-center">Ảnh hiện tại</h3>
-                            <div class="d-flex justify-content-center" >
+                            <div class="d-flex justify-content-center">
                                 <div>
-                                    <img src="" style=" border-radius:20px" id="HinhanhE" alt="Chưa có ảnh"/>
+                                    <img src="" style=" border-radius:20px" id="HinhanhE" alt="Chưa có ảnh" />
 
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <h3 class="text-center">Ảnh mới</h3>
-                            <div class="d-flex justify-content-center" >
+                            <div class="d-flex justify-content-center">
                                 <div>
-                                    <img src="" style=" border-radius:20px" id="PreHinhanhE" alt="Chưa có ảnh"/>
+                                    <img src="" style=" border-radius:20px" id="PreHinhanhE" alt="Chưa có ảnh" />
                                 </div>
                             </div>
                         </div>
@@ -578,9 +582,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="d-flex justify-content-center mb-2" >
+                <div class="d-flex justify-content-center mb-2">
                     <div>
-                        <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh"/>
+                        <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh" />
 
                     </div>
                 </div>
@@ -717,19 +721,19 @@
                                 </div>
                             </div>
                             @*<div class="col-md-12 col-sm-12 mt-2">
-            <div class="row d-flex align-items-center">
-                <div class="col-md-2 col-sm-12">
-                    Hình ảnh
-                </div>
-                <div class="col-md-10 col-sm-12">
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-2 col-sm-12">
+                                            Hình ảnh
+                                        </div>
+                                        <div class="col-md-10 col-sm-12">
 
-                    <div class="custom-file">
-                        <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh"/>
-                    </div>
-                    <div class="preview"></div>
-                </div>
-            </div>
-        </div>*@
+                                            <div class="custom-file">
+                                                <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh"/>
+                                            </div>
+                                            <div class="preview"></div>
+                                        </div>
+                                    </div>
+                                </div>*@
                             <div class="col-md-12 col-sm-12 mt-2">
                                 <div class="row d-flex align-items-center">
                                     <div class="col-md-2 col-sm-12">

@@ -12,7 +12,7 @@
         <div class="col-sm-12">
             <div style="position: relative;" class="card-box table-responsive filterTable">
                 <form id="reportForm" asp-action="ShowReport" asp-controller="Phieunhapkho" method="post">
-                    <div  class="searchToFrom row mb-2">
+                    <div class="searchToFrom row mb-2">
 
                         <div class="col-md-2 col-sm-12">
                             <div class="d-flex justify-content-around align-items-center">
@@ -58,66 +58,70 @@
                         <input name="action" type="hidden" id="action" />
                     </div>
                 </form>
-                <table class="table table-striped table-bordered" id="productTable" style="max-height:60vh;overflow-y:scroll">
-                    <thead>
-                        <tr class="text-center">
+                <div class="table-responsive">
 
-                            <th scope="col">Nhà cung cấp</th>
-                            <th scope="col">Ngày nhập</th>
-                            <th scope="col">Số Phiếu</th>
-                            <th scope="col">Số lô</th>
-                            <th scope="col">Mã hàng hóa</th>
-                            <th scope="col">Tên hàng hóa</th>
-                            <th scope="col">ĐVT</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Đơn giá nhập(đ)</th>
-                            <th scope="col">Thành tiền(đ)</th>
+                    <table class="table table-striped table-bordered" id="productTable" style="max-height:60vh;overflow-y:scroll">
+                        <thead>
+                            <tr class="text-center">
 
-                        </tr>
-                    </thead>
+                                <th scope="col">Nhà cung cấp</th>
+                                <th scope="col">Ngày nhập</th>
+                                <th scope="col">Số Phiếu</th>
+                                <th scope="col">Số lô</th>
+                                <th scope="col">Mã hàng hóa</th>
+                                <th scope="col">Tên hàng hóa</th>
+                                <th scope="col">ĐVT</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Đơn giá nhập(đ)</th>
+                                <th scope="col">Thành tiền(đ)</th>
 
-                    <tbody>
-
-                        @foreach (var item in Model)
-                        {
-                            <tr class="tr">
-                                <td>@item.IdpnkNavigation.IdnccNavigation.Tenncc</td>
-
-                                @{
-                                    DateTime Ngaylap = (DateTime)item.IdpnkNavigation.Ngaylap;
-
-                                }
-                                <td class="text-center">@Ngaylap.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                                <td>@item.IdpnkNavigation.Sophieu</td>
-                                <td>@item.Solo</td>
-                                <td>@item.IdhhNavigation.Mavl</td>
-                                <td>@item.IdhhNavigation.Tenvl</td>
-                                <td>@item.Donvitinh</td>
-                                <td class="soluong text-right">@item.Soluong</td>
-
-
-                                @{
-                                    var Dongia = String.Format("{0:0,0}", (@item.Dongia));
-                                    var ThanhTien = String.Format("{0:0,0}", (@item.Soluong * @item.Dongia));
-                                }
-                                <td class="gianhap text-right">@Dongia</td>
-                                <td class="thanhtien text-right">@ThanhTien</td>
                             </tr>
-                        }
-                        <tr>
-                            <td style="border:none"></td>
-                            <td style="border:none"></td>
-                            <td style="border:none"></td>
-                            <td style="border: none; font-weight: bolder">TỔNG CỘNG</td>
-                            <td style="border:none"></td>
-                            <td style="border:none"></td>
-                            <td style="border:none"></td>
-                            <td style="font-weight:bolder;" class="text-right" id="Tongsoluong"></td>
-                            <td style="font-weight:bolder" class="text-right" id="Tonggianhap"></td>
-                            <td style="font-weight:bolder" class="text-right" id="Tongthanhtien"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr class="tr">
+                                    <td>@item.IdpnkNavigation.IdnccNavigation.Tenncc</td>
+
+                                    @{
+                                        DateTime Ngaylap = (DateTime)item.IdpnkNavigation.Ngaylap;
+
+                                    }
+                                    <td class="text-center">@Ngaylap.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                    <td>@item.IdpnkNavigation.Sophieu</td>
+                                    <td>@item.Solo</td>
+                                    <td>@item.IdhhNavigation.Mavl</td>
+                                    <td>@item.IdhhNavigation.Tenvl</td>
+                                    <td>@item.Donvitinh</td>
+                                    <td class="soluong text-right">@item.Soluong</td>
+
+
+                                    @{
+                                        var Dongia = String.Format("{0:0,0}", (@item.Dongia));
+                                        var ThanhTien = String.Format("{0:0,0}", (@item.Soluong * @item.Dongia));
+                                    }
+                                    <td class="gianhap text-right">@Dongia</td>
+                                    <td class="thanhtien text-right">@ThanhTien</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td style="border:none"></td>
+                                <td style="border:none"></td>
+                                <td style="border:none"></td>
+                                <td style="border: none; font-weight: bolder">TỔNG CỘNG</td>
+                                <td style="border:none"></td>
+                                <td style="border:none"></td>
+                                <td style="border:none"></td>
+                                <td style="font-weight:bolder;" class="text-right" id="Tongsoluong"></td>
+                                <td style="font-weight:bolder" class="text-right" id="Tonggianhap"></td>
+                                <td style="font-weight:bolder" class="text-right" id="Tongthanhtien"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
 
             </div>
         </div>

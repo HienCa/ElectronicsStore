@@ -1045,11 +1045,14 @@
 
         if (Soluongcanxuat.value > CountCurrent.value) {
             Soluongcanxuat.style.border = "4px red solid";
-            Soluongcanxuat.disabled = true;
+            btnAdd.disabled = true;
         } else {
             Soluongcanxuat.style.border = "1px #ced4da solid";
-            Soluongcanxuat.disabled = false;
+            btnAdd.disabled = false;
 
+        }
+        if (Soluongcanxuat.value.length == 0) {
+            Soluongcanxuat.value = 1;
         }
         totalAmount = Soluong.value * Dongia.value;
         Thanhtien.value = VND.format(totalAmount);

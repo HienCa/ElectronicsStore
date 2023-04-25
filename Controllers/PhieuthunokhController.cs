@@ -52,21 +52,43 @@ namespace ElectronicsStore.Controllers
         // GET: Phieuthunokh/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                var phieuthunokh = await _context.Noidungthunokh
+                                                    .Include(p => p.IdptnkhNavigation)
+                                                    .Include(p => p.IdptnkhNavigation.IdnvNavigation)
+                                                    .Where(m => m.Idptnkh == id)
+                                                    .ToListAsync();
+                if (phieuthunokh.Count == 0)
+                {
+                    var phieuthunoddhkh = await _context.Noidungthunoddh
+                                                            .Include(p => p.IdptnkhNavigation)
+                                                            .Include(p => p.IdptnkhNavigation.IdnvNavigation)
+                                                            .Where(m => m.Idptnkh == id)
+                                                            .ToListAsync();
+
+                    //if (phieuthunoddhkh.Count == 0 && phieuthunokh.Count == 0)
+                    //{
+                    //    return RedirectToAction("Index", "Phieuthunokh");
+
+                    //}
+                    //else
+                    //{
+                    ViewData["noidungthunoddhkh"] = phieuthunoddhkh;
+                        return View();
+
+                    //}
+
+                }
+                return View(phieuthunokh);
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Phieuthunokh");
+
             }
 
-            var phieuthunokh = await _context.Phieuthunokh
-                .Include(p => p.IdhtttNavigation)
-                .Include(p => p.IdnvNavigation)
-                .FirstOrDefaultAsync(m => m.Idptnkh == id);
-            if (phieuthunokh == null)
-            {
-                return NotFound();
-            }
-
-            return View(phieuthunokh);
         }
 
         // GET: Phieuthunokh/Create
@@ -83,27 +105,27 @@ namespace ElectronicsStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Phieuthunokh phieuthunokh, int Idpxk)
         {
-           
-                string employeeEmail = Request.Cookies["HienCaCookie"];
-                var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
 
-                phieuthunokh.Ngaylap = DateTime.Now;
-                if (phieuthunokh.Sophieu == null)
-                {
-                    phieuthunokh.Sophieu = "PTN" + nhanvien.Manv + '-' + ((phieuthunokh.Ngaylap).ToString()).Replace("/", "").Replace(" ", "");
-                }
-                phieuthunokh.Idnv = nhanvien.Idnv;
-                //Idnv từ đăng nhập
-                _context.Add(phieuthunokh);
-                await _context.SaveChangesAsync();
+            string employeeEmail = Request.Cookies["HienCaCookie"];
+            var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
 
-                TempData["SoPhieu"] = phieuthunokh.Sophieu;
-                var phieuthuno = _context.Phieuthunokh.Where(e => (e.Idnv).Equals(nhanvien.Idnv)).Where(e => (e.Sophieu).Equals(phieuthunokh.Sophieu)).FirstOrDefault();
+            phieuthunokh.Ngaylap = DateTime.Now;
+            if (phieuthunokh.Sophieu == null)
+            {
+                phieuthunokh.Sophieu = "PTN" + nhanvien.Manv + '-' + ((phieuthunokh.Ngaylap).ToString()).Replace("/", "").Replace(" ", "");
+            }
+            phieuthunokh.Idnv = nhanvien.Idnv;
+            //Idnv từ đăng nhập
+            _context.Add(phieuthunokh);
+            await _context.SaveChangesAsync();
 
-                TempData["phieuthuno"] = phieuthuno.Idptnkh;
-                return RedirectToAction("Details", "Phieuxuatkho", new { id = Idpxk });
+            TempData["SoPhieu"] = phieuthunokh.Sophieu;
+            var phieuthuno = _context.Phieuthunokh.Where(e => (e.Idnv).Equals(nhanvien.Idnv)).Where(e => (e.Sophieu).Equals(phieuthunokh.Sophieu)).FirstOrDefault();
 
-          
+            TempData["phieuthuno"] = phieuthuno.Idptnkh;
+            return RedirectToAction("Details", "Phieuxuatkho", new { id = Idpxk });
+
+
 
         }
 

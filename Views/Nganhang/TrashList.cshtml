@@ -7,15 +7,17 @@
 
 <div class="d-flex justify-content-between mb-2">
     <div class="d-flex justify-content-between  flex-row-reverse">
-            <form asp-controller="Nganhang" asp-action="Index">
-                <button type="submit" class="btn btn-light ">
-                    Quay lại
-                </button>
-            </form>
-           
-    </div>
+        <form asp-controller="Nganhang" asp-action="Index">
+            <button type="submit" class="btn btn-light ">
+                Quay lại
+            </button>
+        </form>
 
     </div>
+
+</div>
+<div class="table-responsive">
+
     <table class="table table-striped table-bordered" id="productTable">
         <thead>
             <tr>
@@ -37,28 +39,28 @@
             @foreach (var item in Model)
             {
 
-            <tr>
-                <td class="d-flex justify-content-center">@count</td>
-                <td>@item.Email</td>
-                <td>@item.Tennh</td>
-                <td>@item.Diachi</td>
-                <td>@item.Masothue</td>
-                <td>@item.Ghichu</td>
-                <td class=d-none>@item.Idnh</td>
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Email</td>
+                    <td>@item.Tennh</td>
+                    <td>@item.Diachi</td>
+                    <td>@item.Masothue</td>
+                    <td>@item.Ghichu</td>
+                    <td class=d-none>@item.Idnh</td>
 
 
-                <td>
-                    <form asp-controller="Nganhang" asp-action="ReStore">
-                        <input name="id" value="@item.Idnh" class="d-none" type="text">
+                    <td>
+                        <form asp-controller="Nganhang" asp-action="ReStore">
+                            <input name="id" value="@item.Idnh" class="d-none" type="text">
 
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-unlock text-white"></i>
-                        </button>
-                    </form>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-unlock text-white"></i>
+                            </button>
+                        </form>
 
-                </td>
-                @{ count++; }
-            </tr>
+                    </td>
+                    @{ count++; }
+                </tr>
 
 
             }
@@ -67,3 +69,4 @@
         </tbody>
     </table>
 
+</div>

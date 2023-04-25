@@ -19,54 +19,58 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Mã thương hiệu</th>
-            <th>Tên thương hiệu</th>
+<div class="table-responsive">
 
-            <th class="d-none"></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
-
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
             <tr>
-                <td class="d-flex justify-content-center">@count</td>
-                <td>@item.Math</td>
-                <td>@item.Tenth</td>
-                <td class=d-none>@item.Idth</td>
+                <th class="text-center">STT</th>
+                <th>Mã thương hiệu</th>
+                <th>Tên thương hiệu</th>
 
-
-                <td>
-                    <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#editModal">
-                        <i class="fas fa-pen text-white"></i>
-                    </button>
-                    <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                            data-target="#detailModal">
-                        <i class="fas fa-info-circle text-white"></i>
-                    </button>
-                    <button data-id="@item.Idth" data-code="@item.Math" data-name="@item.Tenth" type="button" class="btn btn-danger deleteBtn"
-                            data-toggle="modal" data-target="#deleteModal">
-                        <i class="fas fa-trash text-white"></i>
-                    </button>
-                </td>
-                @{ count++; }
+                <th class="d-none"></th>
+                <th></th>
             </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Math</td>
+                    <td>@item.Tenth</td>
+                    <td class=d-none>@item.Idth</td>
 
 
-        }
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Idth" data-code="@item.Math" data-name="@item.Tenth" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                    </td>
+                    @{ count++; }
+                </tr>
 
 
-    </tbody>
-</table>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
      aria-hidden="true">
     <div class="modal-dialog w-90" role="document" style="display: flex;
@@ -92,7 +96,7 @@
                                 <div class="col-md-10 col-sm-12">
                                     <input id="MathA" name="Math" maxlength="255" type="text"
                                            class="form-control">
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -367,5 +371,5 @@
     });
 
 
-    
+
 </script>

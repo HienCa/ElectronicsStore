@@ -1,0 +1,457 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Dondathang>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
+}
+<div style="height:90vh">
+    <ul class="tabs row text-center">
+        @*<li class="tab-link  col-md-4 current tab-11" data-tab="tab-1">Lịch Sử Nhập #@phieunhapkho.Sophieu</li>*@
+
+        <li class="tab-link  col-md-2 current" data-tab="tab-1">Nhập Kho</li>
+        <li class="tab-link  col-md-2" data-tab="tab-2">Xuất Kho</li>
+        <li class="tab-link  col-md-2" data-tab="tab-3">Tồn Kho</li>
+
+    </ul>
+
+    <div id="tab-1" class="tab-content current">
+
+        <div style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ cột</h3>
+            <canvas id="chart-nhap-kho-bar"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ đường</h3>
+            <canvas id="chart-nhap-kho-line"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ tròn</h3>
+
+            <canvas id="chart-nhap-kho-pie"></canvas>
+
+        </div>
+
+    </div>
+
+    <div id="tab-2" class="tab-content ">
+        <div style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ cột</h3>
+            <canvas id="chart-xuat-kho-bar"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ đường</h3>
+            <canvas id="chart-xuat-kho-line"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ tròn</h3>
+            <canvas id="chart-xuat-kho-pie"></canvas>
+
+        </div>
+    </div>
+
+    <div id="tab-3" class="tab-content ">
+        <div style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ cột</h3>
+            <canvas id="chart-ton-kho-bar"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ đường</h3>
+            <canvas id="chart-ton-kho-line"></canvas>
+
+        </div>
+        <div class="mt-3" style="max-width:100%; max-height:80vh">
+            <h3 class="text-center">Biểu đồ tròn</h3>
+            <canvas id="chart-ton-kho-pie"></canvas>
+
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    //TỔNG NHẬP TẤT CẢ
+    let productQuantitiesNhap =@Html.Raw(ViewBag.productQuantitiesNhap);
+    const productId_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[0]]);
+    const quantites_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[1]]);
+    const productName_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[2]]);
+
+
+    var ctx_nhap_bar = document.getElementById('chart-nhap-kho-bar').getContext('2d');
+    var myChart_nhap_bar = new Chart(ctx_nhap_bar, {
+        type: 'bar',
+        data: {
+            labels: productName_Nhap,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã nhập',
+                data: quantites_Nhap,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+    var ctx_nhap_line = document.getElementById('chart-nhap-kho-line').getContext('2d');
+    var myChart_nhap_line = new Chart(ctx_nhap_line, {
+        type: 'line',
+        data: {
+            labels: productName_Nhap,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã nhập',
+                data: quantites_Nhap,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+    var ctx_nhap_pie = document.getElementById('chart-nhap-kho-pie').getContext('2d');
+    var myChart_nhap_pie = new Chart(ctx_nhap_pie, {
+        type: 'pie',
+        data: {
+            labels: productName_Nhap,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã nhập',
+                data: quantites_Nhap,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+
+
+        }
+    });
+
+</script>
+<script>
+    //TỔNG XUẤT TẤT CẢ
+    let productQuantitiesXuat =@Html.Raw(ViewBag.productQuantitiesXuat);
+    const productId_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[0]]);
+    const quantites_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[1]]);
+    const productName_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[2]]);
+
+
+    var ctx_xuat_bar = document.getElementById('chart-xuat-kho-bar').getContext('2d');
+    var myChart_xuat_bar = new Chart(ctx_xuat_bar, {
+        type: 'bar',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã xuất',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+
+
+    var ctx_xuat_line = document.getElementById('chart-xuat-kho-line').getContext('2d');
+    var myChart_xuat_line = new Chart(ctx_xuat_line, {
+        type: 'line',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã xuất',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+
+
+
+
+    var ctx_xuat_pie = document.getElementById('chart-xuat-kho-pie').getContext('2d');
+    var myChart_xuat_pie = new Chart(ctx_xuat_pie, {
+        type: 'pie',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa đã xuất',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+
+        }
+    });
+</script>
+
+
+
+<script>
+    //TỔNG TỒN TẤT CẢ
+    let productQuantitiesTonKho =@Html.Raw(ViewBag.productQuantitiesTonKho);
+    const productId_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[0]]);
+    const quantites_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[1]]);
+    const productName_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[2]]);
+
+
+    var ctx_ton_bar = document.getElementById('chart-ton-kho-bar').getContext('2d');
+    var myChart_ton_bar = new Chart(ctx_ton_bar, {
+        type: 'bar',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa tồn kho',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+
+
+    var ctx_ton_line = document.getElementById('chart-ton-kho-line').getContext('2d');
+    var myChart_ton_line = new Chart(ctx_ton_line, {
+        type: 'line',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa tồn kho',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+
+
+
+
+    var ctx_ton_pie = document.getElementById('chart-ton-kho-pie').getContext('2d');
+    var myChart_ton_pie = new Chart(ctx_ton_pie, {
+        type: 'pie',
+        data: {
+            labels: productName_Xuat,
+            datasets: [{
+                label: 'Tổng số lượng hàng hóa tồn kho',
+                data: quantites_Xuat,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+
+        }
+    });
+</script>

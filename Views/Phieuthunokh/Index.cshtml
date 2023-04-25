@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-content-between ">
         <button type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
-            Thêm mới phiếu thu 
+            Thêm mới phiếu thu
         </button>
         <form asp-controller="Phieuthunokh" asp-action="TrashList">
             <button type="submit" class="btn btn-info">
@@ -19,70 +19,76 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Số phiếu</th>
-            <th>Nhân viên lập</th>
-            <th>Ngày lập</th>
-            <th>Hình thức</th>
-            <th>Ghi chú</th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
 
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Sophieu</td>
-            <td>@item.IdnvNavigation.Tennv</td>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Số phiếu</th>
+                <th>Nhân viên lập</th>
+                <th>Ngày lập</th>
+                <th>Hình thức</th>
+                <th>Ghi chú</th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
             @{
-                DateTime Ngaylap = (DateTime)item.Ngaylap;
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Sophieu</td>
+                    <td>@item.IdnvNavigation.Tennv</td>
+                    @{
+                        DateTime Ngaylap = (DateTime)item.Ngaylap;
+
+                    }
+                    <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>@item.IdhtttNavigation.Tenhttt</td>
+                    <td>@item.Ghichu</td>
+
+                    <td class="d-none">@item.Idptnkh</td>
+                    <td class="d-none">@item.IdnvNavigation.Tennv</td>
+                    <td class="d-none">@item.IdhtttNavigation.Tenhttt</td>
+                    <td class="d-none">@item.IdhtttNavigation.Idhttt</td>
+
+
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Idptnkh" data-code="@item.Sophieu" data-name="@item.IdnvNavigation.Tennv" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                       
+                        <a  class="btn btn-info text-white" style="text-decoration:none" href="/Phieuthunokh/Details/@item.Idptnkh">Chi tiết</a>
+                    </td>
+                    @{ count++; }
+                </tr>
+
 
             }
-            <td>@Ngaylap.ToString("dd/MM/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)</td>
-            <td>@item.IdhtttNavigation.Tenhttt</td>
-            <td>@item.Ghichu</td>
-
-            <td class="d-none">@item.Idptnkh</td>
-            <td class="d-none">@item.IdnvNavigation.Tennv</td>
-            <td class="d-none">@item.IdhtttNavigation.Tenhttt</td>
-            <td class="d-none">@item.IdhtttNavigation.Idhttt</td>
 
 
-            <td>
-                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#editModal">
-                    <i class="fas fa-pen text-white"></i>
-                </button>
-                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                        data-target="#detailModal">
-                    <i class="fas fa-info-circle text-white"></i>
-                </button>
-                <button data-id="@item.Idptnkh" data-code="@item.Sophieu" data-name="@item.IdnvNavigation.Tennv" type="button" class="btn btn-danger deleteBtn"
-                        data-toggle="modal" data-target="#deleteModal">
-                    <i class="fas fa-trash text-white"></i>
-                </button>
-            </td>
-            @{ count++; }
-        </tr>
+        </tbody>
+    </table>
+</div>
 
-
-        }
-
-
-    </tbody>
-</table>
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
      aria-hidden="true">
     <div class="modal-dialog w-90" role="document" style="display: flex;
@@ -149,7 +155,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="submit" id="addButton"  class="btn btn-primary">Lưu</button>
+                    <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
                 </div>
 
             </form>
@@ -184,21 +190,21 @@
                             </div>
                         </div>
                         @*<div class="col-md-12 col-sm-12 mt-2">
-                            <div class="row d-flex align-items-center">
-                                <div class="col-md-2 col-sm-12">
-                                    Người lập
-                                </div>
-                                <div class="col-md-10 col-sm-12">
-                                    <select class="form-control" id="IdhtttE" name="Idhttt">
-                                        @foreach (var item in @ViewData["Nhanvien"] as List<Nhanvien>)
-                                        {
-                                            <option value="@item.Idnv">@item.Manv-@item.Tennv</option>
-                                        }
-                                    </select>
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-md-2 col-sm-12">
+                                        Người lập
+                                    </div>
+                                    <div class="col-md-10 col-sm-12">
+                                        <select class="form-control" id="IdhtttE" name="Idhttt">
+                                            @foreach (var item in @ViewData["Nhanvien"] as List<Nhanvien>)
+                                            {
+                                                <option value="@item.Idnv">@item.Manv-@item.Tennv</option>
+                                            }
+                                        </select>
 
+                                    </div>
                                 </div>
-                            </div>
-                        </div>*@
+                            </div>*@
                         <div class="col-md-12 col-sm-12 mt-2">
                             <div class="row d-flex align-items-center">
                                 <div class="col-md-2 col-sm-12">
@@ -443,7 +449,7 @@
         document.querySelector('#NgaylapD').value = Ngaylap;
         document.querySelector('#IdhtttD').value = Tenhttt;
         document.querySelector('#GhichuD').value = Ghichu;
-       
+
         // Hiển thị modal
         $('#detailModal').modal('show');
     }

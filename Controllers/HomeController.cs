@@ -39,10 +39,10 @@ namespace ElectronicsStore.Controllers
 
 
 
-            string employeeEmail = Request.Cookies["HienCaCookie"];
-            if (employeeEmail != null)
+            string customerEmail = Request.Cookies["CustomerCookie"];
+            if (customerEmail != null)
             {
-                var khachhang = _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefault();
+                var khachhang = _context.Khachhang.Where(e => (e.Email).Equals(customerEmail)).FirstOrDefault();
                 if (khachhang != null)
                 {
                     ViewData["isExist"] = "Exist";
@@ -111,7 +111,7 @@ namespace ElectronicsStore.Controllers
         public async Task<IActionResult> Details(int id)
         {
 
-            string employeeEmail = Request.Cookies["HienCaCookie"];
+            string employeeEmail = Request.Cookies["CustomerCookie"];
             if (employeeEmail != null)
             {
                 var khachhang = _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefault();
@@ -184,7 +184,7 @@ namespace ElectronicsStore.Controllers
             //}
 
 
-            string employeeEmail = Request.Cookies["HienCaCookie"];
+            string employeeEmail = Request.Cookies["CustomerCookie"];
             if (employeeEmail != null)
             {
                 var khachhang = _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefault();
@@ -207,7 +207,7 @@ namespace ElectronicsStore.Controllers
         {
             try
             {
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -268,7 +268,7 @@ namespace ElectronicsStore.Controllers
         {
             try
             {
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -341,7 +341,7 @@ namespace ElectronicsStore.Controllers
                                                                 .ToListAsync();
                 ViewData["OrderedDetailsMulti"] = noidungdonhang;
                 ViewData["Dondathang"] = await _context.Dondathang.Where(ma => ma.Iddh == id).FirstOrDefaultAsync();
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -374,7 +374,7 @@ namespace ElectronicsStore.Controllers
             try
             {
                 //chi tiết đơn
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -422,7 +422,7 @@ namespace ElectronicsStore.Controllers
             try
             {
                 //chi tiết đơn
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhangview = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -468,7 +468,7 @@ namespace ElectronicsStore.Controllers
             try
             {
                 //chi tiết đơn
-                string employeeEmail = Request.Cookies["HienCaCookie"];
+                string employeeEmail = Request.Cookies["CustomerCookie"];
                 if (employeeEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
@@ -511,7 +511,7 @@ namespace ElectronicsStore.Controllers
             try
             {
                 //chi tiết đơn
-                string khachhangEmail = Request.Cookies["HienCaCookie"];
+                string khachhangEmail = Request.Cookies["CustomerCookie"];
                 if (khachhangEmail != null)
                 {
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(khachhangEmail)).FirstOrDefaultAsync();

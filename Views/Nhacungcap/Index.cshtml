@@ -19,67 +19,71 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Mã</th>
-            <th>Tên nhà cung cấp</th>
-            <th>Email</th>
-            <th>SĐT</th>
-            <th class="d-none">Địa chỉ</th>
-            <th class="d-none">Mã Số Thuế</th>
-            <th class="d-none">Facebook</th>
-            <th class="d-none">Zalo</th>
-            <th class="d-none">Ghi chú</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
+<div class="table-responsive">
 
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Mancc</td>
-            <td>@item.Tenncc</td>
-            <td>@item.Email</td>
-            <td>@item.Sdt</td>
-            <td class="d-none">@item.Diachi</td>
-            <td class="d-none">@item.Masothue</td>
-            <td class="d-none">@item.Facebook</td>
-            <td class="d-none">@item.Zalo</td>
-            <td class="d-none">@item.Ghichu</td>
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Mã</th>
+                <th>Tên nhà cung cấp</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th class="d-none">Địa chỉ</th>
+                <th class="d-none">Mã Số Thuế</th>
+                <th class="d-none">Facebook</th>
+                <th class="d-none">Zalo</th>
+                <th class="d-none">Ghi chú</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
 
-
-            <td class=d-none>@item.Idncc</td>
-
-            <td>
-                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#editModal">
-                    <i class="fas fa-pen text-white"></i>
-                </button>
-                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                        data-target="#detailModal">
-                    <i class="fas fa-info-circle text-white"></i>
-                </button>
-                <button data-id="@item.Idncc" data-code="@item.Mancc" data-name="@item.Tenncc" type="button" class="btn btn-danger deleteBtn"
-                        data-toggle="modal" data-target="#deleteModal">
-                    <i class="fas fa-trash text-white"></i>
-                </button>
-            </td>
-            @{ count++; }
-        </tr>
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Mancc</td>
+                    <td>@item.Tenncc</td>
+                    <td>@item.Email</td>
+                    <td>@item.Sdt</td>
+                    <td class="d-none">@item.Diachi</td>
+                    <td class="d-none">@item.Masothue</td>
+                    <td class="d-none">@item.Facebook</td>
+                    <td class="d-none">@item.Zalo</td>
+                    <td class="d-none">@item.Ghichu</td>
 
 
-        }
+                    <td class=d-none>@item.Idncc</td>
+
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Idncc" data-code="@item.Mancc" data-name="@item.Tenncc" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                    </td>
+                    @{ count++; }
+                </tr>
 
 
-    </tbody>
-</table>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
      aria-hidden="true">
     <div class="modal-dialog w-90" role="document" style="display: flex;
@@ -169,7 +173,7 @@
 
                             <div class="row">
 
-                                
+
                                 <div class="col-md-12 col-sm-12 mt-2">
                                     <div class="row d-flex align-items-center">
                                         <div class="col-md-2 col-sm-12">
@@ -335,7 +339,7 @@
                                             Facebook
                                         </div>
                                         <div class="col-md-10 col-sm-12">
-                                            <input id="FacebookE" name="Facebook" maxlength="255" 
+                                            <input id="FacebookE" name="Facebook" maxlength="255"
                                                    type="text" class="form-control">
 
                                         </div>
@@ -382,7 +386,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="modal-footer">
@@ -409,11 +413,11 @@
             </div>
             <div class="modal-body">
                 @*<div class="d-flex justify-content-center mb-2">
-                    <div>
-                        <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh" />
+                        <div>
+                            <img src="" style="width:100%; border-radius:20px" id="HinhanhD" alt="Chưa có ảnh" />
 
-                    </div>
-                </div>*@
+                        </div>
+                    </div>*@
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
 
@@ -653,13 +657,13 @@
         const Facebook = cells[7].textContent;
         const Zalo = cells[8].textContent;
         const Ghichu = cells[9].textContent;
-        
+
 
 
         // Gán giá trị cho các input trong modal
         document.querySelector('#ManccD').value = Mancc;
         document.querySelector('#TennccD').value = Tenncc;
-        
+
         document.querySelector('#DiachiD').value = Diachi;
         document.querySelector('#SdtD').value = Sdt;
         document.querySelector('#EmailD').value = Email;
@@ -702,8 +706,8 @@
         document.querySelector('#GhichuE').value = Ghichu;
         document.querySelector('#FacebookE').value = Facebook;
         document.querySelector('#ZaloE').value = Zalo;
-      
-   
+
+
         document.querySelector('#id').value = id;
 
         // Hiển thị modal

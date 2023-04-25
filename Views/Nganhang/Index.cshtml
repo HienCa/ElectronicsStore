@@ -19,60 +19,64 @@
 
     </div>
 </div>
-<table class="table table-striped table-bordered" id="productTable">
-    <thead>
-        <tr>
-            <th class="text-center">STT</th>
-            <th>Email</th>
-            <th>Tên ngân hàng</th>
-            <th>Địa chỉ</th>
-            <th>Mã số thuế</th>
-            <th>Ghi chú</th>
+<div class="table-responsive">
 
-            <th class="d-none"></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int count = 1;
-        }
-        @foreach (var item in Model)
-        {
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th>Email</th>
+                <th>Tên ngân hàng</th>
+                <th>Địa chỉ</th>
+                <th>Mã số thuế</th>
+                <th>Ghi chú</th>
 
-        <tr>
-            <td class="d-flex justify-content-center">@count</td>
-            <td>@item.Email</td>
-            <td>@item.Tennh</td>
-            <td>@item.Diachi</td>
-            <td>@item.Masothue</td>
-            <td>@item.Ghichu</td>
-            <td class=d-none>@item.Idnh</td>
+                <th class="d-none"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
 
-
-            <td>
-                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#editModal">
-                    <i class="fas fa-pen text-white"></i>
-                </button>
-                <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
-                        data-target="#detailModal">
-                    <i class="fas fa-info-circle text-white"></i>
-                </button>
-                <button data-id="@item.Idnh" data-code="@item.Email" data-name="@item.Tennh" type="button" class="btn btn-danger deleteBtn"
-                        data-toggle="modal" data-target="#deleteModal">
-                    <i class="fas fa-trash text-white"></i>
-                </button>
-            </td>
-            @{ count++; }
-        </tr>
+                <tr>
+                    <td class="d-flex justify-content-center">@count</td>
+                    <td>@item.Email</td>
+                    <td>@item.Tennh</td>
+                    <td>@item.Diachi</td>
+                    <td>@item.Masothue</td>
+                    <td>@item.Ghichu</td>
+                    <td class=d-none>@item.Idnh</td>
 
 
-        }
+                    <td>
+                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editModal">
+                            <i class="fas fa-pen text-white"></i>
+                        </button>
+                        <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
+                                data-target="#detailModal">
+                            <i class="fas fa-info-circle text-white"></i>
+                        </button>
+                        <button data-id="@item.Idnh" data-code="@item.Email" data-name="@item.Tennh" type="button" class="btn btn-danger deleteBtn"
+                                data-toggle="modal" data-target="#deleteModal">
+                            <i class="fas fa-trash text-white"></i>
+                        </button>
+                    </td>
+                    @{ count++; }
+                </tr>
 
 
-    </tbody>
-</table>
+            }
+
+
+        </tbody>
+    </table>
+</div>
+
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
      aria-hidden="true">
     <div class="modal-dialog w-90" role="document" style="display: flex;
@@ -96,7 +100,7 @@
                                     Email
                                 </div>
                                 <div class="col-md-10 col-sm-12">
-                                    <input id="EmailA" name="Email"  maxlength="255" type="email"
+                                    <input id="EmailA" name="Email" maxlength="255" type="email"
                                            class="form-control">
 
                                 </div>
@@ -145,7 +149,7 @@
                                 </div>
                                 <div class="col-md-10 col-sm-12">
                                     <textarea id="GhichuA" name="Ghichu" maxlength="255" type="text"
-                                           class="form-control"></textarea>
+                                              class="form-control"></textarea>
 
                                 </div>
                             </div>
@@ -476,7 +480,7 @@
         var id = button.data('id'); // Lấy giá trị id được lưu trong data-id của nút "Xóa"
         var name = button.data('name'); // Lấy giá trị của cột tên được lưu trong data-name của nút "Xóa"
         var code = button.data('code');
-        console.log(id+"dddd")
+        console.log(id + "dddd")
         // Tiếp tục với các cột còn lại
         document.getElementById("idD").value = id;
         // Hiển thị thông tin của dòng lên modal xác nhận
@@ -485,5 +489,5 @@
     });
 
 
-    
+
 </script>

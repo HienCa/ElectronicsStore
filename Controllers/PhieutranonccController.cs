@@ -52,21 +52,22 @@ namespace ElectronicsStore.Controllers
         // GET: Phieutranoncc/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                var phieuthunoncc = await _context.Noidungtranoncc
+                .Include(p => p.IdptnnccNavigation)
+                .Include(p => p.IdptnnccNavigation.IdnvNavigation)
+                .Where(m => m.Idptnncc == id)
+                .ToListAsync();
+                return View(phieuthunoncc);
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Phieuthunoncc");
+
             }
 
-            var phieutranoncc = await _context.Phieutranoncc
-                .Include(p => p.IdhtttNavigation)
-                .Include(p => p.IdnvNavigation)
-                .FirstOrDefaultAsync(m => m.Idptnncc == id);
-            if (phieutranoncc == null)
-            {
-                return NotFound();
-            }
-
-            return View(phieutranoncc);
         }
 
         // GET: Phieutranoncc/Create

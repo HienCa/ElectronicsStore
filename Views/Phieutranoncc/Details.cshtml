@@ -1,54 +1,60 @@
-﻿@model ElectronicsStore.Models.Phieutranoncc
+﻿@model IEnumerable<ElectronicsStore.Models.Noidungtranoncc>
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
 }
 
-<h1>Details</h1>
+<div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between  flex-row-reverse">
+        <form asp-controller="Phieutranoncc" asp-action="Index">
+            <button type="submit" class="btn btn-light ">
+                Quay lại
+            </button>
+        </form>
 
-<div>
-    <h4>Phieutranoncc</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sophieu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sophieu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ngaylap)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ngaylap)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ghichu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ghichu)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Active)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Active)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdhtttNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdhtttNavigation.Tenhttt)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdnvNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdnvNavigation.Diachi)
-        </dd>
-    </dl>
+    </div>
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Idptnncc">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="table-responsive">
+
+    <table class="table table-striped table-bordered" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th class="text-center">Ngày thu</th>
+                <th class="text-center">Số tiền</th>
+                <th class="text-center">Ghi chú</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int count = 1;
+            }
+            @foreach (var item in Model)
+            {
+
+            <tr>
+                <td class="d-flex justify-content-center">@count</td>
+                @{
+                    DateTime Ngaytrano = (DateTime)item.Ngaytrano;
+
+                }
+                <td class="text-center">@Ngaytrano.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                @{
+                    var Sotien = String.Format("{0:0,0}", (item.Sotien));
+
+                }
+                <td class="text-right">@Sotien đ</td>
+                <td>@item.Ghichu</td>
+
+                @{ count++; }
+            </tr>
+
+            }
+
+        </tbody>
+    </table>
 </div>
+
