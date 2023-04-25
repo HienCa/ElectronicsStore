@@ -54,11 +54,18 @@ namespace ElectronicsStore.Controllers
         {
             try
             {
+
                 var phieuthunokh = await _context.Noidungthunokh
                                                     .Include(p => p.IdptnkhNavigation)
                                                     .Include(p => p.IdptnkhNavigation.IdnvNavigation)
                                                     .Where(m => m.Idptnkh == id)
                                                     .ToListAsync();
+
+                var ndphieuthuno = await _context.Noidungthunokh.Where(a => a.Idptnkh == id)
+                                                           .FirstOrDefaultAsync();
+
+               
+                ViewData["Noidungkh"] = ndphieuthuno;
                 if (phieuthunokh.Count == 0)
                 {
                     var phieuthunoddhkh = await _context.Noidungthunoddh
@@ -67,17 +74,59 @@ namespace ElectronicsStore.Controllers
                                                             .Where(m => m.Idptnkh == id)
                                                             .ToListAsync();
 
-                    //if (phieuthunoddhkh.Count == 0 && phieuthunokh.Count == 0)
-                    //{
-                    //    return RedirectToAction("Index", "Phieuthunokh");
+                    var ndphieuthunoddh = await _context.Noidungthunoddh.Where(a => a.Idptnkh == id)
+                                                           .FirstOrDefaultAsync();
 
-                    //}
-                    //else
-                    //{
+
+                    ViewData["Noidungddh"] = ndphieuthunoddh;
+
+                    var Sotiendathu = _context.Noidungthunoddh
+                                                        .Include(p => p.IdptnkhNavigation)
+                                                        .Include(p => p.IdptnkhNavigation.IdnvNavigation)
+                                                        .Where(m => m.Idptnkh == id).Sum(s=>s.Sotien);
+                            
+                    var Sotienphaitra = _context.Noidungddh
+                                                        .Include(p => p.IdhhNavigation)
+                                                        .Include(p => p.IddhNavigation)
+                                                        .Where(m => m.IddhNavigation.Iddh == ndphieuthunoddh.Iddh).Sum(a=>a.Soluong * a.Dongia);
+
+                    if (Sotienphaitra - Sotiendathu == 0)
+                    {
+                        ViewData["Sotienconno"] = 0;
+                    }
+                    else
+                    {
+                        ViewData["Sotienconno"] = Sotienphaitra - Sotiendathu;
+
+                    }
                     ViewData["noidungthunoddhkh"] = phieuthunoddhkh;
-                        return View();
+
+
+                    
+                    return View();
 
                     //}
+
+                }
+
+
+                var Sotiendathu1 = _context.Noidungthunokh
+                                                       .Include(p => p.IdptnkhNavigation)
+                                                       .Include(p => p.IdptnkhNavigation.IdnvNavigation)
+                                                       .Where(m => m.Idptnkh == id).Sum(s => s.Sotien);
+
+                var Sotienphaitra1 = _context.Noidungpxk
+                                                    .Include(p => p.IdhhNavigation)
+                                                    .Include(p => p.IdpxkNavigation)
+                                                    .Where(m => m.IdpxkNavigation.Idpxk == ndphieuthuno.Idpxk).Sum(a => a.Soluong * a.Dongia);
+
+                if (Sotienphaitra1 - Sotiendathu1 == 0)
+                {
+                    ViewData["Sotienconno"] = 0;
+                }
+                else
+                {
+                    ViewData["Sotienconno"] = Sotienphaitra1 - Sotiendathu1;
 
                 }
                 return View(phieuthunokh);
@@ -91,13 +140,50 @@ namespace ElectronicsStore.Controllers
 
         }
 
-        // GET: Phieuthunokh/Create
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Themnoidungphieuthunokh(Noidungthunokh noidung)
+        {
+            try
+            {
+                noidung.Ngaythuno = DateTime.Now;
+
+                _context.Noidungthunokh.Add(noidung);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Phieuthunokh", new { id = noidung.Idptnkh });
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Phieuthunokh");
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Themnoidungphieuthunoddh(Noidungthunoddh noidung)
+        {
+            try
+            {
+                noidung.Ngaythuno = DateTime.Now;
+                _context.Noidungthunoddh.Add(noidung);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Phieuthunokh", new { id = noidung.Idptnkh });
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Phieuthunokh");
+            }
+        }
         public IActionResult Create()
         {
 
             return View();
         }
-
         // POST: Phieuthunokh/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
