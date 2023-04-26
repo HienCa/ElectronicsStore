@@ -64,6 +64,11 @@ namespace ElectronicsStore.Controllers
                 Khachhang khachhangcu = await _context.Khachhang.Where(a => a.Email.Equals(khachhang.Email)).FirstOrDefaultAsync();
                 if (khachhangcu == null)
                 {
+                    //RSAEncryption rsa = new RSAEncryption();
+
+                    //khachhang.Email = rsa.Encrypt(khachhang.Email);
+                    //khachhang.Matkhau = rsa.Encrypt(khachhang.Matkhau);
+
                     _context.Khachhang.Add(khachhang);
                     await _context.SaveChangesAsync();
                     ViewData["SigninSuccess"] = "Đăng ký thành công!!!";
@@ -93,6 +98,11 @@ namespace ElectronicsStore.Controllers
         {
             if (ModelState.IsValid && account.Email != null)
             {
+                //RSAEncryption rsa = new RSAEncryption();
+
+                //account.PassWord = rsa.Decrypt(account.PassWord);
+                //account.Email = rsa.Decrypt(account.Email);
+
                 Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
                 Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
                 if (employee != null || customer != null)

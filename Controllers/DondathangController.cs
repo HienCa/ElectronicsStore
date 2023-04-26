@@ -140,7 +140,12 @@ namespace ElectronicsStore.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 string employeeEmail = Request.Cookies["HienCaCookie"];
+                //RSAEncryption rsa = new RSAEncryption();
+
+                //employeeEmail = rsa.Decrypt(employeeEmail);
+
                 var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
                 dondathang.Ngaydat = DateTime.Now;
                 dondathang.Trangthai = 0;

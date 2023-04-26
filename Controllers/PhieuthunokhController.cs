@@ -93,10 +93,13 @@ namespace ElectronicsStore.Controllers
                     if (Sotienphaitra - Sotiendathu == 0)
                     {
                         ViewData["Sotienconno"] = 0;
+                        ViewData["MaxSotienconno"] = (float)0;
+
                     }
                     else
                     {
-                        ViewData["Sotienconno"] = Sotienphaitra - Sotiendathu;
+                        ViewData["MaxSotienconno"] = Sotienphaitra - Sotiendathu;
+                        ViewData["Sotienconno"] = 1;
 
                     }
                     ViewData["noidungthunoddhkh"] = phieuthunoddhkh;
@@ -123,10 +126,13 @@ namespace ElectronicsStore.Controllers
                 if (Sotienphaitra1 - Sotiendathu1 == 0)
                 {
                     ViewData["Sotienconno"] = 0;
+                    ViewData["MaxSotienconno"] = (float)0;
+
                 }
                 else
                 {
-                    ViewData["Sotienconno"] = Sotienphaitra1 - Sotiendathu1;
+                    ViewData["MaxSotienconno"] = Sotienphaitra1 - Sotiendathu1;
+                    ViewData["Sotienconno"] = 1;
 
                 }
                 return View(phieuthunokh);

@@ -59,6 +59,44 @@ namespace ElectronicsStore.Controllers
                 .Include(p => p.IdptnnccNavigation.IdnvNavigation)
                 .Where(m => m.Idptnncc == id)
                 .ToListAsync();
+                if (phieuthunoncc == null)
+                {
+                    return RedirectToAction("Index", "Phieuthunoncc");
+
+                }
+
+                var phieuthunokh = await _context.Noidungtranoncc
+                                                   .Include(p => p.IdptnnccNavigation)
+                                                   .Include(p => p.IdptnnccNavigation.IdnvNavigation)
+                                                   .Where(m => m.Idptnncc == id)
+                                                   .ToListAsync();
+
+                var ndphieutrano = await _context.Noidungtranoncc.Where(a => a.Idptnncc == id)
+                                                           .FirstOrDefaultAsync();
+                ViewData["Noidungncc"] = ndphieutrano;
+
+                var Sotiendatra = _context.Noidungtranoncc
+                                                      .Include(p => p.IdptnnccNavigation)
+                                                      .Include(p => p.IdptnnccNavigation.IdnvNavigation)
+                                                      .Where(m => m.Idptnncc == id).Sum(s => s.Sotien);
+
+                var Sotienphaitra = _context.Noidungpnk
+                                                    .Include(p => p.IdhhNavigation)
+                                                    .Include(p => p.IdpnkNavigation)
+                                                    .Where(m => m.IdpnkNavigation.Idpnk == ndphieutrano.Idpnk).Sum(a => a.Soluong * a.Dongia);
+
+                if (Sotienphaitra - Sotiendatra == 0)
+                {
+                    ViewData["Sotienconno"] = 0;
+                    ViewData["MaxSotienconno"] = (float)0;
+                }
+                else
+                {
+                    ViewData["MaxSotienconno"] = Sotienphaitra - Sotiendatra;
+                    ViewData["Sotienconno"] = 1;
+
+                }
+                
                 return View(phieuthunoncc);
 
             }
@@ -69,7 +107,25 @@ namespace ElectronicsStore.Controllers
             }
 
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
 
+        public async Task<IActionResult> Themnoidungphieutranoncc(Noidungtranoncc noidung)
+        {
+            try
+            {
+                noidung.Ngaytrano = DateTime.Now;
+
+                _context.Noidungtranoncc.Add(noidung);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Phieutranoncc", new { id = noidung.Idptnncc });
+
+            }
+            catch
+            {
+                return RedirectToAction("Index", "Phieutranoncc");
+            }
+        }
         // GET: Phieutranoncc/Create
         public IActionResult Create()
         {

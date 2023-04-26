@@ -5,7 +5,8 @@
     Layout = "_Admin";
     Noidungthunokh noidungkh = ViewData["Noidungkh"] as Noidungthunokh;
     Noidungthunoddh noidungddh = ViewData["Noidungddh"] as Noidungthunoddh;
-    int Sotienconno = (int)ViewData["Sotienconno"]; // bằng 0 là đã trả đủ
+    int Conno = (int)ViewData["Sotienconno"]; // bằng 0 là đã trả đủ
+    float MaxSotienconno = (float)ViewData["MaxSotienconno"]; 
 }
 
 <div class="d-flex justify-content-between mb-2">
@@ -17,7 +18,7 @@
         </form>
 
     </div>
-    @if (Sotienconno == 0)
+    @if (Conno == 0)
     {
 
         <button disabled type="button" class="btn btn-success mr-2" data-toggle="modal" data-target="#addModal">
@@ -116,7 +117,11 @@
         justify-content: center;">
         <div class="modal-content ">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Thêm mới nhân viên</h5>
+                @{
+                    string Max = MaxSotienconno.ToString("#,###.##");
+
+                }
+                <h5 class="modal-title" id="addProductModalLabel">Thu nợ - Còn thiếu: <span style="font-weight:bolder">@Max đ</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -134,8 +139,10 @@
                                     <div class="col-md-2 col-sm-12">
                                         Số tiền
                                     </div>
+                                    <input id="maxPrice" type="hidden" value="@MaxSotienconno"
+                                           class="form-control">
                                     <div class="col-md-10 col-sm-12">
-                                        <input id="SophieuA" name="Sotien" maxlength="255" type="text"
+                                        <input id="Sotien" name="Sotien" maxlength="255" type="number" min="1"
                                                class="form-control">
 
                                     </div>
@@ -163,7 +170,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                        <button type="submit" id="addButton" class="btn btn-primary">Lưu</button>
+                        <button type="submit" disabled id="addButton" class="btn btn-primary">Lưu</button>
                     </div>
 
                 </form>
@@ -181,8 +188,12 @@
                                     <div class="col-md-2 col-sm-12">
                                         Số tiền
                                     </div>
+
+                                    <input id="maxPrice" type="hidden" value="@MaxSotienconno"
+                                           class="form-control">
+
                                     <div class="col-md-10 col-sm-12">
-                                        <input id="SophieuA" name="Sotien" maxlength="255" type="text"
+                                        <input id="Sotien" name="Sotien" maxlength="255" type="number"
                                                class="form-control">
 
                                     </div>
@@ -220,3 +231,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    const maxPrice = document.getElementById("maxPrice");
+    const Sotien = document.getElementById("Sotien");
+    const addButton = document.getElementById("addButton");
+
+    Sotien.addEventListener("input", function () {
+        const max = parseInt(maxPrice.value);
+        const enteredValue = parseInt(Sotien.value);
+
+        if (enteredValue > max) {
+            Sotien.value = max;
+            //Sotien.style.border = "4px solid red";
+            //addButton.disabled = true;
+        }
+        if (Sotien.value.length == 0) {
+            Sotien.value = 1;
+
+
+        } if (enteredValue < max) {
+            Sotien.style.border = "4px solid green";
+            //addButton.disabled = false;
+
+        }
+    });
+</script>
