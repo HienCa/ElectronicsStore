@@ -213,9 +213,9 @@ namespace ElectronicsStore.Controllers
                 noidungddhmoi.Soluong = ddh.Soluong;
                 noidungddhmoi.Dongia = ddh.Dongia;
 
-                DateTime today = DateTime.Today;
-                DateTime hanbaohanh = today.AddDays(ngaybaohanh);
-                noidungddhmoi.Hethanbh = hanbaohanh;
+                //DateTime today = DateTime.Today;
+                //DateTime hanbaohanh = today.AddDays(ngaybaohanh);
+                //noidungddhmoi.Hethanbh = hanbaohanh;
 
                 _context.Noidungddh.Add(noidungddhmoi);
                 await _context.SaveChangesAsync();
@@ -254,9 +254,9 @@ namespace ElectronicsStore.Controllers
                 noidungddhmoi.Soluong = ddh.Soluong;
                 noidungddhmoi.Dongia = ddh.Dongia;
 
-                DateTime today = DateTime.Today;
-                DateTime hanbaohanh = today.AddDays(ngaybaohanh);
-                noidungddhmoi.Hethanbh = hanbaohanh;
+                //DateTime today = DateTime.Today;
+                //DateTime hanbaohanh = today.AddDays(ngaybaohanh);
+                //noidungddhmoi.Hethanbh = hanbaohanh;
 
                 _context.Noidungddh.Add(noidungddhmoi);
                 await _context.SaveChangesAsync();
@@ -329,10 +329,10 @@ namespace ElectronicsStore.Controllers
                     noidungddhmoi.Soluong = int.Parse(item.count);
                     noidungddhmoi.Dongia = int.Parse(item.productPrice);
 
-                    Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
-                    DateTime today = DateTime.Today;
-                    DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
-                    noidungddhmoi.Hethanbh = hanbaohanh;
+                    //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                    //DateTime today = DateTime.Today;
+                    //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                    //noidungddhmoi.Hethanbh = hanbaohanh;
 
                     _context.Noidungddh.Add(noidungddhmoi);
                     await _context.SaveChangesAsync();
@@ -386,10 +386,10 @@ namespace ElectronicsStore.Controllers
                     noidungddhmoi.Soluong = int.Parse(item.count);
                     noidungddhmoi.Dongia = int.Parse(item.productPrice);
 
-                    Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
-                    DateTime today = DateTime.Today;
-                    DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
-                    noidungddhmoi.Hethanbh = hanbaohanh;
+                    //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                    //DateTime today = DateTime.Today;
+                    //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                    //noidungddhmoi.Hethanbh = hanbaohanh;
 
                     _context.Noidungddh.Add(noidungddhmoi);
                     await _context.SaveChangesAsync();
@@ -506,6 +506,16 @@ namespace ElectronicsStore.Controllers
                                     _context.Noidungpxk.Add(noidungpxk);
                                     await _context.SaveChangesAsync();
 
+                                    //Cập nhật hạn bảo hành
+                                    Noidungddh hanghoabaohanh = await _context.Noidungddh.Where(dh=>dh.Iddh==dondathang.Iddh).Where(h => h.Idhh == item.Idhh).FirstOrDefaultAsync();
+                                    Hanghoa hh = await _context.Hanghoa.Where(i => i.Idhh == item.Idhh).FirstOrDefaultAsync();
+
+                                    DateTime today = DateTime.Today;
+                                    DateTime hanbaohanh = today.AddDays(hh.Thoigianbh);
+                                    hanghoabaohanh.Hethanbh = hanbaohanh;
+
+                                    _context.Noidungddh.Update(hanghoabaohanh);
+                                    await _context.SaveChangesAsync();
                                 }
                                 Dondathang donhang = await _context.Dondathang.Where(a => a.Iddh == dondathang.Iddh).FirstOrDefaultAsync();
                                 donhang.Trangthai = 2;
@@ -626,6 +636,67 @@ namespace ElectronicsStore.Controllers
         private bool DondathangExists(int id)
         {
             return _context.Dondathang.Any(e => e.Iddh == id);
+        }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult Ajax(Khachhang kh, string noidungphu, string cartItemsInput)
+        {
+            try
+            {
+                //khách hàng đã đăng nhập hệ thống
+
+                Dondathang dondathang = new Dondathang();
+                dondathang.Idkh = kh.Idkh;
+                dondathang.Madh = GenerateOrderCode() + kh.Idkh;
+                dondathang.Ngaydat = DateTime.Now;
+                dondathang.Trangthai = 0;
+                dondathang.Ghichu = noidungphu;
+
+                _context.Dondathang.Add(dondathang);
+                 _context.SaveChangesAsync();
+                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+
+
+                List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
+
+                foreach (CartItemViewModel item in cartItems)
+                {
+                    Noidungddh noidungddhmoi = new Noidungddh();
+                    noidungddhmoi.Iddh = dondathangmoi.Iddh;
+
+                    noidungddhmoi.Idhh = int.Parse(item.productId);
+                    noidungddhmoi.Soluong = int.Parse(item.count);
+                    noidungddhmoi.Dongia = int.Parse(item.productPrice);
+
+                    //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                    //DateTime today = DateTime.Today;
+                    //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                    //noidungddhmoi.Hethanbh = hanbaohanh;
+
+                    _context.Noidungddh.Add(noidungddhmoi);
+                     _context.SaveChangesAsync();
+
+                }
+                TempData["success"] = "Đặt hàng thành công!!!";
+                TempData["Madh"] = dondathang.Madh;
+                TempData["Sdt"] = kh.Sdt;
+                var ResponseCode = 0;
+                return Json(ResponseCode);
+
+            }
+            catch
+            {
+                TempData["success"] = "Đặt hàng thất bại!!!";
+
+                var ResponseCode = 1;
+                return Json(ResponseCode);
+
+            }
+
         }
     }
 }

@@ -255,9 +255,9 @@
             cskh@ElectronicsStore.com. Chịu trách nhiệm nội dung: Nguyễn Văn Hiền.
         </div>
     </footer>
-    @*<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>*@
+            crossorigin="anonymous"></script>
 
     <script src="~/tab/tab.js"></script>
     <script>
@@ -309,134 +309,16 @@
     </script>
 
 
-    <script>
-        //search product
-        // Lấy danh sách sản phẩm
-        // Lấy danh sách sản phẩm
-        const productList = document.getElementById('product-list').querySelectorAll('.productItem');
-
-        // Lấy ô input và thêm sự kiện khi người dùng nhập giá trị vào ô input
-        const searchInput = document.getElementById('search-input');
-        const searchInput2 = document.getElementById('search-input2');
-        searchInput.addEventListener('input', () => {
-            const keyword = searchInput.value.toLowerCase(); // Chuyển giá trị nhập vào thành chữ thường
-            productList.forEach((product) => {
-                const productName = product.querySelector('.card-title').innerText.toLowerCase(); // Lấy tên sản phẩm và chuyển thành chữ thường
-                if (productName.includes(keyword)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
-                    product.style.display = 'block';
-                } else { // Nếu không, ẩn sản phẩm đó đi
-                    product.style.display = 'none';
-                }
-            });
-        });
-        searchInput2.addEventListener('input', () => {
-            const keyword = searchInput2.value.toLowerCase(); // Chuyển giá trị nhập vào thành chữ thường
-            productList.forEach((product) => {
-                const productName = product.querySelector('.card-title').innerText.toLowerCase(); // Lấy tên sản phẩm và chuyển thành chữ thường
-                if (productName.includes(keyword)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
-                    product.style.display = 'block';
-                } else { // Nếu không, ẩn sản phẩm đó đi
-                    product.style.display = 'none';
-                }
-            });
-        });
-
-
-        // Đẩy các sản phẩm block lại gần nhau
-        let visibleProducts = document.querySelectorAll(".card.product:not([style*='display: none'])");
-        for (let i = 0; i < visibleProducts.length; i++) {
-            visibleProducts[i].classList.remove("mb-2");
-            if (i !== visibleProducts.length - 1) {
-                visibleProducts[i].classList.add("mb-2");
-            }
-        }
-
-
-
-        const productType = document.querySelectorAll('.product-type');
-
-        productType.forEach((type) => {
-            type.addEventListener('click', () => {
-                let Nhomhh = type.querySelector('.Idnhh').value;
-
-                productList.forEach((product) => {
-                    const productType = product.querySelector('.Idnhh').value.trim(); // Lấy tên sản phẩm và chuyển thành chữ thường
-                    if (productType.includes(Nhomhh)) { // Nếu tên sản phẩm chứa keyword, hiển thị sản phẩm đó
-                        product.style.display = 'block';
-                    } else { // Nếu không, ẩn sản phẩm đó đi
-                        product.style.display = 'none';
-
-                    }
-                });
-            });
-
-
-        });
-
-        //Lọc theo giá
-        const priceMinInput = document.querySelector('#price-min');
-        const priceMaxInput = document.querySelector('#price-max');
-
-        priceMinInput.addEventListener('input', filterProductsByPrice);
-        priceMaxInput.addEventListener('input', filterProductsByPrice);
-
-        function filterProductsByPrice() {
-            const priceMin = parseInt(priceMinInput.value);
-            const priceMax = parseInt(priceMaxInput.value);
-
-            productList.forEach((product) => {
-                const productPrice = parseInt(product.querySelector('.price').value);
-                if (productPrice >= priceMin && productPrice <= priceMax) {
-                    product.style.display = 'block';
-                    console.log(productPrice);
-                } else {
-                    product.style.display = 'none';
-                    console.log(productPrice);
-
-                }
-            });
-        }
-        // lọc dropdown thấp->cao cao-> thấp
-        //function sortProductsByPriceAsc() {
-        //    if (Array.isArray(productList)) {
-        //        productList.sort((a, b) => {
-        //            const priceA = parseInt(a.querySelector('.price').value);
-        //            const priceB = parseInt(b.querySelector('.price').value);
-        //            return priceA - priceB;
-        //        });
-        //    }
-        //}
-        //function sortProductsByPriceDesc() {
-        //    if (Array.isArray(productList)) {
-        //        productList.sort((a, b) => {
-        //            const priceA = parseInt(a.querySelector('.price').value);
-        //            const priceB = parseInt(b.querySelector('.price').value);
-        //            return priceB - priceA;
-
-        //        });
-        //    }
-        //}
-
-
-    </script>
-    <script>
-
-        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-        document.getElementById("count-items").innerText = cartItems.length;
-
-
-    </script>
+    
+   
     <script>
         const InfoDropDown = document.getElementById("InfoDropDown");
         const InfoDropDownItem = document.getElementById("InfoDropDownItem");
         InfoDropDown.addEventListener("click", function () {
             if (InfoDropDownItem.style.display == "none") {
                 InfoDropDownItem.style.display = "block"
-                console.log("sssss")
             } else if (InfoDropDownItem.style.display == "block") {
                 InfoDropDownItem.style.display = "none"
-                console.log("aaaa")
-
 
             }
         })

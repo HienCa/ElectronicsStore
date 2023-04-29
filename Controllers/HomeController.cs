@@ -34,7 +34,7 @@ namespace ElectronicsStore.Controllers
         }
 
         private readonly int PageSize = 10;
-        public async Task<IActionResult> Index(int? id, int page = 1)
+        public async Task<IActionResult> Index( int? id, int page = 1)
         {
 
 
@@ -57,7 +57,9 @@ namespace ElectronicsStore.Controllers
             int totalPages = 0;
             if (id != null)
             {
+
                 h = await _context.Hanghoa.Where(a => a.Active == 1 && a.IdnhhNavigation.Idnhh == id).Include(a => a.IdnhhNavigation).ToListAsync();
+
                 int totalItems = h.Count();// Lấy tổng số phần tử từ cơ sở dữ liệu
 
                 // Tính tổng số trang
@@ -65,7 +67,10 @@ namespace ElectronicsStore.Controllers
             }
             else
             {
+
+
                 h = await _context.Hanghoa.Where(a => a.Active == 1).Include(a => a.IdnhhNavigation).ToListAsync();
+
                 int totalItems = h.Count();// Lấy tổng số phần tử từ cơ sở dữ liệu
 
                 // Tính tổng số trang
@@ -202,7 +207,37 @@ namespace ElectronicsStore.Controllers
             return View();
 
         }
+        [HttpPost]
+        public async Task<IActionResult> CancelOrdered(Dondathang donhang)
+        {
+            Dondathang dh = await _context.Dondathang.Where(e => e.Iddh == donhang.Iddh).FirstOrDefaultAsync();
 
+            List<Noidungddh> danhsachnoidungcanhuy = await _context.Noidungddh.Where(e => e.Iddh == donhang.Iddh).ToListAsync();
+
+            foreach (Noidungddh item in danhsachnoidungcanhuy)
+            {
+                _context.Noidungddh.Remove(item);
+
+            }
+            _context.Dondathang.Remove(dh);
+            await _context.SaveChangesAsync();
+
+            string employeeEmail = Request.Cookies["CustomerCookie"];
+            if (employeeEmail != null)
+            {
+                var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
+
+                ViewData["Success"] = "Đã hủy thành công đơn hàng: " + dh.Madh;
+                return RedirectToAction("OrderedDetails", "Home", new { Madh = dh.Madh, sdt = khachhang.Sdt });
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+
+            }
+
+        }
         public async Task<IActionResult> OrderedDetails(string Madh, string sdt)
         {
             try
@@ -328,6 +363,7 @@ namespace ElectronicsStore.Controllers
 
 
         }
+        [HttpPost]
         public async Task<IActionResult> OrderedDetailsMulti(int id)
         {
             try
@@ -548,6 +584,26 @@ namespace ElectronicsStore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+
+        [HttpGet]
+        public JsonResult Ajax(int id)
+        {
+            
+            if (id == 0)
+            {
+                var ResponseCode = 0;
+                return Json(ResponseCode);
+
+            }
+            else
+            {
+                var ResponseCode = 1;
+                return Json(ResponseCode);
+
+            }
         }
     }
 }

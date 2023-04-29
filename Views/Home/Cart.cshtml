@@ -95,8 +95,8 @@
 
                                             <a href="#myModal" role="button" class="btn btn-secondary" data-bs-toggle="modal">Hủy bỏ</a>
                                             @*<button type="submit" id="ordered-btn" disabled class="btn btn-primary">
-                                        Đặt hàng
-                                    </button>*@
+                                                    Đặt hàng
+                                                </button>*@
                                             <button id="ordered-btn" onclick="submitForm()" disabled class="btn btn-primary">
                                                 Đặt hàng
                                             </button>
@@ -232,6 +232,9 @@
                                             <button id="ordered-btn-authen" onclick="submitFormAuthen()" class="btn btn-primary">
                                                 Đặt hàng
                                             </button>
+                                            @*<button id="ordered-btn-ajax" class="btn btn-primary">
+                                                Đặt hàng AJAX
+                                            </button>*@
                                         </div>
 
                                     </div>
@@ -313,8 +316,8 @@
                 productName.innerHTML = `<strong>${item.productName}</strong>`;
                 const productColor = document.createElement('p');
                 productColor.innerHTML = `Giá: ${VND.format(item.productPrice)}`;
-                const productSize = document.createElement('p');
-                productSize.innerHTML = `Size: ${item.size}`;
+                //const productSize = document.createElement('p');
+                //productSize.innerHTML = `Size: ${item.size}`;
                 const removeButton = document.createElement('button');
                 removeButton.className = 'btn btn-danger btn-sm me-1 mb-2';
                 removeButton.setAttribute('data-mdb-toggle', 'tooltip');
@@ -326,7 +329,7 @@
 
                 productDataCol.appendChild(productName);
                 productDataCol.appendChild(productColor);
-                productDataCol.appendChild(productSize);
+                //productDataCol.appendChild(productSize);
                 productDataCol.appendChild(removeButton);
 
                 const productQuantityCol = document.createElement('div');
@@ -546,14 +549,14 @@
                 if (xhr.responseText != "") {
                     var err = JSON.parse(xhr.responseText);
                     if (err.status == 440) {
-                        alert("Session expired");
+                        //alert("Session expired");
                     }
                     else {
-                        alert(err.message);
+                        //alert(err.message);
                     }
                 }
                 else {
-                    alert("Crash");
+                    //alert("Crash");
                 }
             }
         });
@@ -571,7 +574,7 @@
             noidungphu: $('#noidungphu').val(),
             cartItemsInput: cartItems
         };
-        alert(cartItems)
+        //alert(cartItems)
         localStorage.removeItem("cartItems");
         updateCartList();
         $.ajax({
@@ -602,3 +605,49 @@
 
     }
 </script>
+
+
+
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script>
+        $(document).ready(function() {
+  $("#ordered-btn-ajax").on("click", function() {
+        var cartItems = localStorage.getItem("cartItems");
+        var data = {
+            Tenkh: $('#Tenkh').val(),
+            Sdt: $('#Sdt').val(),
+            Email: $('#Email').val(),
+            Diachi: $('#Email').val(),
+            noidungphu: $('#noidungphu').val(),
+            cartItemsInput: cartItems
+        };
+
+        var url = '@Url.Action("Ajax", "Dondathang")';
+        $.ajax({
+            type: 'Post',
+            url: url,
+            contentType: 'application/json',
+            processData: false,
+            cache: false,
+            data: data,
+            success: function(response) {
+                if (response == 0) {
+                    alert("successful")
+                    //alert(cartItems)
+                    localStorage.removeItem("cartItems");
+                    updateCartList();
+                }
+                else {
+                   alert(response);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+        });
+    });
+});
+</script>*@
+

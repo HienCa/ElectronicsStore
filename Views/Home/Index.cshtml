@@ -34,8 +34,42 @@
                 }
             }
 
+            <div class="row">
+
+                <div data-role="rangesliderv" class=" d-flex justify-content-between align-items-center" style="max-width:40%">
+                    <div class="row align-items-center">
+                        <div class="col-lg-2 col-md-6  col-sm-12">
+                            <label for="price-min">Từ:</label>
+
+                        </div>
+                        <div class="col-lg-10  col-md-6  col-sm-12">
+                            <input type="number" class="form-control" name="price-min" step="5" id="price-min" min="0" max="100000000">
+                        </div>
+                    </div>
+                    <div class="row ml-3 align-items-center">
+                        <div class="col-lg-2 col-md-6  col-sm-12">
+
+                            <label for="price-max">Đến:</label>
+                        </div>
+                        <div class="col-lg-10  col-md-6  col-sm-12">
+
+                            <input type="number" class="form-control" name="price-max" step="5" id="price-max" min="0" max="100000000">
+                        </div>
+                    </div>
 
 
+                    @*<div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Lọc giá
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Home/Index/?desc=desc" >Thấp đến cao</a>
+                                <li><a class="dropdown-item" href="/Home/Index" >Cao đến thấp</a>
+                            </ul>
+                        </div>*@
+                </div>
+            </div>
+            <button id="ajax" class="btn btn-info">Test AJAX</button>
 
         </div>
 
@@ -71,7 +105,7 @@
                                         string giakms = giakm.HasValue ? giakm.Value.ToString("#,###.##") : "";
 
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <div class=" card-text text-danger">
+                                            <div class=" card-text text-danger ">
                                                 @giakms đ
                                             </div>
                                             <div class=" card-text text-dark" style="text-decoration: line-through;opacity: 0.7;">
@@ -79,11 +113,13 @@
 
                                             </div>
                                         </div>
-
+                                        <input type="hidden" value="@item.Giakm" class="price" />
                                     }
                                     else
                                     {
                                         <div class="card-text text-danger ">@giabans đ</div>
+
+                                        <input type="hidden" value="@item.Giaban" class="price" />
 
                                     }
                                 </a>
@@ -205,4 +241,35 @@
             });
         })
     }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script>
+        $(document).ready(function() {
+    // GET BY ID
+    $("#ajax").on("click", function() {
+        alert("clicked")
+        var url = '@Url.Action("Ajax", "Home")';
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: false,
+            processData: false,
+            cache: false,
+            data: {id:0},
+            success: function(response) {
+                if (response == 0) {
+                    alert("successful")
+                }
+                else {
+                   alert(response);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
+        });
+    });
+});
 </script>
