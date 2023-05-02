@@ -159,7 +159,7 @@ namespace ElectronicsStore.Controllers
 
             try
             {
-                Hanghoa hh = new Hanghoa();
+                Hanghoa hh = await _context.Hanghoa.Where(a=>a.Idhh==hanghoa.Idhh).FirstOrDefaultAsync();
 
                 //lấy hình ảnh
                 //hh.Hinhanh = uniqueFileName;
@@ -195,7 +195,7 @@ namespace ElectronicsStore.Controllers
                     hh.Hinhanh = hanghoacu.Hinhanh;
                 }
 
-                _context.Update(hh);
+                _context.Hanghoa.Update(hh);
                 await _context.SaveChangesAsync();
             }
             catch 

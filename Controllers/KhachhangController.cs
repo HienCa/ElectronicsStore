@@ -162,7 +162,8 @@ namespace ElectronicsStore.Controllers
             {
                 try
                 {
-                    Khachhang kh = new Khachhang();
+                    Khachhang kh = await _context.Khachhang.Where(a => a.Idkh == khachhang.Idkh).FirstOrDefaultAsync();
+
 
                     //lấy hình ảnh
                     //kh.Hinhanh = uniqueFileName;

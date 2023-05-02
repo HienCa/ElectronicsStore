@@ -111,8 +111,8 @@
                 </div>
                 <ul class="sub-menu">
                     <li><a class="link_name" href="#">Cài đặt</a></li>
-                    <li><a href="#">Chế độ tối</a></li>
-                    <li><a href="#">Số dòng hiển thị</a></li>
+                    @*<li><a href="#">Chế độ tối</a></li>*@
+                    <li><a href="/Home/Settings">Số dòng hiển thị</a></li>
                 </ul>
             </li>
 
@@ -176,6 +176,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <script>
+        var defaultLength = 10;
+
+        // Nếu đã lưu trữ số hàng hiển thị trên localstorage thì lấy giá trị đó
+        if (localStorage.getItem("productTableLength")) {
+            defaultLength = parseInt(localStorage.getItem("productTableLength"));
+        }
+
         $(document).ready(function () {
             $('#productTable').DataTable({
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -183,7 +190,7 @@
                     "lengthMenu": "Hiển thị _MENU_ bản ghi",
                     "search": "Tìm kiếm:",
                 },
-                "pageLength": 10, // Số bản ghi hiển thị ban đầu
+                "pageLength": defaultLength, // Số bản ghi hiển thị ban đầu
                 "search": {
                     "search": "", // Giá trị tìm kiếm ban đầu
                     "placeholder": "Tìm kiếm...", // Chú thích tìm kiếm
@@ -217,6 +224,11 @@
             });
         });
 
+
+        // Lưu trữ số hàng hiển thị vào localstorage khi người dùng thay đổi giá trị
+        $('#productTable').on('length.dt', function (e, settings, len) {
+            localStorage.setItem("productTableLength", len);
+        });
 
 
     </script>

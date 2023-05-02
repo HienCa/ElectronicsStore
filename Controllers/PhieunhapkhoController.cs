@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using System.Text;
 using ClosedXML.Excel;
+using ElectronicsStore.ViewModel;
 
 namespace ElectronicsStore.Controllers
 {
@@ -372,47 +373,62 @@ namespace ElectronicsStore.Controllers
         {
 
 
-            var inventoryReport = _context.Noidungpnk
-             .GroupBy(n => n.Idhh)
-             .Select(g => new
-             {
-                 Idhh = g.Key,
-                 TongNhap = g.Sum(n => n.Soluong),
-                 TongXuat = _context.Noidungpxk.Where(n => n.Idhh == g.Key).Sum(n => n.Soluong),
-             })
-             .ToList()
-             .Select(p => new
-             {
-                 ProductId = p.Idhh,
-                 TenSanPham = _context.Hanghoa.FirstOrDefault(pr => pr.Idhh == p.Idhh),
-                 TongNhap = p.TongNhap,
-                 TongXuat = p.TongXuat,
-                 TonKho = p.TongNhap - p.TongXuat,
-             })
-             .ToList();
-            //var report = new Report
-            //{
-            //    Mavl = "MAVL001",
-            //    Tenvl = "Tên vật liệu",
-            //    Donvitinh = "Đơn vị tính",
-            //    Ngaylapbaocao = DateTime.Now,
-            //    SLdauky = 1000,
-            //    Giadauky = 5000,
-            //    SLnhaptrongky = productsReport.Sum(p => p.TongNhap),
-            //    Gianhaptrongky = productsReport.Sum(p => p.TongNhap * p.TenSanPham.GiaNhap),
-            //    SLxuattrongky = productsReport.Sum(p => p.TongXuat),
-            //    Giaxuattrongky = productsReport.Sum(p => p.TongXuat * p.TenSanPham.GiaXuat),
-            //    SLtoncuoiky = productsReport.Sum(p => p.TonKho),
-            //    Giatoncuoiky = productsReport.Sum(p => p.TonKho * p.TenSanPham.GiaBan),
-            //};
+            var productQuantitiesNhap = _context.Noidungpnk.Include(p => p.IdhhNavigation).ToList()
+                                               .GroupBy(item => item.Idhh)
+                                               .Select(group => new ProductQuantityViewModel
+                                               {
+                                                   Idhh = group.Key,
+                                                   Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                   Soluong = group.Sum(item => item.Soluong)
+                                               })
+                                               .ToList();
 
-            //// Tính tổng tiền đầu kỳ, nhập trong kỳ và xuất trong kỳ
-            //report.Tongtiendauky = report.SLdauky * report.Giadauky;
-            //report.Tongtiennhaptrongky = report.SLnhaptrongky * report.Gianhaptrongky;
-            //report.Tongtienxuattrongky = report.SLxuattrongky * report.Giaxuattrongky;
+            var productQuantitiesXuat = _context.Noidungpxk.Include(p => p.IdhhNavigation).ToList()
+                                               .GroupBy(item => item.Idhh)
+                                               .Select(group => new ProductQuantityViewModel
+                                               {
+                                                   Idhh = group.Key,
+                                                   Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                   Soluong = group.Sum(item => item.Soluong)
+                                               })
+                                               .ToList();
+            //var productQuantitiesTonKho = productQuantitiesNhap.Join(
+            //                    productQuantitiesXuat,
+            //                    p => p.Idhh,
+            //                    q => q.Idhh,
+            //                    (p, q) => new ProductQuantityViewModel
+            //                    {
+            //                        Idhh = p.Idhh,
+            //                        Tenhh = p.Tenhh,
+            //                        Soluong = p.Soluong - q.Soluong
+            //                    }).ToList();
 
-            //// Tính tổng tiền tồn cuối kỳ
-            //report.Tongtientoncuoiky = report.SLtoncuoiky * report.Giatoncuoiky;
+
+            var productQuantitiesTonKho = _context.Hanghoa
+                                                .GroupJoin(
+                                                    productQuantitiesNhap,
+                                                    p => p.Idhh,
+                                                    qn => qn.Idhh,
+                                                    (p, qn) => new { Product = p, QuantitiesNhap = qn })
+                                                .GroupJoin(
+                                                    productQuantitiesXuat,
+                                                    pqn => pqn.Product.Idhh,
+                                                    qx => qx.Idhh,
+                                                    (pqn, qx) => new { pqn.Product, pqn.QuantitiesNhap, QuantitiesXuat = qx })
+                                                .SelectMany(
+                                                    pq => pq.QuantitiesNhap.DefaultIfEmpty(),
+                                                    (p, qn) => new { p.Product, QuantitiesNhap = qn, p.QuantitiesXuat })
+                                                .SelectMany(
+                                                    pq => pq.QuantitiesXuat.DefaultIfEmpty(),
+                                                    (p, qx) => new ProductQuantityViewModel
+                                                    {
+                                                        Idhh = p.Product.Idhh,
+                                                        Tenhh = p.Product.Tenvl,
+                                                        Soluong = (p.QuantitiesNhap != null ? p.QuantitiesNhap.Soluong : 0) - (qx != null ? qx.Soluong : 0)
+                                                    })
+                                                .ToList();
+
+
             using (var workbook = new XLWorkbook())
             {
                 //tên sheet
@@ -536,7 +552,7 @@ namespace ElectronicsStore.Controllers
             {
 
 
-               
+
                 //TempData["Listreport"] = Listreport;
             }
             return View();
@@ -547,42 +563,42 @@ namespace ElectronicsStore.Controllers
 
         // GET: Phieunhapkho/Delete/5
         public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null)
         {
-            return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var phieunhapkho = await _context.Phieunhapkho
+                .Include(p => p.Idncc)
+                .Include(p => p.IdnvNavigation)
+                .FirstOrDefaultAsync(m => m.Idpnk == id);
+            if (phieunhapkho == null)
+            {
+                return NotFound();
+            }
+
+            return View(phieunhapkho);
         }
 
-        var phieunhapkho = await _context.Phieunhapkho
-            .Include(p => p.Idncc)
-            .Include(p => p.IdnvNavigation)
-            .FirstOrDefaultAsync(m => m.Idpnk == id);
-        if (phieunhapkho == null)
+        // POST: Phieunhapkho/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            return NotFound();
+            var phieunhapkho = await _context.Phieunhapkho.FindAsync(id);
+            phieunhapkho.Active = 0;
+            _context.Phieunhapkho.Update(phieunhapkho);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        return View(phieunhapkho);
+        private bool PhieunhapkhoExists(int id)
+        {
+            return _context.Phieunhapkho.Any(e => e.Idpnk == id);
+        }
+
+
+
     }
-
-    // POST: Phieunhapkho/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var phieunhapkho = await _context.Phieunhapkho.FindAsync(id);
-        phieunhapkho.Active = 0;
-        _context.Phieunhapkho.Update(phieunhapkho);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
-    private bool PhieunhapkhoExists(int id)
-    {
-        return _context.Phieunhapkho.Any(e => e.Idpnk == id);
-    }
-
-
-
-}
 }

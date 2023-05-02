@@ -100,6 +100,9 @@
                                             <button id="ordered-btn" onclick="submitForm()" disabled class="btn btn-primary">
                                                 Đặt hàng
                                             </button>
+                                            @*<button id="ordered-btn-ajax" class="btn btn-primary">
+                                                    Đặt hàng AJAX
+                                                </button>*@
                                         </div>
 
                                     </div>
@@ -114,9 +117,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <p><strong>Hình thức thanh toán</strong></p>
-                        <img class="me-2" style="width:45px"
-                             src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                             alt="Visa" />
+                        @*<img class="me-2" style="width:45px"
+                            src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                            alt="Visa" />*@
                         <span class="bg-light p-2 border-1">Thanh toán khi nhận hàng</span>
                     </div>
                 </div>
@@ -175,7 +178,7 @@
                 {
                     Khachhang thongtinkhachhang = ViewData["Info"] as Khachhang;
 
-                    <form asp-action="CreateForGuestMultiOrderAuthen" asp-controller="Dondathang">
+                    <form id="form-ordered-authen" asp-action="CreateForGuestMultiOrderAuthen" asp-controller="Dondathang">
                         <input type="hidden" id="cartItemsInput" name="cartItemsInput" value="" />
 
                         <div id="InfoModal" class="modal fade " tabindex="-1">
@@ -187,13 +190,13 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="   ">
-                                            <input type="hidden" class="form-control" readonly name="Idkh" value="@thongtinkhachhang.Idkh">
+                                            <input type="hidden" class="form-control" id="Idkh" readonly name="Idkh" value="@thongtinkhachhang.Idkh">
                                             <div class="col-md-12   bg-white">
 
                                                 <div class=" mb-4">
                                                     <div class="mb-3">
                                                         <label for="Tenkh">Tên</label>
-                                                        <input type="text" class="form-control" readonly name="Tenkh" value="@thongtinkhachhang.Tenkh"
+                                                        <input type="text" class="form-control" id="Tenkh" readonly name="Tenkh" value="@thongtinkhachhang.Tenkh"
                                                                placeholder="Họ tên nhận hàng">
                                                     </div>
                                                     <div class="mb-3">
@@ -203,17 +206,17 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="Email">Email</label>
-                                                        <input type="text" class="form-control" readonly name="Email" value="@thongtinkhachhang.Email"
+                                                        <input type="text" class="form-control" id="Email" readonly name="Email" value="@thongtinkhachhang.Email"
                                                                placeholder="Email liên hệ">
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="Diachi">Địa chỉ nhận hàng</label>
-                                                        <textarea type="text" class="form-control" readonly name="Diachi" value=""
+                                                        <textarea type="text" class="form-control" readonly id="Diachi" name="Diachi" value=""
                                                                   maxlength="4000" required placeholder="Địa chỉ nhận hàng">@thongtinkhachhang.Diachi</textarea>
                                                     </div>
                                                     <div class="">
                                                         <label for="Diachi">Lưu ý</label>
-                                                        <textarea type="text" class="form-control" name="noidungphu" maxlength="4000"
+                                                        <textarea type="text" class="form-control" id="noidungphu" name="noidungphu" maxlength="4000"
                                                                   placeholder="Lưu ý giao hàng"></textarea>
                                                     </div>
 
@@ -233,8 +236,8 @@
                                                 Đặt hàng
                                             </button>
                                             @*<button id="ordered-btn-ajax" class="btn btn-primary">
-                                                Đặt hàng AJAX
-                                            </button>*@
+                                                    Đặt hàng AJAX
+                                                </button>*@
                                         </div>
 
                                     </div>
@@ -268,8 +271,9 @@
 
         const totalAmount = document.getElementById("totalAmount");
         const totalAmountShip = document.getElementById("totalAmountShip");
-        let totalPrice = 0;
         function addItemToList(item) {
+            let totalPrice = 0;
+
             const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
             //số lượng sản phẩm
@@ -377,6 +381,20 @@
 
                 productQuantityCol.appendChild(quantityDiv);
 
+                const checkboxInput = document.createElement('input');
+                checkboxInput.id = 'myCheckbox';
+                checkboxInput.type = 'checkbox';
+                if (item.check === 1) {
+                    checkboxInput.checked = true;
+                }
+                else {
+                    checkboxInput.checked = false;
+                }
+                checkboxInput.onclick = () => {
+                    updateItemCheck(item, checkboxInput.checked);
+                };
+
+                productRow.appendChild(checkboxInput);
                 productRow.appendChild(productImageCol);
                 productRow.appendChild(productDataCol);
                 productRow.appendChild(productQuantityCol);
@@ -384,26 +402,79 @@
                 cartList.appendChild(productRow);
 
                 //TỔNG TIỀN
-                totalPrice = parseInt(totalPrice) + (parseInt(item.productPrice) * parseInt(item.count));
+                if (item.check == 1) {
+                    totalPrice = parseInt(totalPrice) + (parseInt(item.productPrice) * parseInt(item.count));
+                }
+
+                //totalPrice = parseInt(totalPrice) + (parseInt(item.productPrice) * parseInt(item.count));
 
             })
+
+
             totalAmount.innerText = VND.format(totalPrice);
             totalAmountShip.innerText = VND.format(totalPrice + 15000);
+
+
             //truyền dữ liệu qua controller
             let cartItemss = JSON.parse(localStorage.getItem("cartItems"));
             if (cartItemss) {
                 document.getElementById("cartItemsInput").value = JSON.stringify(cartItemss);
             }
-            console.log(JSON.stringify(cartItems));
-            if (cartItems.length > 0) {
-                document.getElementById("ordered-action-btn").disabled = false;
-            } else {
-                document.getElementById("ordered-action-btn").disabled = true;
+            //console.log(JSON.stringify(cartItems));
+            //if (cartItems.length > 0) {
+            //    document.getElementById("ordered-action-btn").disabled = false;
+            //} else {
+            //    document.getElementById("ordered-action-btn").disabled = true;
 
+            //}
+            if (parseInt(totalPrice) == 0) {
+                document.getElementById("ordered-action-btn").disabled = true;
+            } else {
+                document.getElementById("ordered-action-btn").disabled = false;
             }
         }
         addItemToList();
 
+        function updateItemCheck(item, isChecked) {
+            if (isChecked) {
+                item.check = 1;
+            } else {
+                item.check = 0;
+            }
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const index = cartItems.findIndex(i => i.productId === item.productId);
+            if (index > -1) {
+                cartItems[index] = item;
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            }
+
+            let total = 0;
+            total = CalculatePrice();
+            totalAmount.innerText = "";
+            totalAmountShip.innerText = "";
+        
+            totalAmount.innerText = VND.format(total);
+            totalAmountShip.innerText = VND.format(total + 15000);
+
+            if (parseInt(total) == 0) {
+                document.getElementById("ordered-action-btn").disabled = true;
+            } else {
+                document.getElementById("ordered-action-btn").disabled = false;
+            }
+            updateCartList();
+        }
+
+
+        function CalculatePrice() {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            let total = 0;
+            for (let i = 0; i < cartItems.length; i++) {
+                if (cartItems[i].check === 1) {
+                    total += cartItems[i].productPrice * cartItems[i].count;
+                }
+            }
+            return total;
+        }
 
         function removeItem(id) {
             const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
@@ -443,9 +514,11 @@
                 updateCartList();
 
                 const totalPrice = cartItems.reduce((total, item) => {
-                    console.log(item.productPrice)
+                    //console.log(item.productPrice)
                     return total + parseInt(item.productPrice) * parseInt(item.count);
                 }, 0);
+
+                // chỉ gán khi check=1
                 totalAmount.innerText = VND.format(totalPrice);
                 totalAmountShip.innerText = VND.format(totalPrice + 15000);
 
@@ -465,7 +538,7 @@
                 updateCartList();
 
                 const totalPrice = cartItems.reduce((total, item) => {
-                    console.log(item.productPrice)
+                    //console.log(item.productPrice)
                     return total + parseInt(item.productPrice) * parseInt(item.count);
                 }, 0);
 
@@ -475,9 +548,38 @@
             }
         }
 
+        function checkCookie(name) {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.indexOf(name) == 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
+        if (checkCookie("CustomerCookie")) {
+            const formOrderedAuthen = document.getElementById("form-ordered-authen");
+
+            formOrderedAuthen.addEventListener('submit', function () {
+                var cartItems = JSON.parse(localStorage.getItem("cartItems"));
+                cartItems = cartItems.filter(item => item.check !== 1); // Lưu lại các sản phẩm check khác 1 - là chưa được mưa
+                localStorage.removeItem("cartItems");
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            })
+        }
 
         const formOrdered = document.getElementById("form-ordered");
+
+        formOrdered.addEventListener('submit', function () {
+            var cartItems = JSON.parse(localStorage.getItem("cartItems"));
+            cartItems = cartItems.filter(item => item.check !== 1); // Lưu lại các sản phẩm check khác 1 - là chưa được mưa
+            localStorage.removeItem("cartItems");
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        })
+
+
         const orderedbtn = document.getElementById("ordered-btn");
 
         formOrdered.addEventListener('change', function () {
@@ -519,7 +621,6 @@
     })
 
 
-
 </script>
 <script>
     function submitForm() {
@@ -533,8 +634,14 @@
             cartItemsInput: cartItems
         };
         //alert(cartItems)
+        cartItemss = cartItems.filter(item => item.check !== 1); //lưu lại các sản phẩm check khác 1 - là chưa được mưa
         localStorage.removeItem("cartItems");
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItemss));
+
         updateCartList();
+        alert("sssssssssssssssssss")
+
         $.ajax({
             url: '/Cart/CreateForGuestMultiOrder',
             type: 'POST',
@@ -575,8 +682,16 @@
             cartItemsInput: cartItems
         };
         //alert(cartItems)
+        //localStorage.removeItem("cartItems");
+
+        cartItemss = cartItems.filter(item => item.check !== 1); //lưu lại các sản phẩm check khác 1 - là chưa được mua
         localStorage.removeItem("cartItems");
+
+        localStorage.setItem('cartItems', JSON.stringify(cartItemss));
+
         updateCartList();
+        alert("sssssssssssssssssss")
+
         $.ajax({
             url: '/Cart/CreateForGuestMultiOrderAuthen',
             type: 'POST',
@@ -608,46 +723,58 @@
 
 
 
-@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 
-<script>
-        $(document).ready(function() {
-  $("#ordered-btn-ajax").on("click", function() {
-        var cartItems = localStorage.getItem("cartItems");
-        var data = {
-            Tenkh: $('#Tenkh').val(),
-            Sdt: $('#Sdt').val(),
-            Email: $('#Email').val(),
-            Diachi: $('#Email').val(),
-            noidungphu: $('#noidungphu').val(),
-            cartItemsInput: cartItems
-        };
+@*<script>
+        $(document).ready(function () {
+            // GET BY ID
+            $("#ordered-btn-ajax").on("click", function () {
+                var cartItems = localStorage.getItem("cartItems");
+                var kh = {
+                    Idkh: $('#Idkh').val(),
+                    Tenkh: $('#Tenkh').val(),
+                    Sdt: $('#Sdt').val(),
+                    Email: $('#Email').val(),
+                    Diachi: $('#Diachi').val(),
+                };
 
-        var url = '@Url.Action("Ajax", "Dondathang")';
-        $.ajax({
-            type: 'Post',
-            url: url,
-            contentType: 'application/json',
-            processData: false,
-            cache: false,
-            data: data,
-            success: function(response) {
-                if (response == 0) {
-                    alert("successful")
-                    //alert(cartItems)
-                    localStorage.removeItem("cartItems");
-                    updateCartList();
-                }
-                else {
-                   alert(response);
-                }
-            },
-            error: function(xhr, status, error) {
-                alert("An error occurred: " + error);
-            }
+                var url = '/Dondathang/Ajax';
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    contentType: 'application/json',
+                    processData: false,
+                    cache: false,
+                    data: JSON.stringify({
+                        kh: kh,
+                        noidungphu: $('#noidungphu').val(),
+                        cartItemsInput: cartItems
+                    }),
+                    success: function (response) {
+                        if (response == 0) {
+                            alert("successful")
+                            //alert(cartItems)
+                            localStorage.removeItem("cartItems");
+                            updateCartList();
+                        }
+                        else {
+                            alert(response);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                        console.log(JSON.stringify({
+                            kh: kh,
+                            noidungphu: $('#noidungphu').val(),
+                            cartItemsInput: cartItems
+                        }));
+
+                    }
+                });
+            });
+
         });
-    });
-});
-</script>*@
+
+    </script>*@
 

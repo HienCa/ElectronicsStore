@@ -322,20 +322,24 @@ namespace ElectronicsStore.Controllers
 
                 foreach (CartItemViewModel item in cartItems)
                 {
-                    Noidungddh noidungddhmoi = new Noidungddh();
-                    noidungddhmoi.Iddh = dondathangmoi.Iddh;
+                    if (item.check == 1)
+                    {
+                        Noidungddh noidungddhmoi = new Noidungddh();
+                        noidungddhmoi.Iddh = dondathangmoi.Iddh;
 
-                    noidungddhmoi.Idhh = int.Parse(item.productId);
-                    noidungddhmoi.Soluong = int.Parse(item.count);
-                    noidungddhmoi.Dongia = int.Parse(item.productPrice);
+                        noidungddhmoi.Idhh = int.Parse(item.productId);
+                        noidungddhmoi.Soluong = int.Parse(item.count);
+                        noidungddhmoi.Dongia = int.Parse(item.productPrice);
 
-                    //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
-                    //DateTime today = DateTime.Today;
-                    //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
-                    //noidungddhmoi.Hethanbh = hanbaohanh;
+                        //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+                        //DateTime today = DateTime.Today;
+                        //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+                        //noidungddhmoi.Hethanbh = hanbaohanh;
 
-                    _context.Noidungddh.Add(noidungddhmoi);
-                    await _context.SaveChangesAsync();
+                        _context.Noidungddh.Add(noidungddhmoi);
+                        await _context.SaveChangesAsync();
+                    }
+                   
 
                 }
                 TempData["success"] = "Đặt hàng thành công!!!";
@@ -566,11 +570,11 @@ namespace ElectronicsStore.Controllers
                                 await _context.SaveChangesAsync();
 
                             }
-                            //else if(dondathang.Trangthai == 4)
+                            //else if (dondathang.Trangthai == 4)
                             //{
                             //    List<Noidungddh> noidungddhtra = await _context.Noidungddh.Where(a => a.Iddh == dondathang.Iddh).ToListAsync();
 
-                            //    foreach(Noidungddh noidungtra in noidungddhtra)
+                            //    foreach (Noidungddh noidungtra in noidungddhtra)
                             //    {
                             //        _context.Noidungddh.Remove(noidungtra);
                             //        await _context.SaveChangesAsync();
@@ -641,62 +645,62 @@ namespace ElectronicsStore.Controllers
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult Ajax(Khachhang kh, string noidungphu, string cartItemsInput)
-        {
-            try
-            {
-                //khách hàng đã đăng nhập hệ thống
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public JsonResult Ajax(Khachhang kh, string noidungphu, string cartItemsInput)
+        //{
+        //    try
+        //    {
+        //        //khách hàng đã đăng nhập hệ thống
 
-                Dondathang dondathang = new Dondathang();
-                dondathang.Idkh = kh.Idkh;
-                dondathang.Madh = GenerateOrderCode() + kh.Idkh;
-                dondathang.Ngaydat = DateTime.Now;
-                dondathang.Trangthai = 0;
-                dondathang.Ghichu = noidungphu;
+        //        Dondathang dondathang = new Dondathang();
+        //        dondathang.Idkh = kh.Idkh;
+        //        dondathang.Madh = GenerateOrderCode() + kh.Idkh;
+        //        dondathang.Ngaydat = DateTime.Now;
+        //        dondathang.Trangthai = 0;
+        //        dondathang.Ghichu = noidungphu;
 
-                _context.Dondathang.Add(dondathang);
-                 _context.SaveChangesAsync();
-                Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+        //        _context.Dondathang.Add(dondathang);
+        //         _context.SaveChangesAsync();
+        //        Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
 
 
-                List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
+        //        List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
 
-                foreach (CartItemViewModel item in cartItems)
-                {
-                    Noidungddh noidungddhmoi = new Noidungddh();
-                    noidungddhmoi.Iddh = dondathangmoi.Iddh;
+        //        foreach (CartItemViewModel item in cartItems)
+        //        {
+        //            Noidungddh noidungddhmoi = new Noidungddh();
+        //            noidungddhmoi.Iddh = dondathangmoi.Iddh;
 
-                    noidungddhmoi.Idhh = int.Parse(item.productId);
-                    noidungddhmoi.Soluong = int.Parse(item.count);
-                    noidungddhmoi.Dongia = int.Parse(item.productPrice);
+        //            noidungddhmoi.Idhh = int.Parse(item.productId);
+        //            noidungddhmoi.Soluong = int.Parse(item.count);
+        //            noidungddhmoi.Dongia = int.Parse(item.productPrice);
 
-                    //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
-                    //DateTime today = DateTime.Today;
-                    //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
-                    //noidungddhmoi.Hethanbh = hanbaohanh;
+        //            //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
+        //            //DateTime today = DateTime.Today;
+        //            //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
+        //            //noidungddhmoi.Hethanbh = hanbaohanh;
 
-                    _context.Noidungddh.Add(noidungddhmoi);
-                     _context.SaveChangesAsync();
+        //            _context.Noidungddh.Add(noidungddhmoi);
+        //             _context.SaveChangesAsync();
 
-                }
-                TempData["success"] = "Đặt hàng thành công!!!";
-                TempData["Madh"] = dondathang.Madh;
-                TempData["Sdt"] = kh.Sdt;
-                var ResponseCode = 0;
-                return Json(ResponseCode);
+        //        }
+        //        TempData["success"] = "Đặt hàng thành công!!!";
+        //        TempData["Madh"] = dondathang.Madh;
+        //        TempData["Sdt"] = kh.Sdt;
+        //        var ResponseCode = 0;
+        //        return Json(ResponseCode);
 
-            }
-            catch
-            {
-                TempData["success"] = "Đặt hàng thất bại!!!";
+        //    }
+        //    catch
+        //    {
+        //        TempData["success"] = "Đặt hàng thất bại!!!";
 
-                var ResponseCode = 1;
-                return Json(ResponseCode);
+        //        var ResponseCode = 1;
+        //        return Json(ResponseCode);
 
-            }
+        //    }
 
-        }
+        //}
     }
 }

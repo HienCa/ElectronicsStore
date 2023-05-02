@@ -165,7 +165,8 @@ namespace ElectronicsStore.Controllers
             {
                 try
                 {
-                    Nhanvien nv = new Nhanvien();
+                    Nhanvien nv = await _context.Nhanvien.Where(a => a.Idnv == nhanvien.Idnv).FirstOrDefaultAsync();
+
 
                     //lấy hình ảnh
                     //nv.Hinhanh = uniqueFileName;

@@ -1,0 +1,21 @@
+
+@{
+    ViewData["Title"] = "Cài đặt";
+    Layout = "_Admin";
+}
+<label for="page-length">Chọn số dòng hiển thị mặc định</label>
+<select id="page-length" class="form-control">
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="-1">Tất cả</option>
+</select>
+<script>
+    const pageLengthSelect = document.getElementById('page-length');
+
+    pageLengthSelect.addEventListener('change', () => {
+        const selectedPageLength = pageLengthSelect.value;
+        localStorage.setItem('productTableLength', selectedPageLength);
+    });
+
+</script>

@@ -266,3 +266,4 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Access\Signin.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\DataVisualization\Index.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_HomeSub.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Settings.cshtml.g.cs

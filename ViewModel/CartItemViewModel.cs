@@ -11,7 +11,8 @@ namespace ElectronicsStore.ViewModel
         public string productImage { get; set; }
         public string productName { get; set; }
         public string count { get; set; }
-       
+        public int check { get; set; }
+
         public string productPrice { get; set; }
     }
 
