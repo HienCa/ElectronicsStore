@@ -267,21 +267,21 @@ namespace ElectronicsStore.Controllers
         {
             ViewBag.Head = "Export Phiếu Xuất Kho";
 
-            List<Noidungpxk> Listndpxk;
+            List<Noidungpxk> Listndpxk = new List<Noidungpxk>();
 
             if (from != null && to != null)
             {
                 Listndpxk = await _context.Noidungpxk.Where(d => d.IdpxkNavigation.Ngaylap >= from && d.IdpxkNavigation.Ngaylap <= to).Include(p => p.IdpxkNavigation).Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).ToListAsync();
             }
-            if (from != null && to != null && Idhh > 0)
+            else if(from != null && to != null && Idhh > 0)
             {
                 Listndpxk = await _context.Noidungpxk.Where(d => d.IdpxkNavigation.Ngaylap >= from && d.IdpxkNavigation.Ngaylap <= to).Include(p => p.IdpxkNavigation).Where(d => d.Idhh == Idhh).Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).ToListAsync();
             }
-            if (from == null && to == null && Idhh > 0)
+            else if(from == null && to == null && Idhh > 0)
             {
                 Listndpxk = await _context.Noidungpxk.Include(p => p.IdpxkNavigation).Where(d => d.Idhh == Idhh).Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).ToListAsync();
             }
-            else
+            else if (from == null && to == null && Idhh == null)
             {
                 Listndpxk = await _context.Noidungpxk.Include(p => p.IdpxkNavigation).Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).ToListAsync();
 
@@ -438,5 +438,8 @@ namespace ElectronicsStore.Controllers
         {
             return _context.Phieuxuatkho.Any(e => e.Idpxk == id);
         }
+
+
+    
     }
 }

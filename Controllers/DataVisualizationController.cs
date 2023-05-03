@@ -47,44 +47,16 @@ namespace ElectronicsStore.Controllers
                                                    Soluong = group.Sum(item => item.Soluong)
                                                })
                                                .ToList();
-            var productQuantitiesTonKho = productQuantitiesNhap.Join(
-                                productQuantitiesXuat,
-                                p => p.Idhh,
-                                q => q.Idhh,
-                                (p, q) => new ProductQuantityViewModel
-                                {
-                                    Idhh = p.Idhh,
-                                    Tenhh = p.Tenhh,
-                                    Soluong = p.Soluong - q.Soluong
-                                }).ToList();
+         
 
-            //       var productQuantitiesTonKho = _context.Hanghoa
-            //.GroupJoin(
-            //    productQuantitiesNhap,
-            //    p => p.Idhh,
-            //    qn => qn.Idhh,
-            //    (p, qn) => new { Product = p, QuantitiesNhap = qn })
-            //.GroupJoin(
-            //    productQuantitiesXuat,
-            //    pqn => pqn.Product.Idhh,
-            //    qx => qx.Idhh,
-            //    (pqn, qx) => new { pqn.Product, pqn.QuantitiesNhap, QuantitiesXuat = qx })
-            //.SelectMany(
-            //    pq => pq.QuantitiesNhap.DefaultIfEmpty(),
-            //    (p, qn) => new { p.Product, QuantitiesNhap = qn, p.QuantitiesXuat })
-            //.SelectMany(
-            //    pq => pq.QuantitiesXuat.DefaultIfEmpty(),
-            //    (p, qx) => new ProductQuantityViewModel
-            //    {
-            //        Idhh = p.Product.Idhh,
-            //        Tenhh = p.Product.Tenvl,
-            //        Soluong = (p.QuantitiesNhap != null ? p.QuantitiesNhap.Soluong : 0) - (qx != null ? qx.Soluong : 0)
-            //    })
-            //.ToList()
-            //.AsQueryable()
-            //.Where(pq => pq.Soluong > 0)
-            //.ToList();
+            var productQuantitiesTonKho = productQuantitiesNhap.Select(p => new ProductQuantityViewModel
+            {
+                Idhh = p.Idhh,
+                Tenhh = p.Tenhh,
+                Soluong = p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)
+            }).ToList();
 
+            
 
 
             var settings = new JsonSerializerSettings
