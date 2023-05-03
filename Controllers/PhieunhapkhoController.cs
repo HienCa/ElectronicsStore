@@ -257,7 +257,7 @@ namespace ElectronicsStore.Controllers
                     Dongia = p.Dongia,
                     Donvitinh = p.Donvitinh,
                     Soluong = p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
-                    Tongtien = p.Soluong * p.Dongia
+                    Tongtien = (p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
                 }).ToList();
 
                 if (action != null && action.Equals("excel"))
@@ -363,7 +363,7 @@ namespace ElectronicsStore.Controllers
                     Dongia = p.Dongia,
                     Donvitinh = p.Donvitinh,
                     Soluong = p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
-                    Tongtien = p.Soluong * p.Dongia
+                    Tongtien = (p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
                 }).ToList();
 
                 if (action != null && action.Equals("excel"))
@@ -439,6 +439,474 @@ namespace ElectronicsStore.Controllers
 
 
         }
+
+        // Xuất Nhập Tồn Kho
+        public async Task<IActionResult> XuatNhapTonReport(DateTime? from, DateTime? to, int? Idhh, string action)
+        {
+
+            ViewBag.Head = "THỐNG KÊ SỐ LIỆU XUẤT - NHẬP - TỒN";
+
+            if (from != null && to != null && Idhh == null)
+            {
+                ViewData["from"] = from;
+                ViewData["to"] = to;
+                //ĐẦU KỲ
+                var productQuantitiesNhapDK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap < from).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                  Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.FirstOrDefault().Dongia,
+                                              })
+                                              .ToList();
+                var productQuantitiesXuatDK = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation).Where(p => p.IdpxkNavigation.Ngaylap < from).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia)
+
+                                              })
+                                              .ToList();
+
+                var productQuantitiesTonKhoDK = productQuantitiesNhapDK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatDK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatDK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+                // GIỮA KỲ
+                var productQuantitiesNhapGK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap >= from && p.IdpnkNavigation.Ngaylap <= to).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                  Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.FirstOrDefault().Dongia,
+                                                  Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+                                              })
+                                              .ToList();
+                var productQuantitiesXuatGK = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation).Where(p => p.IdpxkNavigation.Ngaylap >= from && p.IdpxkNavigation.Ngaylap <= to).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia),
+                                                  Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+
+
+                                              })
+                                              .ToList();
+
+                var productQuantitiesTonKhoGK = productQuantitiesNhapGK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatGK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatGK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+
+                //Cuối kỳ - XUẤT TỒN TỔNG 
+
+                var productQuantitiesNhapCK = _context.Noidungpnk.Include(p => p.IdhhNavigation).ToList()
+                                             .GroupBy(item => item.Idhh)
+                                             .Select(group => new ProductQuantityViewModel
+                                             {
+                                                 Idhh = group.Key,
+                                                 Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                 Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                 Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                 Soluong = group.Sum(item => item.Soluong),
+                                                 Dongia = group.FirstOrDefault().Dongia,
+                                             })
+                                             .ToList();
+                var productQuantitiesXuatCK = _context.Noidungpxk.Include(p => p.IdhhNavigation).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia)
+
+                                              })
+                                              .ToList();
+
+
+                var productQuantitiesTonKhoCK = productQuantitiesNhapCK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatCK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatCK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+                List<Hanghoa> hanghoa = await _context.Hanghoa.ToListAsync();
+                // KẾT HỢP DK-GK-CK
+                var XuatNhapTonReport = hanghoa.Select(t => new XuatNhapTon
+                {
+                    Idhh = t.Idhh,
+                    Mahh = t.Mavl,
+                    Tenhh = t.Tenvl,
+                    Donvitinh = t.Donvitinh,
+
+                    //đầu kỳ
+                    Soluongdauky = (productQuantitiesTonKhoDK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiadauky = (productQuantitiesTonKhoDK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    //giữ kỳ
+                    Soluonggiuakynhap = (productQuantitiesNhapGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiagiuakynhap = (productQuantitiesNhapGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    Soluonggiuakyxuat = (productQuantitiesXuatGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiagiuakyxuat = (productQuantitiesXuatGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    //cuối kỳ
+                    Soluongcuoiky = (productQuantitiesTonKhoCK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiacuoiky = (productQuantitiesTonKhoCK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                }).ToList();
+
+                ViewData["XuatNhapTonReport"] = XuatNhapTonReport;
+
+
+                if (action != null && action.Equals("excel"))
+                {
+
+
+                    using (var workbook = new XLWorkbook())
+                    {
+                        //tên sheet
+                        var worksheet = workbook.Worksheets.Add("Tonkho");
+
+                        //tiêu đề
+                        var currentRow = 1;
+                        worksheet.Cell(currentRow, 1).Value = "Linh kiện máy tính ElectronicsStore";
+                        //worksheet.Cell(currentRow, 2).Value = "Báo cáo xuất nhập tồn từ: "+ from.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        currentRow += 2;
+
+                        //danh sách phiếu
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = "Mã hàng hóa";
+                        worksheet.Cell(currentRow, 2).Value = "Tên hàng hóa";
+                        worksheet.Cell(currentRow, 3).Value = "Đơn vị tính";
+                        worksheet.Cell(currentRow, 4).Value = "Số lượng tồn đầu kỳ";
+                        worksheet.Cell(currentRow, 5).Value = "Tổng trị giá đầu kỳ (đ)";
+
+                        worksheet.Cell(currentRow, 6).Value = "Số lượng nhập giữa kỳ";
+                        worksheet.Cell(currentRow, 7).Value = "Tổng trị giá nhập giữa kỳ (đ)";
+                        worksheet.Cell(currentRow, 8).Value = "Số lượng xuất giữa kỳ";
+                        worksheet.Cell(currentRow, 9).Value = "Tổng trị giá xuất giữa kỳ (đ)";
+
+                        worksheet.Cell(currentRow, 10).Value = "Số lượng tồn cuối kỳ";
+                        worksheet.Cell(currentRow, 11).Value = "Tổng trị giá tồn cuối kỳ (đ)";
+
+
+                        foreach (var tk in XuatNhapTonReport)
+                        {
+                            currentRow++;
+                            worksheet.Cell(currentRow, 1).Value = tk.Mahh;
+                            worksheet.Cell(currentRow, 2).Value = tk.Tenhh;
+                            worksheet.Cell(currentRow, 3).Value = tk.Donvitinh;
+                            worksheet.Cell(currentRow, 4).Value = tk.Soluongdauky;
+                            worksheet.Cell(currentRow, 5).Value = String.Format("{0:0,0}", tk.Dongiadauky);
+                            worksheet.Cell(currentRow, 6).Value = tk.Soluonggiuakynhap;
+                            worksheet.Cell(currentRow, 7).Value = String.Format("{0:0,0}", tk.Dongiagiuakynhap);
+                            worksheet.Cell(currentRow, 8).Value = tk.Soluonggiuakyxuat;
+                            worksheet.Cell(currentRow, 9).Value = String.Format("{0:0,0}", tk.Dongiagiuakyxuat);
+                            worksheet.Cell(currentRow, 10).Value = tk.Soluongcuoiky;
+                            worksheet.Cell(currentRow, 11).Value = String.Format("{0:0,0}", tk.Dongiacuoiky);
+
+                        }
+
+
+                        //tiêu đề
+                        DateTime now = DateTime.Now;
+                        currentRow += 2;
+                        worksheet.Cell(currentRow, 8).Value = "TP. Hồ Chí Minh, Ngày " + now.Day + " tháng " + now.Month + " năm " + now.Year;
+
+                        using (var stream = new MemoryStream())
+                        {
+                            workbook.SaveAs(stream);
+                            var content = stream.ToArray();
+                            return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xuatnhapton.xlsx");
+                        }
+                    }
+                }
+                else if (action != null && action.Equals("csv"))
+                {
+
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Mã hàng hóa, Tên hàng hóa, Đơn vị tính, Số lượng tồn đầu kỳ, Tổng trị giá đầu kỳ, Số lượng nhập giữa kỳ, Tổng trị giá nhập giữa kỳ, Số lượng xuất giữa kỳ, Tổng trị giá xuất giữa kỳ, Tổng số lượng tồn kho cuối kỳ, Tổng trị giá tồn kho cuối kỳ");
+                    foreach (var p in XuatNhapTonReport)
+                    {
+                        builder.AppendLine($"{p.Mahh}, {p.Tenhh}, {p.Donvitinh}, {p.Soluongdauky}, {p.Dongiadauky}, {p.Soluonggiuakynhap}, {p.Dongiagiuakynhap}, {p.Soluonggiuakyxuat}, {p.Dongiagiuakyxuat}, {p.Soluongcuoiky}, {p.Dongiacuoiky}");
+                    }
+                    return File(new UTF8Encoding().GetBytes(builder.ToString()), "text/csv", "xuatnhapton.csv");
+                }
+
+                return View();
+            }
+            else if (from != null && to != null && Idhh > 0)
+            {
+                ViewData["from"] = from;
+                ViewData["to"] = to;
+                //ĐẦU KỲ
+                var productQuantitiesNhapDK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap < from).Where(p => p.Idhh==Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                  Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.FirstOrDefault().Dongia,
+                                              })
+                                              .ToList();
+                var productQuantitiesXuatDK = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation).Where(p => p.IdpxkNavigation.Ngaylap < from).Where(p => p.Idhh == Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia)
+
+                                              })
+                                              .ToList();
+
+                var productQuantitiesTonKhoDK = productQuantitiesNhapDK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatDK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatDK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+                // GIỮA KỲ
+                var productQuantitiesNhapGK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap >= from && p.IdpnkNavigation.Ngaylap <= to).Where(p => p.Idhh == Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                  Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.FirstOrDefault().Dongia,
+                                                  Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+                                              })
+                                              .ToList();
+                var productQuantitiesXuatGK = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation).Where(p => p.IdpxkNavigation.Ngaylap >= from && p.IdpxkNavigation.Ngaylap <= to).Where(p => p.Idhh == Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia),
+                                                  Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+
+
+                                              })
+                                              .ToList();
+
+                var productQuantitiesTonKhoGK = productQuantitiesNhapGK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatGK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatGK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+
+                //Cuối kỳ - XUẤT TỒN TỔNG 
+
+                var productQuantitiesNhapCK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Where(p => p.Idhh == Idhh).ToList()
+                                             .GroupBy(item => item.Idhh)
+                                             .Select(group => new ProductQuantityViewModel
+                                             {
+                                                 Idhh = group.Key,
+                                                 Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                 Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                 Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                 Soluong = group.Sum(item => item.Soluong),
+                                                 Dongia = group.FirstOrDefault().Dongia,
+                                             })
+                                             .ToList();
+                var productQuantitiesXuatCK = _context.Noidungpxk.Include(p => p.IdhhNavigation).Where(p => p.Idhh == Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia)
+
+                                              })
+                                              .ToList();
+
+
+                var productQuantitiesTonKhoCK = productQuantitiesNhapCK.Select(p => new ProductQuantityViewModel
+                {
+                    Idhh = p.Idhh,
+                    Tenhh = p.Tenhh,
+                    Mahh = p.Mahh,
+                    Dongia = p.Dongia,
+                    Donvitinh = p.Donvitinh,
+                    Soluong = p.Soluong - (productQuantitiesXuatCK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Tongtien = (p.Soluong - (productQuantitiesXuatCK.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
+                }).ToList();
+
+
+                List<Hanghoa> hanghoa = await _context.Hanghoa.Where(p => p.Idhh == Idhh).ToListAsync();
+                // KẾT HỢP DK-GK-CK
+                var XuatNhapTonReport = hanghoa.Select(t => new XuatNhapTon
+                {
+                    Idhh = t.Idhh,
+                    Mahh = t.Mavl,
+                    Tenhh = t.Tenvl,
+                    Donvitinh = t.Donvitinh,
+
+                    //đầu kỳ
+                    Soluongdauky = (productQuantitiesTonKhoDK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiadauky = (productQuantitiesTonKhoDK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    //giữ kỳ
+                    Soluonggiuakynhap = (productQuantitiesNhapGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiagiuakynhap = (productQuantitiesNhapGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    Soluonggiuakyxuat = (productQuantitiesXuatGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiagiuakyxuat = (productQuantitiesXuatGK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                    //cuối kỳ
+                    Soluongcuoiky = (productQuantitiesTonKhoCK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Soluong ?? 0),
+                    Dongiacuoiky = (productQuantitiesTonKhoCK.Where(q => q.Idhh == t.Idhh).FirstOrDefault()?.Tongtien ?? 0),
+
+                }).ToList();
+
+                ViewData["XuatNhapTonReport"] = XuatNhapTonReport;
+
+
+                if (action != null && action.Equals("excel"))
+                {
+
+
+                    using (var workbook = new XLWorkbook())
+                    {
+                        //tên sheet
+                        var worksheet = workbook.Worksheets.Add("Tonkho");
+
+                        //tiêu đề
+                        var currentRow = 1;
+                        worksheet.Cell(currentRow, 1).Value = "Linh kiện máy tính ElectronicsStore";
+                        //worksheet.Cell(currentRow, 2).Value = "Báo cáo xuất nhập tồn từ: "+ from.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                        currentRow += 2;
+
+                        //danh sách phiếu
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = "Mã hàng hóa";
+                        worksheet.Cell(currentRow, 2).Value = "Tên hàng hóa";
+                        worksheet.Cell(currentRow, 3).Value = "Đơn vị tính";
+                        worksheet.Cell(currentRow, 4).Value = "Số lượng tồn đầu kỳ";
+                        worksheet.Cell(currentRow, 5).Value = "Tổng trị giá đầu kỳ (đ)";
+
+                        worksheet.Cell(currentRow, 6).Value = "Số lượng nhập giữa kỳ";
+                        worksheet.Cell(currentRow, 7).Value = "Tổng trị giá nhập giữa kỳ (đ)";
+                        worksheet.Cell(currentRow, 8).Value = "Số lượng xuất giữa kỳ";
+                        worksheet.Cell(currentRow, 9).Value = "Tổng trị giá xuất giữa kỳ (đ)";
+
+                        worksheet.Cell(currentRow, 10).Value = "Số lượng tồn cuối kỳ";
+                        worksheet.Cell(currentRow, 11).Value = "Tổng trị giá tồn cuối kỳ (đ)";
+
+
+                        foreach (var tk in XuatNhapTonReport)
+                        {
+                            currentRow++;
+                            worksheet.Cell(currentRow, 1).Value = tk.Mahh;
+                            worksheet.Cell(currentRow, 2).Value = tk.Tenhh;
+                            worksheet.Cell(currentRow, 3).Value = tk.Donvitinh;
+                            worksheet.Cell(currentRow, 4).Value = tk.Soluongdauky;
+                            worksheet.Cell(currentRow, 5).Value = String.Format("{0:0,0}", tk.Dongiadauky);
+                            worksheet.Cell(currentRow, 6).Value = tk.Soluonggiuakynhap;
+                            worksheet.Cell(currentRow, 7).Value = String.Format("{0:0,0}", tk.Dongiagiuakynhap);
+                            worksheet.Cell(currentRow, 8).Value = tk.Soluonggiuakyxuat;
+                            worksheet.Cell(currentRow, 9).Value = String.Format("{0:0,0}", tk.Dongiagiuakyxuat);
+                            worksheet.Cell(currentRow, 10).Value = tk.Soluongcuoiky;
+                            worksheet.Cell(currentRow, 11).Value = String.Format("{0:0,0}", tk.Dongiacuoiky);
+
+                        }
+
+
+                        //tiêu đề
+                        DateTime now = DateTime.Now;
+                        currentRow += 2;
+                        worksheet.Cell(currentRow, 8).Value = "TP. Hồ Chí Minh, Ngày " + now.Day + " tháng " + now.Month + " năm " + now.Year;
+
+                        using (var stream = new MemoryStream())
+                        {
+                            workbook.SaveAs(stream);
+                            var content = stream.ToArray();
+                            return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xuatnhapton.xlsx");
+                        }
+                    }
+                }
+                else if (action != null && action.Equals("csv"))
+                {
+
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Mã hàng hóa, Tên hàng hóa, Đơn vị tính, Số lượng tồn đầu kỳ, Tổng trị giá đầu kỳ, Số lượng nhập giữa kỳ, Tổng trị giá nhập giữa kỳ, Số lượng xuất giữa kỳ, Tổng trị giá xuất giữa kỳ, Tổng số lượng tồn kho cuối kỳ, Tổng trị giá tồn kho cuối kỳ");
+                    foreach (var p in XuatNhapTonReport)
+                    {
+                        builder.AppendLine($"{p.Mahh}, {p.Tenhh}, {p.Donvitinh}, {p.Soluongdauky}, {p.Dongiadauky}, {p.Soluonggiuakynhap}, {p.Dongiagiuakynhap}, {p.Soluonggiuakyxuat}, {p.Dongiagiuakyxuat}, {p.Soluongcuoiky}, {p.Dongiacuoiky}");
+                    }
+                    return File(new UTF8Encoding().GetBytes(builder.ToString()), "text/csv", "xuatnhapton.csv");
+                }
+
+                return View();
+            }
+
+            return View();
+
+        }
+
+
+
         public async Task<IActionResult> ShowReport(DateTime? from, DateTime? to, string action, int? Idhh)
         {
             ViewBag.Head = "Export Phiếu Nhập Kho";
@@ -697,34 +1165,6 @@ namespace ElectronicsStore.Controllers
                 float tongThanhTien = 0;
                 float tongThanhTienTon = 0;
                 float tongThanhTienXuat = 0;
-
-                //foreach (var pnk in ListndpnkNew)
-                //{
-                //    currentRow++;
-                //    //worksheet.Cell(vitri1, 1).Value = pnk.IdhhNavigation.Mavl;
-                //    worksheet.Cell(currentRow, 2).Value = pnk.Tenvl;
-                //    //worksheet.Cell(vitri1, 3).Value = pnk.Donvitinh;
-
-                //    worksheet.Cell(currentRow, 6).Value = pnk.Soluong;
-                //    worksheet.Cell(currentRow, 7).Value = String.Format("{0:0,0}", pnk.Thanhtien);
-
-
-                //    //worksheet.Cell(vitri1, 8).Value = pnk.Soluongxuat;
-                //    worksheet.Cell(currentRow, 8).Value = pnk.Soluongxuat;
-                //    worksheet.Cell(currentRow, 9).Value = 0;//giá xuất
-                //    worksheet.Cell(currentRow, 10).Value = String.Format("{0:0,0}", pnk.Thanhtienxuat);
-
-                //    worksheet.Cell(currentRow, 11).Value = pnk.Soluongcon;
-                //    worksheet.Cell(currentRow, 12).Value = String.Format("{0:0,0}", pnk.Thanhtienton);
-
-                //    tongSoLuong += pnk.Soluong;
-                //    tongSoLuongXuat += pnk.Soluongxuat;
-                //    tongSoLuongTon += pnk.Soluongcon;
-                //    //GiaNhap = pnk.Giaban;
-                //    tongThanhTien += pnk.Thanhtien;
-                //    tongThanhTienXuat += pnk.Thanhtienxuat;
-                //    tongThanhTienTon += pnk.Thanhtienton;
-                //}
 
 
 

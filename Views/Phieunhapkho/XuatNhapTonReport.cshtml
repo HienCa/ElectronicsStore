@@ -1,0 +1,167 @@
+﻿
+@using ElectronicsStore.Models;
+@using ElectronicsStore.ViewModel;
+
+@{
+    Layout = "_Admin";
+    ElectronicsStoreContext _context = new ElectronicsStoreContext();
+    List<Hanghoa> hanghoa = _context.Hanghoa.Where(V => V.Active == 1).ToList();
+}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="position: relative;" class="card-box  filterTable">
+                <form id="reportForm" asp-action="XuatNhapTonReport" asp-controller="Phieunhapkho" method="post">
+                    <div class="searchToFrom row mb-2">
+
+                        <div class="col-md-2 col-sm-12">
+                            <div class="d-flex justify-content-around align-items-center">
+                                <div class="">Từ: </div>
+                                <input type="date" id="from" name="from" placeholder="Từ" class=" form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="d-flex justify-content-around align-items-center">
+                                <div class="">Đến: </div>
+                                <input type="date" id="to" name="to" placeholder="Đến" class=" form-control" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-7 col-sm-12" style="z-index:1">
+
+                            <select data-search="true" name="Idhh"
+                                    id="multipleSelect">
+                                <option value="">Tất cả</option>
+                                @foreach (var item in hanghoa)
+                                {
+                                    <option value="@item.Idhh">@item.Tenvl</option>
+
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-md-1 col-sm-12">
+                            <input type="button" id="searchDate" value="Tìm" class="btn btn-primary" />
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="col-md-1 col-sm-12">
+                            <button type="button" id="export" class="btn btn-success text-white"><i class="fas fa-file-excel"></i></button>
+                        </div>
+                        <div class="col-md-1 col-sm-12">
+                            <button type="button" id="csv" class="btn btn-success text-white"><i class="fas fa-file-csv"></i></button>
+                        </div>
+                        <div class="col-md-10 col-sm-12">
+                            @if (ViewData["from"] != null && ViewData["to"] != null)
+                            {
+                                DateTime from = (DateTime)ViewData["from"];
+                                DateTime to = (DateTime)ViewData["to"];
+
+                                <span>
+                                    Từ:@from.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) đến @to.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                                </span>
+                            }
+                        </div>
+                        <input name="action" type="hidden" id="action" />
+                    </div>
+                </form>
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-bordered" id="productTable" style="max-height:60vh;overflow-y:scroll">
+                        <thead>
+                            <tr class="text-center">
+
+                                <th scope="col">Mã hàng</th>
+                                <th scope="col">Tên hàng</th>
+
+                                <th scope="col">ĐVT</th>
+                                <th scope="col">SL ĐK</th>
+                                <th scope="col">Trị giá ĐK</th>
+
+                                <th scope="col">SLN GK</th>
+                                <th scope="col">Trị giá DGN GK</th>
+                                <th scope="col">SLX GK</th>
+                                <th scope="col">Trị giá DGX GK</th>
+
+                                <th scope="col">SL CK</th>
+                                <th scope="col">Trị giá CK</th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (ViewData["XuatNhapTonReport"] != null)
+                            {
+                                @foreach (var item in ViewData["XuatNhapTonReport"] as List<XuatNhapTon>)
+                                {
+                                    <tr class="tr">
+                                        <td>@item.Mahh</td>
+                                        <td>@item.Tenhh</td>
+                                        <td class="text-center">@item.Donvitinh</td>
+
+                                        @{
+                                            var Dongiadauky = String.Format("{0:0,0}", (@item.Dongiadauky > 0 ? @item.Dongiadauky : 0));
+                                            var Dongiagiuakynhap = String.Format("{0:0,0}", (@item.Dongiagiuakynhap > 0 ? @item.Dongiagiuakynhap : 0));
+                                            var Dongiagiuakyxuat = String.Format("{0:0,0}", (@item.Dongiagiuakyxuat > 0 ? @item.Dongiagiuakyxuat : 0));
+                                            var Dongiacuoiky = String.Format("{0:0,0}", (@item.Dongiacuoiky > 0 ? @item.Dongiacuoiky : 0));
+
+                                        }
+                                        <td class="text-center">@item.Soluongdauky</td>
+                                        <td class="text-right">@Dongiadauky</td>
+
+                                        <td class="text-center">@item.Soluonggiuakynhap</td>
+                                        <td class="text-right">@Dongiagiuakynhap</td>
+
+                                        <td class="text-center">@item.Soluonggiuakyxuat</td>
+                                        <td class="text-right">@Dongiagiuakyxuat</td>
+
+                                        <td class="text-center">@item.Soluongcuoiky</td>
+                                        <td class="text-right">@Dongiacuoiky</td>
+
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    const reportForm = document.getElementById("reportForm");
+    const exportBtn = document.getElementById("export");
+    const csvBtn = document.getElementById("csv");
+    const searchDateBtn = document.getElementById("searchDate");
+    let action = document.getElementById("action");
+
+    exportBtn.addEventListener("click", function () {
+        action.value = "excel";
+        reportForm.submit();
+    });
+    csvBtn.addEventListener("click", function () {
+        action.value = "csv";
+        reportForm.submit();
+    });
+    searchDateBtn.addEventListener("click", function () {
+        action.value = "searchDate";
+        reportForm.submit();
+    })
+</script>
+<script src="~/multiSelectDropdown/virtual-select.min.js"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: 'select'
+    });
+</script>
