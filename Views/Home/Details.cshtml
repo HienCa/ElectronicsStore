@@ -25,7 +25,16 @@
                     </div>
                     <div class="col-lg-7 col-md-12 col-sm-12">
 
+                        @if (TempData["success"] != null)
+                        {
+                            <div class="mb-3">
+                                <h3 class="text-success text-center">@TempData["success"]</h3>
+                                <p class="text-success text-center">Mã đơn hàng của bạn là: @TempData["Madh"]</p>
+                                <p class="text-success text-center">Số điện thoại nhận hàng: @TempData["Sdt"]</p>
+                                <p class="text-warning text-center">Lưu ý: lưu lại mã đơn hàng để tiện theo dõi trạng thái đơn hàng vừa đặt.</p>
+                            </div>
 
+                        }
                         @if (Model.Giakm != null)
                         {
                             float? giakm = Model.Giakm;
@@ -402,7 +411,7 @@
                         <div class="row d-flex justify-content-center  ">
                             <div class="col-md-8 p-3  bg-white">
 
-                                <input type="hidden" class="form-control" name="Idkh" value="@thongtinkhachhang.Idkh" >
+                                <input type="hidden" class="form-control" name="Idkh" value="@thongtinkhachhang.Idkh">
 
                                 <div class=" mb-4">
                                     <div class="mb-3">

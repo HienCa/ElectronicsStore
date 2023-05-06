@@ -269,3 +269,4 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Share
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\Settings.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\InventoryReport.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\XuatNhapTonReport.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Access\ForgotPassword.cshtml.g.cs

@@ -184,7 +184,7 @@ namespace ElectronicsStore.Controllers
                 string message = "";
                 var address = account.Email;
 
-                var subject = "Reset your password";
+                var subject = "Khôi phục mật khẩu";
 
                 var mailContent = new MailContent();
                 mailContent.Subject = subject;
@@ -202,9 +202,9 @@ namespace ElectronicsStore.Controllers
                 }
                 else
                 {
-                    ViewData["errorMessage"] = errorMessage;
+                    ViewData["CheckEmail"] = "Email không tồn tại, vui lòng kiểm tra lại!!!";
                 }
-                mailContent.Body = "<h1>From HienCa Production</h1><br/>" + message;
+                mailContent.Body = "<h1>Từ Electronic Store</h1><br/>" + message;
 
 
                 Service.SendMailService c = new Service.SendMailService();
@@ -212,18 +212,13 @@ namespace ElectronicsStore.Controllers
 
                 _context.SaveChanges();
 
-                TempData["SuccessMessage"] = "Chúng tôi đã gửi mail xác nhận đến cho bạn. Vui lòng kiểm tra mail!";
-
-                //return RedirectToAction("Login", "Access");
-
+                ViewData["SuccessMessage"] = "Chúng tôi đã gửi mail xác nhận đến cho bạn. Vui lòng kiểm tra mail!";
 
             }
             catch (Exception e)
             {
-                ViewData["errorMessage"] = "Email không khả dụng " + e;
+                ViewData["errorMessage"] = "Email không khả dụng";
             }
-
-
 
             return View();
         }

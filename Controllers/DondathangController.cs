@@ -67,7 +67,7 @@ namespace ElectronicsStore.Controllers
                                                 .ToListAsync();
 
                 List<NoidungddhViewModel> listnoidungviewmodel = new List<NoidungddhViewModel>();
-                foreach(Noidungddh item in noidungddh)
+                foreach (Noidungddh item in noidungddh)
                 {
                     NoidungddhViewModel noidungviewmodel = new NoidungddhViewModel();
                     noidungviewmodel.Idndddh = item.Idndddh;
@@ -85,7 +85,7 @@ namespace ElectronicsStore.Controllers
                                                             .SumAsync(p => p.Soluong) - await _context.Noidungpxk
                                                                                                                 .Where(p => p.Idhh == item.Idhh)
                                                                                                                 .SumAsync(p => p.Soluong);
-                    
+
                     noidungviewmodel.SoLuongTon = currentStock;
 
                     //StatusViewModel statusviewmodel = new StatusViewModel();
@@ -120,7 +120,7 @@ namespace ElectronicsStore.Controllers
 
             }
         }
-       
+
 
         // GET: Dondathang/Create
         public IActionResult Create()
@@ -220,6 +220,26 @@ namespace ElectronicsStore.Controllers
                 _context.Noidungddh.Add(noidungddhmoi);
                 await _context.SaveChangesAsync();
 
+
+                //Thông báo mail về đơn đặt hàng
+
+                TempData["success"] = "Đặt hàng thành công!!!";
+                TempData["Madh"] = dondathangmoi.Madh;
+                TempData["Sdt"] = khachhang.Sdt;
+
+                try
+                {
+                    if (khachhang.Email != null)
+                    {
+                        SendMailOrdered(khachhang, dondathangmoi);
+                    }
+                }
+                catch
+                {
+                    return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+                }
+
                 return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
 
             }
@@ -230,6 +250,10 @@ namespace ElectronicsStore.Controllers
             }
 
         }
+
+
+        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateForGuestAuthen(Noidungddh ddh, Khachhang kh, string noidungphu, int ngaybaohanh)
@@ -261,6 +285,23 @@ namespace ElectronicsStore.Controllers
                 _context.Noidungddh.Add(noidungddhmoi);
                 await _context.SaveChangesAsync();
 
+
+                TempData["success"] = "Đặt hàng thành công!!!";
+                TempData["Madh"] = dondathangmoi.Madh;
+                TempData["Sdt"] = kh.Sdt;
+
+                try
+                {
+                    if (kh.Email != null)
+                    {
+                        SendMailOrdered(kh, dondathangmoi);
+                    }
+                }
+                catch
+                {
+                    return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
+
+                }
                 return RedirectToAction("Details", "Home", new { id = ddh.Idhh });
 
             }
@@ -339,13 +380,28 @@ namespace ElectronicsStore.Controllers
                         _context.Noidungddh.Add(noidungddhmoi);
                         await _context.SaveChangesAsync();
                     }
-                   
+
 
                 }
                 TempData["success"] = "Đặt hàng thành công!!!";
                 TempData["Madh"] = dondathang.Madh;
-                TempData["Sdt"] = kh.Sdt;
+                TempData["Sdt"] = khachhang.Sdt;
 
+
+
+
+                try
+                {
+                    if (khachhang.Email != null)
+                    {
+                        SendMailOrdered(khachhang, dondathangmoi);
+                    }
+                }
+                catch
+                {
+                    return RedirectToAction("Cart", "Home");
+
+                }
                 return RedirectToAction("Cart", "Home");
 
             }
@@ -402,6 +458,21 @@ namespace ElectronicsStore.Controllers
                 TempData["success"] = "Đặt hàng thành công!!!";
                 TempData["Madh"] = dondathang.Madh;
                 TempData["Sdt"] = kh.Sdt;
+
+
+
+                try
+                {
+                    if (kh.Email != null)
+                    {
+                        SendMailOrdered(kh, dondathangmoi);
+                    }
+                }
+                catch
+                {
+                    return RedirectToAction("Cart", "Home");
+
+                }
                 return RedirectToAction("Cart", "Home");
 
             }
@@ -511,7 +582,7 @@ namespace ElectronicsStore.Controllers
                                     await _context.SaveChangesAsync();
 
                                     //Cập nhật hạn bảo hành
-                                    Noidungddh hanghoabaohanh = await _context.Noidungddh.Where(dh=>dh.Iddh==dondathang.Iddh).Where(h => h.Idhh == item.Idhh).FirstOrDefaultAsync();
+                                    Noidungddh hanghoabaohanh = await _context.Noidungddh.Where(dh => dh.Iddh == dondathang.Iddh).Where(h => h.Idhh == item.Idhh).FirstOrDefaultAsync();
                                     Hanghoa hh = await _context.Hanghoa.Where(i => i.Idhh == item.Idhh).FirstOrDefaultAsync();
 
                                     DateTime today = DateTime.Today;
@@ -526,6 +597,18 @@ namespace ElectronicsStore.Controllers
                                 _context.Dondathang.Update(donhang);
                                 await _context.SaveChangesAsync();
 
+
+                                //gửi mail thông báo đến khách hàng
+                                try
+                                {
+                                    Khachhang khachhang = await _context.Khachhang.Where(a => a.Idkh == dondathang.Idkh).FirstOrDefaultAsync();
+                                    SendMailUpdateOrdered(khachhang, donhang, 2);
+                                }
+                                catch
+                                {
+                                    return RedirectToAction(nameof(Index));
+
+                                }
                             }
                             else if (dondathang.Trangthai == 3)
                             {
@@ -568,6 +651,19 @@ namespace ElectronicsStore.Controllers
                                 _context.Dondathang.Update(donhang);
 
                                 await _context.SaveChangesAsync();
+                                
+
+                                //gửi mail thông báo đến khách hàng
+                                try
+                                {
+                                    Khachhang khachhang= await _context.Khachhang.Where(a => a.Idkh == dondathang.Idkh).FirstOrDefaultAsync();
+                                    SendMailUpdateOrdered(khachhang, donhang, 3);
+                                }
+                                catch
+                                {
+                                    return RedirectToAction(nameof(Index));
+
+                                }
 
                             }
                             //else if (dondathang.Trangthai == 4)
@@ -592,7 +688,7 @@ namespace ElectronicsStore.Controllers
                             }
                         }
                     }
-                   
+
 
                 }
                 catch
@@ -645,62 +741,109 @@ namespace ElectronicsStore.Controllers
 
 
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public JsonResult Ajax(Khachhang kh, string noidungphu, string cartItemsInput)
-        //{
-        //    try
-        //    {
-        //        //khách hàng đã đăng nhập hệ thống
+        [HttpPost]
+        public IActionResult SendMailOrdered(Khachhang kh, Dondathang dh)
+        {
+            try
+            {
 
-        //        Dondathang dondathang = new Dondathang();
-        //        dondathang.Idkh = kh.Idkh;
-        //        dondathang.Madh = GenerateOrderCode() + kh.Idkh;
-        //        dondathang.Ngaydat = DateTime.Now;
-        //        dondathang.Trangthai = 0;
-        //        dondathang.Ghichu = noidungphu;
+                string message = "";
+                var address = kh.Email;
 
-        //        _context.Dondathang.Add(dondathang);
-        //         _context.SaveChangesAsync();
-        //        Dondathang dondathangmoi = _context.Dondathang.Where(ma => ma.Madh.Equals(dondathang.Madh)).FirstOrDefault();
+                var subject = "Trạng thái đơn đặt hàng";
+
+                var mailContent = new MailContent();
+                mailContent.Subject = subject;
+                if (address != null)
+                {
+                    message = "Chào '" + kh.Tenkh + "'"
+                                            + "<br/>Mã đơn hàng của quý khách là: " + dh.Madh
+                                            + "<br/>Số điện thoại đã đặt hàng là: " + kh.Sdt
+                                            + "<br/><br/>Quý khách vui lòng truy cập trang web vào mục 'Đơn hàng', nhập thông tin mã đơn hàng và số điện thoại để có thể xem lại và theo dõi đơn hàng vừa đặt."
+                                            + "<br/><br/>Đơn hàng của bạn sẽ sớm đến nơi, quý khách vui lòng chú ý điện thoại của mình để không bỏ lỡ đơn hàng"
+                                            + "<br/><br/> Chúc quý khách một ngày tốt lành!!!"
+                                            + "<br/><br/> Xin cảm ơn quý khách!"
+                                            + "<br/><br/>---Nguyễn Văn Hiền---";
+                    mailContent.To = kh.Email;
+                }
+                else
+                {
+                    ViewData["CheckEmail"] = "Email không tồn tại, vui lòng kiểm tra lại!!!";
+                }
+                mailContent.Body = "<h1>Electronics Store</h1><br/>" + message;
 
 
-        //        List<CartItemViewModel> cartItems = JsonConvert.DeserializeObject<List<CartItemViewModel>>(cartItemsInput);
+                Service.SendMailService c = new Service.SendMailService();
+                c.SendMail(mailContent);
 
-        //        foreach (CartItemViewModel item in cartItems)
-        //        {
-        //            Noidungddh noidungddhmoi = new Noidungddh();
-        //            noidungddhmoi.Iddh = dondathangmoi.Iddh;
+                _context.SaveChanges();
 
-        //            noidungddhmoi.Idhh = int.Parse(item.productId);
-        //            noidungddhmoi.Soluong = int.Parse(item.count);
-        //            noidungddhmoi.Dongia = int.Parse(item.productPrice);
+                ViewData["SuccessMessage"] = "Chúng tôi đã gửi mail xác nhận đến cho bạn. Vui lòng kiểm tra mail!";
 
-        //            //Hanghoa hanghoabaohanh = _context.Hanghoa.Where(id => id.Idhh == int.Parse(item.productId)).FirstOrDefault();
-        //            //DateTime today = DateTime.Today;
-        //            //DateTime hanbaohanh = today.AddDays(hanghoabaohanh.Thoigianbh);
-        //            //noidungddhmoi.Hethanbh = hanbaohanh;
+            }
+            catch (Exception e)
+            {
+                ViewData["errorMessage"] = "Email không khả dụng";
+            }
 
-        //            _context.Noidungddh.Add(noidungddhmoi);
-        //             _context.SaveChangesAsync();
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SendMailUpdateOrdered(Khachhang kh, Dondathang dh, int trangthai)
+        {
+            try
+            {
+                string mess = "";
+                string employee = "";
+                string message = "";
+                var address = kh.Email;
 
-        //        }
-        //        TempData["success"] = "Đặt hàng thành công!!!";
-        //        TempData["Madh"] = dondathang.Madh;
-        //        TempData["Sdt"] = kh.Sdt;
-        //        var ResponseCode = 0;
-        //        return Json(ResponseCode);
+                var subject = "Theo dõi tiến độ đơn đặt hàng";
 
-        //    }
-        //    catch
-        //    {
-        //        TempData["success"] = "Đặt hàng thất bại!!!";
+                var mailContent = new MailContent();
+                mailContent.Subject = subject;
+                if (address != null)
+                {
+                    if(trangthai == 2)
+                    {
+                        mess = "<br/><br/>Đơn hàng của quý khách đã xuất kho.";
+                        employee = "<br/><br/>Người giao: nhân viên bộ phận giao hàng Electronics Store";
+                    }
+                    if (trangthai == 3)
+                    {
+                        mess = "<br/><br/>Qúy khách đã hoàn tất thanh toán đơn hàng.";
+                    }
+                    message = "Chào '" + kh.Tenkh + "'"
+                                            + "<br/>Mã đơn hàng của quý khách là: " + dh.Madh
+                                            + "<br/>Số điện thoại đã đặt hàng là: " + kh.Sdt
+                                            + mess
+                                            + employee
+                                            + "<br/><br/> Chúc quý khách một ngày tốt lành!!!"
+                                            + "<br/><br/> Xin cảm ơn quý khách!"
+                                            + "<br/><br/>---Nguyễn Văn Hiền---";
+                    mailContent.To = kh.Email;
+                }
+                else
+                {
+                    ViewData["CheckEmail"] = "Email không tồn tại, vui lòng kiểm tra lại!!!";
+                }
+                mailContent.Body = "<h1>Electronics Store</h1><br/>" + message;
 
-        //        var ResponseCode = 1;
-        //        return Json(ResponseCode);
 
-        //    }
+                Service.SendMailService c = new Service.SendMailService();
+                c.SendMail(mailContent);
 
-        //}
+                _context.SaveChanges();
+
+                ViewData["SuccessMessage"] = "Chúng tôi đã gửi mail xác nhận đến cho bạn. Vui lòng kiểm tra mail!";
+
+            }
+            catch (Exception e)
+            {
+                ViewData["errorMessage"] = "Email không khả dụng";
+            }
+
+            return View();
+        }
     }
 }
