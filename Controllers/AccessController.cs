@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Cryptography;
 using ElectronicsStore.Models;
 using ElectronicsStore.ViewModel;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 //Scaffold-DbContext “Data Source=.;Initial Catalog=ElectronicsStore;Persist Security Info=True;User ID=sa;Password=sa”  Microsoft.EntityFrameworkCore.SQLServer -f –Output Models
 namespace ElectronicsStore.Controllers
 {
@@ -52,7 +54,7 @@ namespace ElectronicsStore.Controllers
             return RedirectToAction("Login", "Access");
         }
         public async Task<IActionResult> Signin()
-        { 
+        {
             return View();
         }
         [HttpPost]
@@ -245,5 +247,7 @@ namespace ElectronicsStore.Controllers
             }
             return randomStr;
         }
+
+       
     }
 }

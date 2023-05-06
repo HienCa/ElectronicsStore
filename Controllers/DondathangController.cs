@@ -11,6 +11,8 @@ using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Http;
 using ElectronicsStore.ViewModel;
 using Newtonsoft.Json;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace ElectronicsStore.Controllers
 {
@@ -160,7 +162,7 @@ namespace ElectronicsStore.Controllers
 
             return View(dondathang);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateForGuest(Noidungddh ddh, Khachhang kh, string noidungphu, int ngaybaohanh)
@@ -233,6 +235,10 @@ namespace ElectronicsStore.Controllers
                     {
                         SendMailOrdered(khachhang, dondathangmoi);
                     }
+                    if (khachhang.Sdt != null)
+                    {
+                        SendSMS(khachhang, dondathangmoi);
+                    }
                 }
                 catch
                 {
@@ -295,6 +301,10 @@ namespace ElectronicsStore.Controllers
                     if (kh.Email != null)
                     {
                         SendMailOrdered(kh, dondathangmoi);
+                    }
+                    if (kh.Sdt != null)
+                    {
+                        SendSMS(kh, dondathangmoi);
                     }
                 }
                 catch
@@ -396,6 +406,10 @@ namespace ElectronicsStore.Controllers
                     {
                         SendMailOrdered(khachhang, dondathangmoi);
                     }
+                    if (khachhang.Sdt != null)
+                    {
+                        SendSMS(khachhang, dondathangmoi);
+                    }
                 }
                 catch
                 {
@@ -466,6 +480,10 @@ namespace ElectronicsStore.Controllers
                     if (kh.Email != null)
                     {
                         SendMailOrdered(kh, dondathangmoi);
+                    }
+                    if (kh.Sdt != null)
+                    {
+                        SendSMS(kh, dondathangmoi);
                     }
                 }
                 catch
@@ -844,6 +862,38 @@ namespace ElectronicsStore.Controllers
             }
 
             return View();
+        }
+        public string FormatPhoneNumber(string phoneNumber)
+        {
+            // Remove leading 0
+            phoneNumber = phoneNumber.TrimStart('0');
+
+            // Add +84 prefix
+            phoneNumber = "+84" + phoneNumber;
+
+            return phoneNumber;
+        }
+
+
+        public void SendSMS(Khachhang khachhang, Dondathang dondathang)
+        {
+            // Set up the Twilio client
+            var accountSid = "ACceab86b7a7dc86fc3a5cf69aa7c22333";
+            var authToken = "a770436f58146877b4625b76d0e64f4b";
+            TwilioClient.Init(accountSid, authToken);
+
+            // Send an SMS message
+            var message = MessageResource.Create(
+                body: "Xin chào " + khachhang.Tenkh
+                                    + "!\nChúc mừng quý khách đã đặt hàng thành công."
+                                    + "\nMã đơn hàng của bạn là: " + dondathang.Madh
+                                    + ".\nSố điện thoại đặt hàng là: " + khachhang.Sdt
+                                    + ".\nQúy khách vui lòng truy cập Electronics Stores để theo dõi đơn đặt hàng."
+                                    + "Qúy khách vui lòng truy cập Electronics Stores để theo dõi đơn đặt hàng.",
+                from: new Twilio.Types.PhoneNumber("+13184966314"),
+                to: new Twilio.Types.PhoneNumber(FormatPhoneNumber(khachhang.Sdt))
+            );
+
         }
     }
 }

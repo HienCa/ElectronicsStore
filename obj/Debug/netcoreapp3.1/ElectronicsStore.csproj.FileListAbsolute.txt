@@ -270,3 +270,5 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\InventoryReport.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Phieunhapkho\XuatNhapTonReport.cshtml.g.cs
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Access\ForgotPassword.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Abstractions.dll
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\Twilio.dll

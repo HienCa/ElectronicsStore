@@ -87,6 +87,10 @@
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.5, )"
+            },
+            "Twilio": {
+              "target": "Package",
+              "version": "[6.6.0, )"
             }
           },
           "imports": [
