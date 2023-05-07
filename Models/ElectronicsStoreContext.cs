@@ -269,8 +269,7 @@ namespace ElectronicsStore.Models
                     .HasMaxLength(4000);
 
                 entity.Property(e => e.Email)
-                    .HasColumnName("EMAIL")
-                    .HasMaxLength(255);
+                    .HasColumnName("EMAIL");
 
                 entity.Property(e => e.Facebook)
                     .HasColumnName("FACEBOOK")
@@ -298,8 +297,8 @@ namespace ElectronicsStore.Models
                     .HasMaxLength(255);
 
                 entity.Property(e => e.Matkhau)
-                    .HasColumnName("MATKHAU")
-                    .HasMaxLength(255);
+                    .HasColumnName("MATKHAU");
+                    //.HasMaxLength(255);
 
                 entity.Property(e => e.Ngaysinh)
                     .HasColumnName("NGAYSINH")
@@ -447,8 +446,7 @@ namespace ElectronicsStore.Models
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasColumnName("EMAIL")
-                    .HasMaxLength(255);
+                    .HasColumnName("EMAIL");
 
                 entity.Property(e => e.Facebook)
                     .HasColumnName("FACEBOOK")
@@ -476,8 +474,8 @@ namespace ElectronicsStore.Models
                     .HasMaxLength(255);
 
                 entity.Property(e => e.Matkhau)
-                    .HasColumnName("MATKHAU")
-                    .HasMaxLength(255);
+                    .HasColumnName("MATKHAU");
+                    //.HasMaxLength(255);
 
                 entity.Property(e => e.Ngaysinh)
                     .HasColumnName("NGAYSINH")

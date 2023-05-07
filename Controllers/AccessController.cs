@@ -66,10 +66,10 @@ namespace ElectronicsStore.Controllers
                 Khachhang khachhangcu = await _context.Khachhang.Where(a => a.Email.Equals(khachhang.Email)).FirstOrDefaultAsync();
                 if (khachhangcu == null)
                 {
-                    //RSAEncryption rsa = new RSAEncryption();
+                    SHA512Encryption sha = new SHA512Encryption();
 
                     //khachhang.Email = rsa.Encrypt(khachhang.Email);
-                    //khachhang.Matkhau = rsa.Encrypt(khachhang.Matkhau);
+                    khachhang.Matkhau = sha.Encrypt(khachhang.Matkhau);
 
                     _context.Khachhang.Add(khachhang);
                     await _context.SaveChangesAsync();
@@ -78,6 +78,7 @@ namespace ElectronicsStore.Controllers
                 else
                 {
                     ViewData["SigninFailure"] = "Đăng ký thất bại!";
+                    ViewData["Thongtin"] = khachhang;
 
                 }
             }
@@ -100,23 +101,39 @@ namespace ElectronicsStore.Controllers
         {
             if (ModelState.IsValid && account.Email != null)
             {
-                //RSAEncryption rsa = new RSAEncryption();
+                SHA512Encryption sha = new SHA512Encryption();
 
-                //account.PassWord = rsa.Decrypt(account.PassWord);
-                //account.Email = rsa.Decrypt(account.Email);
 
-                Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
-                Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(account.PassWord)).FirstOrDefault();
+
+                //Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(rsa.Encrypt(account.PassWord))).FirstOrDefault();
+                Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).FirstOrDefault();
+                Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).FirstOrDefault();
+
+
+
                 if (employee != null || customer != null)
                 {
+
+
                     if (employee != null)
                     {
-                        Response.Cookies.Append("HienCaCookie", account.Email);
+                        if (sha.Verify(account.PassWord, employee.Matkhau))
+                        {
+                            Response.Cookies.Append("HienCaCookie", account.Email);
+
+                        }
 
                     }
                     else
                     {
-                        Response.Cookies.Append("CustomerCookie", account.Email);
+
+                        if (sha.Verify(account.PassWord, customer.Matkhau))
+                        {
+                            Response.Cookies.Append("CustomerCookie", account.Email);
+
+                        }
+                        //Response.Cookies.Append("CustomerCookie", account.Email);
+
 
                     }
                     List<Claim> claims = new List<Claim>()
@@ -134,14 +151,30 @@ namespace ElectronicsStore.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimIdentity), properties);
 
+
+
                     if (employee != null)
                     {
+
+                        ////string decryptedEmailemployee = rsa.Decrypt(employee.Email);
+                        //string decryptedMatkhauemployee = rsa.Decrypt(customer.Matkhau);
+
+                        //if (account.Email.Equals(decryptedEmailemployee) && account.PassWord.Equals(decryptedMatkhauemployee))
+                        //{
                         return RedirectToAction("Index", "Dondathang");
+
+                        //}
 
                     }
                     else
                     {
+                        //string decryptedEmailcustomer = rsa.Decrypt(employee.Email);
+                        //string decryptedMatkhaucustomer = rsa.Decrypt(employee.Matkhau);
+
+                        //if (account.Email.Equals(decryptedEmailcustomer) && account.PassWord.Equals(decryptedMatkhaucustomer))
+                        //{
                         return RedirectToAction("Index", "Home");
+                        //}
 
                     }
 
@@ -150,6 +183,7 @@ namespace ElectronicsStore.Controllers
                 else
                 {
                     ViewData["LoginFailure"] = "Tài khoản đăng nhập không hợp lệ";
+                    ViewData["Thongtin"] = account;
 
                 }
             }
@@ -248,6 +282,6 @@ namespace ElectronicsStore.Controllers
             return randomStr;
         }
 
-       
+
     }
 }

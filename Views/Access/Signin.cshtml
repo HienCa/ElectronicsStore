@@ -478,69 +478,142 @@
                         <h4 class="text-center text-success">Đăng ký tài khoản thành công!!!</h4>
                     }
 
-                    <form id="formSignIn" asp-action="Signin" asp-controller="Access">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-12">
-                                <div class="">
-                                    <span>Họ tên</span>
-                                    <input class="form-control" type="text" name="Tenkh" id="" required>
-                                    <span class="spin" id="emailc"></span>
-                                </div>
-                                <div class="mt-2">
-                                    <span>Giới tính</span>
+                    @if (ViewData["Thongtin"] != null)
+                    {
 
-                                    <select class="form-control" id="GioitinhA" name="Gioitinh" required>
-                                        <option value="0">Nam</option>
-                                        <option value="1">Nữ</option>
-                                        <option value="2">Khác</option>
-                                    </select>
-                                </div>
+                        Khachhang kh = ViewData["Thongtin"] as Khachhang;
+                        <form id="formSignIn" asp-action="Signin" asp-controller="Access">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="">
+                                        <span>Họ tên</span>
+                                        <input class="form-control" type="text" name="Tenkh" id="" required value="@kh.Tenkh">
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Giới tính</span>
 
-                                <div class="mt-2">
-                                    <span>Sdt</span>
-                                    <input class="form-control" type="text" name="Sdt" id="" required>
-                                    <span class="spin" id="emailc"></span>
+                                        <select class="form-control" id="GioitinhA" name="Gioitinh" required value="@kh.Gioitinh">>
+                                            <option value="0">Nam</option>
+                                            <option value="1">Nữ</option>
+                                            <option value="2">Khác</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span>Sdt</span>
+                                        <input class="form-control" type="text" name="Sdt" id="" required value="@kh.Sdt">
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Địa chỉ</span>
+                                        <textarea class="form-control" type="text" name="Diachi" id="" required>@kh.Diachi></textarea>
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
                                 </div>
-                                <div class="mt-2">
-                                    <span>Địa chỉ</span>
-                                    <textarea class="form-control" type="text" name="Diachi" id="" required></textarea>
-                                    <span class="spin" id="emailc"></span>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="">
+                                        <span>Email đăng nhập</span>
+                                        <input class="form-control" type="email" name="Email" id="" required value="@kh.Email">
+                                        @if (ViewData["SigninFailure"] != null)
+                                        {
+
+                                            <span class="text-center text-danger">Tài khoản (Email) đã tồn tại!!!</span>
+                                        }
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Mật khẩu</span>
+                                        <input class="form-control" type="password" minlength="8" name="Matkhau" id="" required>
+                                        <span class="spin" id="passc"></span>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span>Nhập lại mật khẩu</span>
+                                        <input class="form-control" type="password" minlength="8" name="Matkhaunhaplai" id="" required>
+                                        @if (ViewData["PassInvalid"] != null)
+                                        {
+                                            <span class="text-center text-danger">@ViewData["PassInvalid"]</span>
+                                        }
+                                    </div>
+
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-12">
-                                <div class="">
-                                    <span>Email đăng nhập</span>
-                                    <input class="form-control" type="email" name="Email" id="" required>
-                                    @if (ViewData["SigninFailure"] != null)
-                                    {
-                                        <span class="text-center text-danger">Tài khoản (Email) đã tồn tại!!!</span>
-                                    }
-                                </div>
-                                <div class="mt-2">
-                                    <span>Mật khẩu</span>
-                                    <input class="form-control" type="password" minlength="8" name="Matkhau" id="" required>
-                                    <span class="spin" id="passc"></span>
-                                </div>
 
-                                <div class="mt-2">
-                                    <span>Nhập lại mật khẩu</span>
-                                    <input class="form-control" type="password" minlength="8" name="Matkhaunhaplai" id="" required>
-                                    @if (ViewData["PassInvalid"] != null)
-                                    {
-                                        <span class="text-center text-danger">@ViewData["PassInvalid"]</span>
-                                    }
-                                </div>
 
+                            <div class="button d-flex justify-content-center align-items-center">
+                                <button id="signin-btn" type="submit"><span>Đăng ký</span></button>
                             </div>
-                        </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <form id="formSignIn" asp-action="Signin" asp-controller="Access">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="">
+                                        <span>Họ tên</span>
+                                        <input class="form-control" type="text" name="Tenkh" id="" required>
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Giới tính</span>
+
+                                        <select class="form-control" id="GioitinhA" name="Gioitinh" required>
+                                            <option value="0">Nam</option>
+                                            <option value="1">Nữ</option>
+                                            <option value="2">Khác</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span>Sdt</span>
+                                        <input class="form-control" type="text" name="Sdt" id="" required>
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Địa chỉ</span>
+                                        <textarea class="form-control" type="text" name="Diachi" id="" required></textarea>
+                                        <span class="spin" id="emailc"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="">
+                                        <span>Email đăng nhập</span>
+                                        <input class="form-control" type="email" name="Email" id="" required>
+                                        @if (ViewData["SigninFailure"] != null)
+                                        {
+
+                                            <span class="text-center text-danger">Tài khoản (Email) đã tồn tại!!!</span>
+                                        }
+                                    </div>
+                                    <div class="mt-2">
+                                        <span>Mật khẩu</span>
+                                        <input class="form-control" type="password" minlength="8" name="Matkhau" id="" required>
+                                        <span class="spin" id="passc"></span>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <span>Nhập lại mật khẩu</span>
+                                        <input class="form-control" type="password" minlength="8" name="Matkhaunhaplai" id="" required>
+                                        @if (ViewData["PassInvalid"] != null)
+                                        {
+                                            <span class="text-center text-danger">@ViewData["PassInvalid"]</span>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
 
 
-                        <div class="button d-flex justify-content-center align-items-center">
-                            <button id="signin-btn" type="submit"><span>Đăng ký</span></button>
-                        </div>
-                    </form>
+                            <div class="button d-flex justify-content-center align-items-center">
+                                <button id="signin-btn" type="submit"><span>Đăng ký</span></button>
+                            </div>
+                        </form>
+                    }
+
+
                     <a class="mr-2" href="/Access/Login">Đăng nhập</a>
-                    <a  href="/">Trang chủ</a>
+                    <a href="/">Trang chủ</a>
 
                 </div>
 

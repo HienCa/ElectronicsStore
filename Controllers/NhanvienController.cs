@@ -116,13 +116,17 @@ namespace ElectronicsStore.Controllers
                 nv.Masothue = nhanvien.Masothue;
                 if (nhanvien.Matkhau != "")
                 {
-                    nv.Matkhau = nhanvien.Matkhau;
 
+                    //nv.Matkhau = nhanvien.Matkhau;
+                    SHA512Encryption sha = new SHA512Encryption();
+
+                    nv.Matkhau = sha.Encrypt(nhanvien.Matkhau);
                 }
                 else
                 {
-                    nv.Matkhau = "NV12345";
-
+                    //nv.Matkhau = "NV12345";
+                    SHA512Encryption sha = new SHA512Encryption();
+                    nv.Matkhau = sha.Encrypt("NV12345");
                 }
                 nv.Ghichu = nhanvien.Ghichu;
                 nv.Facebook = nhanvien.Facebook;

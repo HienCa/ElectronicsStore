@@ -21,15 +21,18 @@ namespace ElectronicsStore.ViewModel
             {
                 // Convert the plain text to bytes and encrypt using the public key
                 encryptedData = _rsa.Encrypt(Encoding.UTF8.GetBytes(plainText), false);
+            return Convert.ToBase64String(encryptedData);
+
             }
             catch (Exception ex)
             {
                 // Handle encryption errors here
-                throw new Exception("Error encrypting data: " + ex.Message);
+                Console.WriteLine(ex);
+
             }
+            return "";
 
             // Convert the encrypted bytes to base64 string
-            return Convert.ToBase64String(encryptedData);
         }
 
         public string Decrypt(string cipherText)
@@ -39,15 +42,18 @@ namespace ElectronicsStore.ViewModel
             {
                 // Convert the cipher text to bytes and decrypt using the private key
                 decryptedData = _rsa.Decrypt(Convert.FromBase64String(cipherText), false);
+                return Encoding.UTF8.GetString(decryptedData);
+
             }
             catch (Exception ex)
             {
                 // Handle decryption errors here
-                throw new Exception("Error decrypting data: " + ex.Message);
+                Console.WriteLine(ex);
             }
 
             // Convert the decrypted bytes to plain text
-            return Encoding.UTF8.GetString(decryptedData);
+            return "";
+
         }
 
         public string GetPublicKeyXml()

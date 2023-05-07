@@ -33,12 +33,15 @@ namespace ElectronicsStore
             var mailsettings = Configuration.GetSection("MailSettings");
             services.Configure<MailSettings>(mailsettings);
             //login
+
+
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
                {
                    options.LoginPath = "/Access/Login";
-                    //options.Cookie.Name = "HienCaCookie";
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                   options.Cookie.Name = "HienCaCookie";
+                   options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                });
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddSession(); ;
@@ -46,7 +49,9 @@ namespace ElectronicsStore
 
             services.AddControllersWithViews();
             services.AddDbContext<ElectronicsStoreContext>(option => option.UseSqlServer(Configuration.GetConnectionString("MyConnectionString")));
-           
+
+
+
             //luu Id Cart ma hoa sha512
             services.AddHttpContextAccessor();
         }

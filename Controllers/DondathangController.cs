@@ -559,8 +559,12 @@ namespace ElectronicsStore.Controllers
                     dondathang.Active = 1;
 
                     string employeeEmail = Request.Cookies["HienCaCookie"];
+
                     if (employeeEmail != null)
                     {
+                        //RSAEncryption rsa = new RSAEncryption();
+                        //employeeEmail = rsa.Decrypt(employeeEmail);
+
                         var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
                         //0 chuẩn bị hàng
                         //1 đóng gói

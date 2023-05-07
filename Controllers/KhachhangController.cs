@@ -113,13 +113,14 @@ namespace ElectronicsStore.Controllers
                 kh.Masothue = khachhang.Masothue;
                 if (khachhang.Matkhau != "")
                 {
-                    kh.Matkhau = khachhang.Matkhau;
+                    //kh.Matkhau = khachhang.Matkhau;
 
+                    SHA512Encryption sha = new SHA512Encryption();
+                    kh.Matkhau = sha.Encrypt(kh.Matkhau);
                 }
                 else
                 {
-                    kh.Matkhau = "NV12345";
-
+                    kh.Matkhau = "";
                 }
                 kh.Ghichu = khachhang.Ghichu;
                 kh.Facebook = khachhang.Facebook;
