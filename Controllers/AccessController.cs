@@ -106,10 +106,10 @@ namespace ElectronicsStore.Controllers
 
 
                 //Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Matkhau.Equals(rsa.Encrypt(account.PassWord))).FirstOrDefault();
-                Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).FirstOrDefault();
-                Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).FirstOrDefault();
+                Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Active==1).FirstOrDefault();
+                Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Active == 1).FirstOrDefault();
 
-
+                
 
                 if (employee != null || customer != null)
                 {
@@ -124,9 +124,9 @@ namespace ElectronicsStore.Controllers
                         }
 
                     }
-                    else
+                    else if (customer != null)
                     {
-
+                        bool h = sha.Verify(account.PassWord, customer.Matkhau);
                         if (sha.Verify(account.PassWord, customer.Matkhau))
                         {
                             Response.Cookies.Append("CustomerCookie", account.Email);
@@ -156,29 +156,18 @@ namespace ElectronicsStore.Controllers
                     if (employee != null)
                     {
 
-                        ////string decryptedEmailemployee = rsa.Decrypt(employee.Email);
-                        //string decryptedMatkhauemployee = rsa.Decrypt(customer.Matkhau);
-
-                        //if (account.Email.Equals(decryptedEmailemployee) && account.PassWord.Equals(decryptedMatkhauemployee))
-                        //{
-                        return RedirectToAction("Index", "Dondathang");
-
-                        //}
-
+                        if (sha.Verify(account.PassWord, employee.Matkhau))
+                        {
+                            return RedirectToAction("Index", "Dondathang");
+                        }
                     }
-                    else
+                    else if (customer != null)
                     {
-                        //string decryptedEmailcustomer = rsa.Decrypt(employee.Email);
-                        //string decryptedMatkhaucustomer = rsa.Decrypt(employee.Matkhau);
-
-                        //if (account.Email.Equals(decryptedEmailcustomer) && account.PassWord.Equals(decryptedMatkhaucustomer))
-                        //{
-                        return RedirectToAction("Index", "Home");
-                        //}
-
+                        if (sha.Verify(account.PassWord, customer.Matkhau))
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
-
-
                 }
                 else
                 {

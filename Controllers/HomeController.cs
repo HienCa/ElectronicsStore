@@ -510,7 +510,10 @@ namespace ElectronicsStore.Controllers
                     var khachhang = await _context.Khachhang.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
                     if (khachhang != null)
                     {
-                        khachhang.Matkhau = Matkhau;
+                        SHA512Encryption sha = new SHA512Encryption();
+
+                        khachhang.Matkhau = sha.Encrypt(Matkhau); ;
+
                         _context.Update(khachhang);
                         await _context.SaveChangesAsync();
                         return RedirectToAction("PersonalPage", "Home");

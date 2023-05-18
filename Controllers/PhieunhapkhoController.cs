@@ -218,10 +218,122 @@ namespace ElectronicsStore.Controllers
         }
 
 
-        public async Task<IActionResult> InventoryReport(int? Idnhh, string action)
+        public async Task<IActionResult> InventoryReport(int? Idnhh, int? Idhh, string action)
         {
             ViewBag.Head = "THỐNG KÊ SỐ LIỆU TỒN KHO";
+            if (Idhh != null)
+            {
+                var productQuantitiesNhap = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdhhNavigation.IdnhhNavigation).Where(i => i.Idhh == Idhh).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                  Donvitinh = group.FirstOrDefault().IdhhNavigation.Donvitinh,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.FirstOrDefault().Dongia,
+                                              })
+                                              .ToList();
+                var productQuantitiesXuat = _context.Noidungpxk.Include(p => p.IdhhNavigation).ToList()
+                                              .GroupBy(item => item.Idhh)
+                                              .Select(group => new ProductQuantityViewModel
+                                              {
+                                                  Idhh = group.Key,
+                                                  Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                  Soluong = group.Sum(item => item.Soluong),
+                                                  Dongia = group.Sum(item => item.Dongia)
 
+                                              })
+                                              .ToList();
+
+
+                var allHanghoa = await _context.Hanghoa.Where(i => i.Idhh == Idhh).ToListAsync();
+
+                var productQuantitiesTonKho = new List<ProductQuantityViewModel>();
+                foreach (var hanghoa in allHanghoa)
+                {
+                    var tonkho = new ProductQuantityViewModel
+                    {
+                        Idhh = hanghoa.Idhh,
+                        Tenhh = hanghoa.Tenvl,
+                        Mahh = hanghoa.Mavl,
+                        Donvitinh = hanghoa.Donvitinh,
+                        Dongia = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                        Soluong = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0),
+                        Tongtien = ((productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0)) * (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                    };
+
+                    productQuantitiesTonKho.Add(tonkho);
+                }
+
+                if (action != null && action.Equals("excel"))
+                {
+
+
+                    using (var workbook = new XLWorkbook())
+                    {
+                        //tên sheet
+                        var worksheet = workbook.Worksheets.Add("Tonkho");
+
+                        //tiêu đề
+                        var currentRow = 1;
+                        worksheet.Cell(currentRow, 1).Value = "Linh kiện máy tính ElectronicsStore";
+                        currentRow += 2;
+
+                        //danh sách phiếu
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = "Mã hàng hóa";
+                        worksheet.Cell(currentRow, 2).Value = "Tên hàng hóa";
+                        worksheet.Cell(currentRow, 3).Value = "Đơn vị tính";
+                        worksheet.Cell(currentRow, 4).Value = "Số lượng tồn";
+                        worksheet.Cell(currentRow, 5).Value = "Đơn giá nhập";
+                        worksheet.Cell(currentRow, 6).Value = "Tổng trị giá tồn (đ)";
+
+                        double tongcong = 0;
+                        foreach (var tk in productQuantitiesTonKho)
+                        {
+                            currentRow++;
+                            worksheet.Cell(currentRow, 1).Value = tk.Mahh;
+                            worksheet.Cell(currentRow, 2).Value = tk.Tenhh;
+                            worksheet.Cell(currentRow, 3).Value = tk.Donvitinh;
+                            worksheet.Cell(currentRow, 4).Value = tk.Soluong;
+                            worksheet.Cell(currentRow, 5).Value = String.Format("{0:0,0}", tk.Dongia);
+                            worksheet.Cell(currentRow, 6).Value = String.Format("{0:0,0}", tk.Tongtien);
+
+                            tongcong += tk.Tongtien;
+                        }
+                        currentRow++;
+                        worksheet.Cell(currentRow, 1).Value = "TỔNG CỘNG";
+                        worksheet.Cell(currentRow, 6).Value = String.Format("{0:0,0}", tongcong);
+
+                        //tiêu đề
+                        DateTime now = DateTime.Now;
+                        currentRow += 2;
+                        worksheet.Cell(currentRow, 4).Value = "TP. Hồ Chí Minh, Ngày " + now.Day + " tháng " + now.Month + " năm " + now.Year;
+
+                        using (var stream = new MemoryStream())
+                        {
+                            workbook.SaveAs(stream);
+                            var content = stream.ToArray();
+                            return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "tonkho.xlsx");
+                        }
+                    }
+                }
+                else if (action != null && action.Equals("csv"))
+                {
+
+                    var builder = new StringBuilder();
+                    builder.AppendLine("Mã hàng hóa, Tên hàng hóa, Đơn vị tính, Số lượng tồn, Đơn giá nhập, Tổng trị giá tồn");
+                    foreach (var p in productQuantitiesTonKho)
+                    {
+                        builder.AppendLine($"{p.Mahh}, {p.Tenhh}, {p.Donvitinh}, {p.Soluong}, {p.Dongia}, {p.Tongtien}");
+                    }
+                    return File(new UTF8Encoding().GetBytes(builder.ToString()), "text/csv", "tonkho.csv");
+                }
+
+                return View(productQuantitiesTonKho);
+            }
             if (Idnhh != null)
             {
                 var productQuantitiesNhap = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdhhNavigation.IdnhhNavigation).Where(i => i.IdhhNavigation.IdnhhNavigation.Idnhh == Idnhh).ToList()
@@ -248,17 +360,25 @@ namespace ElectronicsStore.Controllers
                                               })
                                               .ToList();
 
+                var allHanghoa = await _context.Hanghoa.Where(i=>i.Idnhh== Idnhh).ToListAsync();
 
-                var productQuantitiesTonKho = productQuantitiesNhap.Select(p => new ProductQuantityViewModel
+                var productQuantitiesTonKho = new List<ProductQuantityViewModel>();
+                foreach (var hanghoa in allHanghoa)
                 {
-                    Idhh = p.Idhh,
-                    Tenhh = p.Tenhh,
-                    Mahh = p.Mahh,
-                    Dongia = p.Dongia,
-                    Donvitinh = p.Donvitinh,
-                    Soluong = p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
-                    Tongtien = (p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
-                }).ToList();
+                    var tonkho = new ProductQuantityViewModel
+                    {
+                        Idhh = hanghoa.Idhh,
+                        Tenhh = hanghoa.Tenvl,
+                        Mahh = hanghoa.Mavl,
+                        Donvitinh = hanghoa.Donvitinh,
+                        Dongia = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                        Soluong = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0),
+                        Tongtien = ((productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0)) * (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                    };
+
+                    productQuantitiesTonKho.Add(tonkho);
+                }
+
 
                 if (action != null && action.Equals("excel"))
                 {
@@ -355,16 +475,26 @@ namespace ElectronicsStore.Controllers
                                               .ToList();
 
 
-                var productQuantitiesTonKho = productQuantitiesNhap.Select(p => new ProductQuantityViewModel
+
+                var allHanghoa = await _context.Hanghoa.ToListAsync();
+
+                var productQuantitiesTonKho = new List<ProductQuantityViewModel>();
+                foreach (var hanghoa in allHanghoa)
                 {
-                    Idhh = p.Idhh,
-                    Tenhh = p.Tenhh,
-                    Mahh = p.Mahh,
-                    Dongia = p.Dongia,
-                    Donvitinh = p.Donvitinh,
-                    Soluong = p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0),
-                    Tongtien = (p.Soluong - (productQuantitiesXuat.Where(q => q.Idhh == p.Idhh).FirstOrDefault()?.Soluong ?? 0)) * p.Dongia
-                }).ToList();
+                    var tonkho = new ProductQuantityViewModel
+                    {
+                        Idhh = hanghoa.Idhh,
+                        Tenhh = hanghoa.Tenvl,
+                        Mahh = hanghoa.Mavl,
+                        Donvitinh = hanghoa.Donvitinh,
+                        Dongia = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                        Soluong = (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0),
+                        Tongtien = ((productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0) - (productQuantitiesXuat.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Soluong ?? 0)) * (productQuantitiesNhap.FirstOrDefault(q => q.Idhh == hanghoa.Idhh)?.Dongia ?? 0),
+                    };
+
+                    productQuantitiesTonKho.Add(tonkho);
+                }
+
 
                 if (action != null && action.Equals("excel"))
                 {
@@ -678,7 +808,7 @@ namespace ElectronicsStore.Controllers
                 ViewData["from"] = from;
                 ViewData["to"] = to;
                 //ĐẦU KỲ
-                var productQuantitiesNhapDK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap < from).Where(p => p.Idhh==Idhh).ToList()
+                var productQuantitiesNhapDK = _context.Noidungpnk.Include(p => p.IdhhNavigation).Include(p => p.IdpnkNavigation).Where(p => p.IdpnkNavigation.Ngaylap < from).Where(p => p.Idhh == Idhh).ToList()
                                               .GroupBy(item => item.Idhh)
                                               .Select(group => new ProductQuantityViewModel
                                               {

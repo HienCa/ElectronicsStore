@@ -40,6 +40,20 @@ namespace ElectronicsStore.ViewModel
             }
             
         }
+        public string Descrypt(string plainText, string hash)
+        {
+            if (hash.Equals(""))
+            {
+                return "";
+            }
+            else
+            {
+                string hashOfInput = Encrypt(plainText);
+
+                return hashOfInput;
+            }
+
+        }
     }
 
 }

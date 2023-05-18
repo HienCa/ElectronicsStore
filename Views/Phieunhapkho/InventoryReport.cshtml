@@ -6,43 +6,74 @@
     Layout = "_Admin";
     ElectronicsStoreContext _context = new ElectronicsStoreContext();
     List<Nhomhh> nhomhanghoa = _context.Nhomhh.Where(V => V.Active == 1).ToList();
+    List<Hanghoa> hanghoa = _context.Hanghoa.Where(V => V.Active == 1).ToList();
 }
 <div class="x_content">
     <div class="row">
         <div class="col-sm-12">
             <div style="position: relative;" class="card-box  filterTable">
                 <form id="reportForm" asp-action="InventoryReport" asp-controller="Phieunhapkho" method="post">
-                    <div class="searchToFrom row mb-2">
 
-                        <div class="col-md-7 col-sm-12" style="z-index:1">
-
-                            <select data-search="true" name="Idnhh"
-                                    id="multipleSelect">
-                                <option value="">Tất cả</option>
-                                @foreach (var item in nhomhanghoa)
-                                {
-                                    <option value="@item.Idnhh">@item.Tennhh</option>
-
-                                }
-
-                            </select>
-                        </div>
-                        <div class="col-md-1 col-sm-12">
-                            <input type="submit" id="search" value="Tìm" class="btn btn-primary" />
-                        </div>
-                    </div>
                     <div class="row">
+                        <div class="col-lg-5 col-sm-12">
+                            <div class="searchToFrom row mb-2">
 
-                        <div class="col-md-1 col-sm-12">
-                            <button type="button" id="excel" class="btn btn-success text-white"><i class="fas fa-file-excel"></i></button>
+                                <div class="col-md-11 col-sm-12" style="z-index:1">
+
+                                    <select data-search="true" name="Idnhh"
+                                            id="multipleSelect">
+                                        <option value="">Tất cả</option>
+                                        @foreach (var item in nhomhanghoa)
+                                        {
+                                            <option value="@item.Idnhh">@item.Tennhh</option>
+
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-sm-12">
+                                    <input type="submit" id="search" value="Tìm theo nhóm" class="btn btn-primary" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-1 col-sm-12">
-                            <button type="button" id="csv" class="btn btn-success text-white"><i class="fas fa-file-csv"></i></button>
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="searchToFrom row mb-2">
+
+                                <div class="col-md-11 col-sm-12" style="z-index:1">
+
+                                    <select data-search="true" name="Idhh"
+                                            id="multipleSelect">
+                                        <option value="">Tất cả</option>
+                                        @foreach (var item in hanghoa)
+                                        {
+                                            <option value="@item.Idhh">@item.Tenvl</option>
+
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="col-md-1 col-sm-12">
+                                    <input type="submit" id="search" value="Tìm theo hàng hóa" class="btn btn-primary" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-10 col-sm-12">
+                        <div class="col-lg-1 col-sm-12">
+                            <div class="row">
+
+                                <div class="col-md-6 col-sm-12">
+                                    <button type="button" id="excel" class="btn btn-success text-white"><i class="fas fa-file-excel"></i></button>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <button type="button" id="csv" class="btn btn-success text-white"><i class="fas fa-file-csv"></i></button>
+                                </div>
+                                
+                                <input name="action" type="hidden" id="action" />
+                            </div>
                         </div>
-                        <input name="action" type="hidden" id="action" />
                     </div>
+
+
+
                 </form>
                 <div class="table-responsive">
 
@@ -55,7 +86,7 @@
                                 <th scope="col">ĐVT</th>
                                 <th scope="col">Số lượng tồn</th>
                                 <th scope="col">Đơn giá nhập</th>
-                                <th scope="col">Tổng trị giá tồn (vốn)(đ)</th>
+                                <th scope="col">Tổng trị giá tồn(đ)</th>
 
                             </tr>
                         </thead>
@@ -64,20 +95,20 @@
 
                             @foreach (var item in Model)
                             {
-                            <tr class="tr">
-                                <td>@item.Mahh</td>
+                                <tr class="tr">
+                                    <td>@item.Mahh</td>
 
-                                <td>@item.Tenhh</td>
-                                <td class="text-center">@item.Donvitinh</td>
-                                <td class="text-center">@item.Soluong</td>
+                                    <td>@item.Tenhh</td>
+                                    <td class="text-center">@item.Donvitinh</td>
+                                    <td class="text-center">@item.Soluong</td>
 
-                                @{
-                                    var Dongia = String.Format("{0:0,0}", (@item.Dongia));
-                                    var ThanhTien = String.Format("{0:0,0}", (@item.Tongtien));
-                                }
-                                <td class="thanhtien text-right">@Dongia</td>
-                                <td class="thanhtien text-right">@ThanhTien</td>
-                            </tr>
+                                    @{
+                                        var Dongia = String.Format("{0:0,0}", (@item.Dongia));
+                                        var ThanhTien = String.Format("{0:0,0}", (@item.Tongtien));
+                                    }
+                                    <td class="thanhtien text-right">@Dongia</td>
+                                    <td class="thanhtien text-right">@ThanhTien</td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -104,7 +135,7 @@
         action.value = "csv";
         reportForm.submit();
     });
-    
+
 </script>
 <script src="~/multiSelectDropdown/virtual-select.min.js"></script>
 <script type="text/javascript">

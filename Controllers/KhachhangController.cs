@@ -111,7 +111,7 @@ namespace ElectronicsStore.Controllers
                 kh.Sdt = khachhang.Sdt;
                 kh.Email = khachhang.Email;
                 kh.Masothue = khachhang.Masothue;
-                if (khachhang.Matkhau != "")
+                if (khachhang.Matkhau != null)
                 {
                     //kh.Matkhau = khachhang.Matkhau;
 
@@ -178,15 +178,24 @@ namespace ElectronicsStore.Controllers
                     kh.Sdt = khachhang.Sdt;
                     kh.Email = khachhang.Email;
                     kh.Masothue = khachhang.Masothue;
-                    if (khachhang.Matkhau != "")
+                    if (khachhang.Matkhau != null)
                     {
-                        kh.Matkhau = khachhang.Matkhau;
+                        //kh.Matkhau = khachhang.Matkhau;
 
+                        if (khachhang.Matkhau != kh.Matkhau)
+                        {
+                            SHA512Encryption sha = new SHA512Encryption();
+                            kh.Matkhau = sha.Encrypt(khachhang.Matkhau);
+                        }
+                        else
+                        {
+                            kh.Matkhau = khachhang.Matkhau;
+
+                        }
                     }
                     else
                     {
-                        kh.Matkhau = "NV12345";
-
+                        kh.Matkhau = "";
                     }
                     kh.Ghichu = khachhang.Ghichu;
                     kh.Facebook = khachhang.Facebook;
