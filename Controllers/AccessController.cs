@@ -160,12 +160,24 @@ namespace ElectronicsStore.Controllers
                         {
                             return RedirectToAction("Index", "Dondathang");
                         }
+                        else
+                        {
+                            ViewData["WrongPass"] = "Mật khẩu không chính xác!";
+                            return View();
+
+                        }
                     }
                     else if (customer != null)
                     {
                         if (sha.Verify(account.PassWord, customer.Matkhau))
                         {
                             return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ViewData["WrongPass"] = "Mật khẩu không chính xác!";
+                            return View();
+
                         }
                     }
                 }

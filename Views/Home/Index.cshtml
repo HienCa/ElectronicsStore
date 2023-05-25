@@ -7,16 +7,16 @@
 }
 <div class="container" style="margin-top:70px;">
     <div class="row mt-2">
-        <div class="mt-2 col-md-2 col-sm-12">
+        <div class="mt-4 col-md-2 col-sm-12">
             <div class="category p-2" style="background-color: #fff;border-radius: 5px;">
-                <h3 class="text-center">Danh Mục</h3>
-                <div class="row">
+                <h3 class="text-center" style="font-weight: bolder; color: #de0146">Danh Mục</h3>
+                <div class="row mt-4">
                     <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
-                        <div class="d-flex flex-column align-items-center">
+                        <div class="w-100 text-center">
                             <div class="">
 
                             </div>
-                            <div class="p-2 bg-light product-type productType" style=" border-radius: 5px;cursor:pointer"><a href="/" style="text-decoration:none;color:black">Tất cả</a></div>
+                            <div class="p-2 bg-light product-type productType" style=" border-radius: 5px;cursor:pointer"><a href="/" class="" style="text-decoration:none;color:black">Tất cả</a></div>
                         </div>
 
                     </div>
@@ -26,12 +26,34 @@
                         {
                             <div class="col-lg-12 col-md-12 col-sm-12 mb-2">
 
-                                <div class="d-flex flex-column align-items-center">
+                                <div class="">
                                     <div class="">
 
                                     </div>
+
                                     @*<div class="p-2 bg-light" style=" border-radius: 5px"><a href="/Home/Index/@item.Idnhh" style="text-decoration: none; color: #343a40">@item.Tennhh</a></div>*@
-                                    <div class="p-2 bg-light product-type productType" style=" border-radius: 5px;cursor:pointer">@item.Tennhh <input type="hidden" class="Idnhh" value="@item.Idnhh" /></div>
+                                <div class="p-2 bg-light product-type productType" style=" border-radius: 5px;cursor:pointer">
+                                    @if (item.Manhh == "BPC")
+                                    {
+                                        <img src="~/Images/mouse-keyboard.png" style="width:50px;height:50px" />
+
+                                    }
+                                    @if (item.Manhh == "RAM")
+                                    {
+                                        <img src="~/Images/ramImage.jpg" style="width:50px;height:50px" />
+                                    }
+                                    @if (item.Manhh == "MH")
+                                    {
+                                        <img src="~/Images/screen.png" style="width:50px;height:50px" />
+
+                                    }
+                                    @if (item.Manhh == "MB")
+                                    {
+                                        <img src="~/Images/mainboar.png" style="width:50px;height:50px" />
+
+                                    }
+                                    @item.Tennhh <input type="hidden" class="Idnhh" value="@item.Idnhh" />
+                                </div>
                                 </div>
 
                             </div>
@@ -40,6 +62,7 @@
 
 
                 </div>
+                <h3 class="text-center mb-4 mt-4" style="font-weight: bolder; color: #de0146">Lọc Giá</h3>
                 <div class="row align-items-center">
                     <div class="col-lg-2 col-md-4  col-sm-12">
                         <label for="price-min">Từ:</label>
@@ -62,7 +85,7 @@
             </div>
         </div>
         <div class="col-md-10 col-sm-12">
-            <div class="mt-2">
+            <div class="mt-4">
                 <div class="p-2" style="background-color: #fff;border-radius: 5px;">
                     <div class="row " id="product-list">
 

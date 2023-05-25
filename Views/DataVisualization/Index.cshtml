@@ -1,9 +1,54 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.Dondathang>
+@using ElectronicsStore.Models;
 
 @{
     ViewData["Title"] = "Index";
     Layout = "_Admin";
+    ElectronicsStoreContext _context = new ElectronicsStoreContext();
+
+    List<Hanghoa> hanghoa = _context.Hanghoa.Where(V => V.Active == 1).ToList();
+
 }
+<div class="row">
+
+    <form asp-action="Index" asp-controller="DataVisualization" method="post">
+
+        <div class="ml-2 row mb-2">
+
+            <div class="col-md-3 col-sm-12">
+                <div class="d-flex justify-content-around align-items-center">
+                    <div class="">Từ: </div>
+                    <input type="date" id="from" name="from" placeholder="Từ" class=" form-control" />
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <div class="d-flex justify-content-around align-items-center">
+                    <div class="">Đến: </div>
+                    <input type="date" id="to" name="to" placeholder="Đến" class=" form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-5 col-sm-12" style="z-index:1">
+
+                <select data-search="true" name="Idhh"
+                        id="multipleSelect">
+                    <option value="">Tất cả</option>
+                    @foreach (var item in hanghoa)
+                    {
+                        <option value="@item.Idhh">@item.Tenvl</option>
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-12">
+                <input type="submit" id="searchDate" value="Trực quan" class="btn btn-primary" />
+            </div>
+        </div>
+
+
+    </form>
+</div>
 <div style="height:90vh">
     <ul class="tabs row text-center">
         @*<li class="tab-link  col-md-4 current tab-11" data-tab="tab-1">Lịch Sử Nhập #@phieunhapkho.Sophieu</li>*@
@@ -14,65 +59,78 @@
 
     </ul>
 
-    <div id="tab-1" class="tab-content current">
 
-        <div style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ cột</h3>
-            <canvas id="chart-nhap-kho-bar"></canvas>
+    @if (ViewData["Date"] != null)
+    {
+        <h3 class="text-center mt-2">@ViewData["Date"]</h3>
+        <div id="tab-1" class="tab-content current">
 
-        </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ đường</h3>
-            <canvas id="chart-nhap-kho-line"></canvas>
+            <div style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ cột</h3>
+                <canvas id="chart-nhap-kho-bar"></canvas>
 
-        </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ tròn</h3>
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ đường</h3>
+                <canvas id="chart-nhap-kho-line"></canvas>
 
-            <canvas id="chart-nhap-kho-pie"></canvas>
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ tròn</h3>
 
-        </div>
+                <div class="d-flex justify-content-center align-items-center" style="max-height:800px">
+                    <canvas id="chart-nhap-kho-pie"></canvas>
 
-    </div>
-
-    <div id="tab-2" class="tab-content">
-
-        <div style="max-width:100%; max-height:80vh" class=" mt-3">
-            <h3 class="text-center">Biểu đồ cột</h3>
-            <canvas id="chart-xuat-kho-bar"></canvas>
+                </div>
+            </div>
 
         </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ đường</h3>
-            <canvas id="chart-xuat-kho-line"></canvas>
 
+        <div id="tab-2" class="tab-content">
+
+            <div style="max-width:100%; max-height:80vh" class="">
+                <h3 class="text-center">Biểu đồ cột</h3>
+                <canvas id="chart-xuat-kho-bar"></canvas>
+
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ đường</h3>
+                <canvas id="chart-xuat-kho-line"></canvas>
+
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ tròn</h3>
+                <div class="d-flex justify-content-center align-items-center" style="max-height:800px">
+                    <canvas id="chart-xuat-kho-pie"></canvas>
+
+                </div>
+            </div>
         </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ tròn</h3>
-            <canvas id="chart-xuat-kho-pie"></canvas>
 
+        <div id="tab-3" class="tab-content ">
+
+
+            <div style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ cột</h3>
+                <canvas id="chart-ton-kho-bar"></canvas>
+
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ đường</h3>
+                <canvas id="chart-ton-kho-line"></canvas>
+
+            </div>
+            <div class="mt-5" style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ tròn</h3>
+                <div class="d-flex justify-content-center align-items-center" style="max-height:800px">
+                    <canvas id="chart-ton-kho-pie"></canvas>
+
+                </div>
+
+            </div>
         </div>
-    </div>
+    }
 
-    <div id="tab-3" class="tab-content ">
-
-
-        <div style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ cột</h3>
-            <canvas id="chart-ton-kho-bar"></canvas>
-
-        </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ đường</h3>
-            <canvas id="chart-ton-kho-line"></canvas>
-
-        </div>
-        <div class="mt-5" style="max-width:100%; max-height:80vh">
-            <h3 class="text-center">Biểu đồ tròn</h3>
-            <canvas id="chart-ton-kho-pie"></canvas>
-
-        </div>
-    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>
@@ -81,7 +139,7 @@
     //TỔNG NHẬP TẤT CẢ
     let productQuantitiesNhap =@Html.Raw(ViewBag.productQuantitiesNhap);
     const productId_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[0]]);
-    const quantites_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[1]]);
+    const quantites_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[4]]);
     const productName_Nhap = productQuantitiesNhap.map(obj => obj[Object.keys(obj)[2]]);
 
 
@@ -203,7 +261,7 @@
     //TỔNG XUẤT TẤT CẢ
     let productQuantitiesXuat =@Html.Raw(ViewBag.productQuantitiesXuat);
     const productId_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[0]]);
-    const quantites_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[1]]);
+    const quantites_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[4]]);
     const productName_Xuat = productQuantitiesXuat.map(obj => obj[Object.keys(obj)[2]]);
 
 
@@ -334,7 +392,7 @@
     //TỔNG TỒN TẤT CẢ
     let productQuantitiesTonKho =@Html.Raw(ViewBag.productQuantitiesTonKho);
     const productId_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[0]]);
-    const quantites_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[1]]);
+    const quantites_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[4]]);
     const productName_Ton = productQuantitiesTonKho.map(obj => obj[Object.keys(obj)[2]]);
 
 
@@ -456,5 +514,12 @@
             //maintainAspectRatio: false,
 
         }
+    });
+</script>
+
+<script src="~/multiSelectDropdown/virtual-select.min.js"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: 'select'
     });
 </script>
