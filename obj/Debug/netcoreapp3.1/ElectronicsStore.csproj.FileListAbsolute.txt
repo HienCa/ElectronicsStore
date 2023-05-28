@@ -273,3 +273,4 @@ D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Acces
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Abstractions.dll
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\bin\Debug\netcoreapp3.1\Twilio.dll
 D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\Home\News.cshtml.g.cs
+D:\ĐH-08CNTT1\HienCa\ElectronicsStore\obj\Debug\netcoreapp3.1\Razor\Views\DataVisualization\Others.cshtml.g.cs

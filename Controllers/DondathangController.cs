@@ -562,8 +562,9 @@ namespace ElectronicsStore.Controllers
 
                     if (employeeEmail != null)
                     {
-                        //RSAEncryption rsa = new RSAEncryption();
-                        //employeeEmail = rsa.Decrypt(employeeEmail);
+                        //SHA512Encryption sha = new SHA512Encryption();
+
+                        //employeeEmail = sha.Descrypt(employeeEmail);
 
                         var nhanvien = await _context.Nhanvien.Where(e => (e.Email).Equals(employeeEmail)).FirstOrDefaultAsync();
                         //0 chuẩn bị hàng

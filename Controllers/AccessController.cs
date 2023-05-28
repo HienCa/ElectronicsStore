@@ -109,7 +109,7 @@ namespace ElectronicsStore.Controllers
                 Nhanvien employee = _context.Nhanvien.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Active==1).FirstOrDefault();
                 Khachhang customer = _context.Khachhang.Where(tk => tk.Email.Equals(account.Email)).Where(tk => tk.Active == 1).FirstOrDefault();
 
-                
+                var Role = "";
 
                 if (employee != null || customer != null)
                 {
@@ -121,6 +121,15 @@ namespace ElectronicsStore.Controllers
                         {
                             Response.Cookies.Append("HienCaCookie", account.Email);
 
+                            if (employee.Email.Equals("nguyenvanhien050601@gmail.com"))
+                            {
+                                Role = "admin";
+                            }
+                            else
+                            {
+                                Role = "manage";
+
+                            }
                         }
 
                     }
@@ -139,7 +148,8 @@ namespace ElectronicsStore.Controllers
                     List<Claim> claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Email),
-                    new Claim("OtherProperties", "Example Role")
+                    new Claim(ClaimTypes.Role, Role)
+
                 };
                     ClaimsIdentity claimIdentity = new ClaimsIdentity(claims,
                         CookieAuthenticationDefaults.AuthenticationScheme);
@@ -177,7 +187,6 @@ namespace ElectronicsStore.Controllers
                         {
                             ViewData["WrongPass"] = "Mật khẩu không chính xác!";
                             return View();
-
                         }
                     }
                 }
@@ -188,7 +197,6 @@ namespace ElectronicsStore.Controllers
 
                 }
             }
-
 
             return View();
         }
@@ -228,13 +236,16 @@ namespace ElectronicsStore.Controllers
                 if (kh != null)
                 {
                     message = "Xin Chào '" + kh.Tenkh + "' Mật khẩu mới của bạn là " + newPassword;
-                    kh.Matkhau = newPassword;
+                    SHA512Encryption sha = new SHA512Encryption();
+                    kh.Matkhau = sha.Encrypt(newPassword); 
                     mailContent.To = kh.Email;
                 }
                 if (nv != null)
                 {
                     message = "Xin Chào '" + nv.Tennv + "' Mật khẩu mới của bạn là " + newPassword;
-                    nv.Matkhau = newPassword;
+                    SHA512Encryption sha = new SHA512Encryption();
+
+                    nv.Matkhau = sha.Encrypt(newPassword);
                     mailContent.To = nv.Email;
                 }
                 else

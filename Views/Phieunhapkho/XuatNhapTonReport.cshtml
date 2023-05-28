@@ -77,16 +77,16 @@
                                 <th scope="col">Tên hàng</th>
 
                                 <th scope="col">ĐVT</th>
-                                <th scope="col">SL ĐK</th>
-                                <th scope="col">Trị giá ĐK</th>
+                                <th scope="col">SL đầu kỳ</th>
+                                <th scope="col">Trị giá đầu kỳ</th>
 
-                                <th scope="col">SLN GK</th>
-                                <th scope="col">Trị giá DGN GK</th>
-                                <th scope="col">SLX GK</th>
-                                <th scope="col">Trị giá DGX GK</th>
+                                <th scope="col">SL nhập giữa kỳ</th>
+                                <th scope="col">Trị giá nhập giữa kỳ</th>
+                                <th scope="col">SL xuất giữa kỳ</th>
+                                <th scope="col">Trị giá xuất giữa kỳ</th>
 
-                                <th scope="col">SL CK</th>
-                                <th scope="col">Trị giá CK</th>
+                                <th scope="col">SL cuối kỳ</th>
+                                <th scope="col">Trị giá cuối kỳ</th>
 
 
                             </tr>
@@ -129,7 +129,105 @@
                         </tbody>
                     </table>
                 </div>
+                <!--<div class="container-fluid mt-2">
+                    <h2 class=" text-center text-danger">BÁO CÁO NHẬP, XUẤT, TỒN</h2>
+                    <!----> @*<h5 class=" text-center text-danger">Tháng 02/2023</h5>*@
+                    <!--<div class="row text-center bg-light p-1" style="border-bottom:2px solid #ccc;border-top:2px solid #ccc">
+                        <div class="col-1 pt-2" style="border-right:2px solid #ccc">Mã hàng</div>
+                        <div class="col-2 pt-2" style="border-right:2px solid #ccc">Tên hàng hóa</div>
+                        <div class="col-1 pt-2" style="border-right:2px solid #ccc">Đơn vị tính</div>
+                        <div class="col-2" style="border-right:2px solid #ccc">
+                            <div class="" style="border-bottom:2px solid #ccc">Tồn kho đầu kỳ</div>
+                            <div class="row">
+                                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                                <div class="col-6">Thành tiền</div>
+                            </div>
+                        </div>
+                        <div class="col-2" style="border-right:2px solid #ccc">
+                            <div class="" style="border-bottom:2px solid #ccc">Nhập trong kỳ</div>
+                            <div class="row">
+                                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                                <div class="col-6">Thành tiền</div>
+                            </div>
+                        </div>
+                        <div class="col-2" style="border-right:2px solid #ccc">
+                            <div class="" style="border-bottom:2px solid #ccc">Xuất trong kỳ</div>
+                            <div class="row">
+                                <div class="col-5" style="border-right:2px solid #ccc">Giá</div>
+                                <div class="col-2" style="border-right:2px solid #ccc">SL</div>
+                                <div class="col-5">Thành tiền</div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="" style="border-bottom:2px solid #ccc">Tồn kho cuối kỳ</div>
+                            <div class="row">
+                                <div class="col-6" style="border-right:2px solid #ccc">SL</div>
+                                <div class="col-6">Thành tiền</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-center p-1">
+                        @if (ViewData["XuatNhapTonReport"] != null)
+                        {
+                            @foreach (var item in ViewData["XuatNhapTonReport"] as List<XuatNhapTon>)
+                            {
+                                <div class="col-1" style="border:2px solid #ccc">@item.Mahh</div>
+                                <div class="col-2" style="border:2px solid #ccc">@item.Tenhh</div>
+                                <div class="col-1" style="border:2px solid #ccc">@item.Donvitinh</div>
+                                <div class="col-2" style="border:2px solid #ccc">
 
+                                    <div class="row">
+                                        @{ 
+                                            var Soluongdauky = String.Format("{0:0,0}", item.Soluongdauky);
+                                            var Tongdauky = String.Format("{0:0,0}", item.Soluongdauky * @item.Dongiadauky);
+
+                                        }
+                                        <div class="col-6" style="border-right:2px solid #ccc">@Soluongdauky</div>
+                                        <div class="col-6">@Tongdauky</div>
+                                    </div>
+                                </div>
+                                <div class="col-2" style="border:2px solid #ccc">
+
+                                    <div class="row">
+                                        @{
+                                            var Soluonggiuakynhap = String.Format("{0:0,0}", item.Soluonggiuakynhap);
+                                            var Tonggiuakynhap = String.Format("{0:0,0}", item.Soluonggiuakynhap * @item.Dongiagiuakynhap);
+
+                                        }
+                                        <div class="col-6" style="border-right:2px solid #ccc">@Soluonggiuakynhap</div>
+                                        <div class="col-6">@Tonggiuakynhap</div>
+                                    </div>
+                                </div>
+                                <div class="col-2" style="border:2px solid #ccc">
+
+                                    <div class="row">
+                                        @{
+                                            var Soluonggiuakyxuat = String.Format("{0:0,0}", item.Soluonggiuakyxuat);
+                                            var Dongiagiuakyxuat = String.Format("{0:0,0}", item.Dongiagiuakyxuat);
+                                            var Tonggiuakyxuat = String.Format("{0:0,0}", item.Soluonggiuakyxuat * @item.Dongiagiuakyxuat);
+
+                                        }
+                                        <div class="col-2" style="border-right:2px solid #ccc">@Soluonggiuakyxuat</div>
+                                        <div class="col-5" style="border-right:2px solid #ccc">@Dongiagiuakyxuat</div>
+                                        <div class="col-5">@Tonggiuakyxuat</div>
+                                    </div>
+                                </div>
+                                <div class="col-2" style="border:2px solid #ccc">
+
+                                    <div class="row">
+                                        @{
+                                            var Soluongcuoiky = String.Format("{0:0,0}", item.Soluongcuoiky);
+                                            var Tongcuoiky = String.Format("{0:0,0}", item.Soluongcuoiky * @item.Dongiacuoiky);
+
+                                        }
+                                        <div class="col-6" style="border-right:2px solid #ccc">@item.Soluongcuoiky</div>
+                                        <div class="col-6">@Tongcuoiky</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>-->
 
             </div>
         </div>

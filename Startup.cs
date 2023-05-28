@@ -40,11 +40,11 @@ namespace ElectronicsStore
                .AddCookie(options =>
                {
                    options.LoginPath = "/Access/Login";
-                   options.Cookie.Name = "HienCaCookie";
-                   options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                   //options.Cookie.Name = "HienCaCookie";
+                   options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                });
             services.AddMvc().AddSessionStateTempDataProvider();
-            services.AddSession(); ;
+            services.AddSession(); 
 
 
             services.AddControllersWithViews();

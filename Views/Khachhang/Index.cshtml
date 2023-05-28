@@ -1,11 +1,16 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.Khachhang>
 @using ElectronicsStore.Models;
+@using System.Security.Claims;
 @{
     ViewData["Title"] = "Index";
     Layout = "_Admin";
 
 
+    // Truy xuất đối tượng ClaimsPrincipal từ User
+    ClaimsPrincipal claimsPrincipal = User as ClaimsPrincipal;
 
+    // Truy xuất Role từ danh sách Claims
+    string role = claimsPrincipal.FindFirstValue(ClaimTypes.Role);
 }
 
 <div class="d-flex justify-content-between mb-2">
@@ -114,10 +119,17 @@
                     }
 
                     <td>
-                        <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#editModal">
-                            <i class="fas fa-pen text-white"></i>
-                        </button>
+                        @if (!string.IsNullOrEmpty(role))
+                        {
+                            @if (role == "admin")
+                            {
+                                <button onclick="showModalEdit(this)" type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#editModal">
+                                    <i class="fas fa-pen text-white"></i>
+                                </button>
+                            }
+                        }
+
                         <button onclick="showModalDetail(this)" type="button" class="btn btn-info" data-toggle="modal"
                                 data-target="#detailModal">
                             <i class="fas fa-info-circle text-white"></i>
@@ -283,7 +295,7 @@
                                             Mật khẩu
                                         </div>
                                         <div class="col-md-10 col-sm-12">
-                                            <input id="MatkhauA" name="Matkhau" 
+                                            <input id="MatkhauA" name="Matkhau"
                                                    type="text" class="form-control">
 
                                         </div>
@@ -525,8 +537,8 @@
                                             Mật khẩu
                                         </div>
                                         <div class="col-md-10 col-sm-12">
-                                            <input id="MatkhauE" name="Matkhau" 
-                                                   type="text" class="form-control" >
+                                            <input id="MatkhauE" name="Matkhau"
+                                                   type="text" class="form-control">
 
                                         </div>
                                     </div>
@@ -761,7 +773,7 @@
                                         Mật khẩu
                                     </div>
                                     <div class="col-md-10 col-sm-12">
-                                        <input id="MatkhauD" name="Matkhau"  disabled
+                                        <input id="MatkhauD" name="Matkhau" disabled
                                                type="text" class="form-control">
 
                                     </div>

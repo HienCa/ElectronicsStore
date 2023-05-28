@@ -1,0 +1,209 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Dondathang>
+@using ElectronicsStore.Models;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_Admin";
+    ElectronicsStoreContext _context = new ElectronicsStoreContext();
+
+    List<Hanghoa> hanghoa = _context.Hanghoa.Where(V => V.Active == 1).ToList();
+
+}
+<div class="row">
+
+    <form asp-action="Others" asp-controller="DataVisualization" method="post">
+
+        <div class="ml-2 row mb-2">
+
+            <div class="col-md-3 col-sm-12">
+                <div class="d-flex justify-content-around align-items-center">
+                    <div class="">Từ: </div>
+                    <input type="date" id="from" name="from" placeholder="Từ" class=" form-control" />
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12">
+                <div class="d-flex justify-content-around align-items-center">
+                    <div class="">Đến: </div>
+                    <input type="date" id="to" name="to" placeholder="Đến" class=" form-control" />
+                </div>
+            </div>
+
+            <div class="col-md-5 col-sm-12" style="z-index:1">
+
+                <select data-search="true" name="Idhh"
+                        id="multipleSelect">
+                    <option value="">Tất cả</option>
+                    @foreach (var item in hanghoa)
+                    {
+                        <option value="@item.Idhh">@item.Tenvl</option>
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-md-1 col-sm-12">
+                <input type="submit" id="searchDate" value="Trực quan" class="btn btn-primary" />
+            </div>
+        </div>
+
+
+    </form>
+</div>
+<div style="height:90vh">
+    <ul class="tabs row text-center">
+        @*<li class="tab-link  col-md-4 current tab-11" data-tab="tab-1">Lịch Sử Nhập #@phieunhapkho.Sophieu</li>*@
+
+        <li class="tab-link  col-md-2 current" data-tab="tab-1">Top 5 sản phẩm được mua nhiều</li>
+        <li class="tab-link  col-md-2" data-tab="tab-2">Top 5 Khách hàng chi nhiều nhất</li>
+
+    </ul>
+
+
+    @if (ViewData["Date"] != null)
+    {
+        <h3 class="text-center mt-2">@ViewData["Date"]</h3>
+        <div id="tab-1" class="tab-content current">
+
+            <div style="max-width:100%; max-height:80vh">
+                <h3 class="text-center">Biểu đồ cột</h3>
+                <canvas id="top5ProductbySales"></canvas>
+
+            </div>
+           
+
+        </div>
+
+        <div id="tab-2" class="tab-content">
+
+            <div style="max-width:100%; max-height:80vh" class="">
+                <h3 class="text-center">Biểu đồ cột</h3>
+                <canvas id="top5Customer"></canvas>
+
+            </div>
+         
+        </div>
+
+       
+    }
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.2.1/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    //TỔNG NHẬP TẤT CẢ
+    let top5ProductbySales =@Html.Raw(ViewBag.top5ProductbySales);
+    const top5ProductbySalesIDHH = top5ProductbySales.map(obj => obj[Object.keys(obj)[0]]);
+    const top5ProductbySalesTENHH = top5ProductbySales.map(obj => obj[Object.keys(obj)[1]]);
+    const top5ProductbySalesMAHH = top5ProductbySales.map(obj => obj[Object.keys(obj)[2]]);
+    const top5ProductbySalesSL = top5ProductbySales.map(obj => obj[Object.keys(obj)[4]]);
+    //const top5ProductbySalesDONGIA = top5ProductbySales.map(obj => obj[Object.keys(obj)[4]]);
+    const top5ProductbySalesTHANHTIEN = top5ProductbySales.map(obj => obj[Object.keys(obj)[5]]);
+
+
+    var top5ProductbySales_bar = document.getElementById('top5ProductbySales').getContext('2d');
+    var myChart_nhap_bar = new Chart(top5ProductbySales_bar, {
+        type: 'bar',
+        data: {
+            labels: top5ProductbySalesTENHH,
+            datasets: [{
+                label: 'TOP 5 Tổng giá trị hàng hóa đã xuất',
+                data: top5ProductbySalesSL,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+   
+
+</script>
+<script>
+    //TỔNG XUẤT TẤT CẢ
+    let top5Customer =@Html.Raw(ViewBag.top5Customer);
+    const top5CustomerIDKH = top5Customer.map(obj => obj[Object.keys(obj)[0]]);
+    const top5CustomerMAKH = top5Customer.map(obj => obj[Object.keys(obj)[1]]);
+    const top5CustomerTENKH = top5Customer.map(obj => obj[Object.keys(obj)[2]]);
+    const top5CustomerGT = top5Customer.map(obj => obj[Object.keys(obj)[3]]);
+    const top5CustomerTONGTIEN = top5Customer.map(obj => obj[Object.keys(obj)[5]]);
+
+
+    var top5Customer_bar = document.getElementById('top5Customer').getContext('2d');
+    var myChart_xuat_bar = new Chart(top5Customer_bar, {
+        type: 'bar',
+        data: {
+            labels: top5CustomerTENKH,
+            datasets: [{
+                label: 'TOP 5 Tổng giá trị khách hàng đã mua',
+                data: top5CustomerTONGTIEN,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+                barThickness: 120
+
+            }]
+        },
+        options: {
+            //responsive: true,
+            //maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+
+            }
+        }
+    });
+
+
+</script>
+
+
+
+
+<script src="~/multiSelectDropdown/virtual-select.min.js"></script>
+<script type="text/javascript">
+    VirtualSelect.init({
+        ele: 'select'
+    });
+</script>

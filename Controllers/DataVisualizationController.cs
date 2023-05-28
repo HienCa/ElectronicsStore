@@ -200,5 +200,145 @@ namespace ElectronicsStore.Controllers
 
         }
 
+
+
+        public async Task<IActionResult> Others(DateTime? from, DateTime? to, int? Idhh)
+        {
+            ViewBag.Head = "THỐNG KÊ SỐ LIỆU";
+
+            if (from != null && to != null && Idhh != null)
+            {
+                ViewData["Date"] = "Dữ liệu từ: " + from?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) + "đến: " + to?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                var allHanghoa = await _context.Hanghoa.ToListAsync();
+
+              
+
+
+                var top5ProductbySales = _context.Noidungpxk.Include(p => p.IdhhNavigation).Where(i => i.Idhh == Idhh).Where(f => f.IdpxkNavigation.Ngaylap >= from && f.IdpxkNavigation.Ngaylap <= to).ToList()
+                                                   .GroupBy(item => item.Idhh)
+                                                   .Select(group => new ProductQuantityViewModel
+                                                   {
+                                                       Idhh = group.Key,
+                                                       Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                       Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                       Soluong = group.Sum(item => item.Soluong),
+                                                       Dongia = group.Sum(item => item.Dongia),
+                                                       Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+                                                   })
+                                                   .OrderByDescending(a=>a.Tongtien).Take(5).ToList();
+
+                var top5Customer = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).Where(i => i.Idhh == Idhh).Where(f => f.IdpxkNavigation.Ngaylap >= from && f.IdpxkNavigation.Ngaylap <= to).ToList()
+                                                   .GroupBy(item => item.IdpxkNavigation.IdkhNavigation.Idkh)
+                                                   .Select(group => new CustomerQuantityViewModel
+                                                   {
+                                                       Idkh = group.Key,
+                                                       Tenkh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Tenkh,
+                                                       Makh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Makh,
+                                                       Gioitinh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Gioitinh,
+                                                       Tongtien = group.Sum(item => item.Soluong * item.Dongia)
+                                                   })
+                                                   .OrderByDescending(a => a.Tongtien).Take(5).ToList();
+
+
+
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Formatting = Formatting.Indented
+                };
+                ViewBag.productQuantitiesNhap = JsonConvert.SerializeObject(top5ProductbySales, settings);
+                ViewBag.productQuantitiesXuat = JsonConvert.SerializeObject(top5Customer, settings);
+                return View();
+
+            }
+            else if (from != null && to != null)
+            {
+                ViewData["Date"] = "Dữ liệu từ: " + from?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture) + " đến: " + to?.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                var allHanghoa = await _context.Hanghoa.ToListAsync();
+
+                var top5ProductbySales = _context.Noidungpxk.Include(p => p.IdhhNavigation).Where(f => f.IdpxkNavigation.Ngaylap >= from && f.IdpxkNavigation.Ngaylap <= to).ToList()
+                                                    .GroupBy(item => item.Idhh)
+                                                    .Select(group => new ProductQuantityViewModel
+                                                    {
+                                                        Idhh = group.Key,
+                                                        Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                        Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                        Soluong = group.Sum(item => item.Soluong),
+                                                        Dongia = group.Sum(item => item.Dongia),
+                                                        Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+                                                    })
+                                                    .OrderByDescending(a => a.Tongtien).Take(5).ToList();
+
+                var top5Customer = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).Where(f => f.IdpxkNavigation.Ngaylap >= from && f.IdpxkNavigation.Ngaylap <= to).ToList()
+                                                   .GroupBy(item => item.IdpxkNavigation.IdkhNavigation.Idkh)
+                                                   .Select(group => new CustomerQuantityViewModel
+                                                   {
+                                                       Idkh = group.Key,
+                                                       Tenkh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Tenkh,
+                                                       Makh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Makh,
+                                                       Gioitinh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Gioitinh,
+                                                       Tongtien = group.Sum(item => item.Soluong * item.Dongia)
+                                                   })
+                                                   .OrderByDescending(a => a.Tongtien).Take(5).ToList();
+
+
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Formatting = Formatting.Indented
+                };
+                ViewBag.top5ProductbySales = JsonConvert.SerializeObject(top5ProductbySales, settings);
+                ViewBag.top5Customer = JsonConvert.SerializeObject(top5Customer, settings);
+                return View();
+
+            }
+            else if (from == null && to == null && Idhh != null)
+            {
+
+                var allHanghoa = await _context.Hanghoa.ToListAsync();
+                ViewData["Date"] = "Dữ liệu cho: " + allHanghoa.Where(i => i.Idhh == Idhh).FirstOrDefault().Tenvl;
+
+                var top5ProductbySales = _context.Noidungpxk.Include(p => p.IdhhNavigation).Where(i => i.Idhh == Idhh).ToList()
+                                                   .GroupBy(item => item.Idhh)
+                                                   .Select(group => new ProductQuantityViewModel
+                                                   {
+                                                       Idhh = group.Key,
+                                                       Tenhh = group.FirstOrDefault().IdhhNavigation.Tenvl,
+                                                       Mahh = group.FirstOrDefault().IdhhNavigation.Mavl,
+                                                       Soluong = group.Sum(item => item.Soluong),
+                                                       Dongia = group.Sum(item => item.Dongia),
+                                                       Tongtien = group.Sum(item => item.Soluong) * group.Sum(item => item.Dongia)
+                                                   })
+                                                   .OrderByDescending(a => a.Tongtien).Take(5).ToList();
+
+                var top5Customer = _context.Noidungpxk.Include(p => p.IdhhNavigation).Include(p => p.IdpxkNavigation.IdkhNavigation).Where(i => i.Idhh == Idhh).ToList()
+                                                   .GroupBy(item => item.IdpxkNavigation.IdkhNavigation.Idkh)
+                                                   .Select(group => new CustomerQuantityViewModel
+                                                   {
+                                                       Idkh = group.Key,
+                                                       Tenkh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Tenkh,
+                                                       Makh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Makh,
+                                                       Gioitinh = group.FirstOrDefault().IdpxkNavigation.IdkhNavigation.Gioitinh,
+                                                       Tongtien = group.Sum(item => item.Soluong * item.Dongia)
+                                                   })
+                                                   .OrderByDescending(a => a.Tongtien).Take(5).ToList();
+
+
+
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    Formatting = Formatting.Indented
+                };
+                ViewBag.productQuantitiesNhap = JsonConvert.SerializeObject(top5ProductbySales, settings);
+                ViewBag.productQuantitiesXuat = JsonConvert.SerializeObject(top5Customer, settings);
+                return View();
+
+            }
+            return View();
+
+        }
+
     }
 }
